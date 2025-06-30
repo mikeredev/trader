@@ -1,0 +1,1 @@
+class_name NodeContainer extends Node2D

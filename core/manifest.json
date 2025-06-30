@@ -1,0 +1,9 @@
+{
+	"name": "Super Core Mod",
+	"id": "core",
+	"version": 1.0,
+	"author": "admin",
+	"contact": "admin@cool.com",
+	"minimum": 0.1,
+	"tags": ["world"],
+}

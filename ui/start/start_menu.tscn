@@ -1,0 +1,227 @@
+[gd_scene load_steps=12 format=3 uid="uid://cc0wsa572eev2"]
+
+[ext_resource type="Script" uid="uid://dho0gnv125ohv" path="res://ui/start/start_menu.gd" id="1_vq1hr"]
+[ext_resource type="Shader" uid="uid://cscchv2qusg1n" path="res://ui/start/shader/sky_rect.gdshader" id="2_37g20"]
+[ext_resource type="Shader" uid="uid://oga8al6agck7" path="res://ui/start/shader/starfield_texture.gdshader" id="3_rcrc8"]
+[ext_resource type="Texture2D" uid="uid://cldk5e7f3ynv7" path="res://assets/image/parallax/sea_stars.png" id="4_nnn58"]
+[ext_resource type="Shader" uid="uid://cowtwhtc7b223" path="res://ui/start/shader/birds.gdshader" id="5_sfxhq"]
+[ext_resource type="Shader" uid="uid://dhtwegab4bsl3" path="res://ui/start/shader/atmosphere_rect.gdshader" id="6_oi30m"]
+[ext_resource type="Script" uid="uid://cv7kgrkgcqrgt" path="res://data/component/ui_button_start_menu.gd" id="7_oi30m"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rcrc8"]
+shader = ExtResource("2_37g20")
+shader_parameter/horizon = 0.85
+shader_parameter/sky_color = Color(0.1, 0.15, 0.4, 1)
+shader_parameter/sea_color = Color(0.1, 0.2, 0.3, 1)
+shader_parameter/crest_color = Color(0.15, 0.2, 0.3, 1)
+shader_parameter/wave_amplitude = 0.005
+shader_parameter/wave_frequency = 10.0
+shader_parameter/wave_speed = 0.01
+shader_parameter/band_height = 0.0
+shader_parameter/band_fade_range = 0.75
+shader_parameter/band_color = Color(0.140704, 0.702977, 1, 0.3)
+shader_parameter/band_steps = 24
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnn58"]
+shader = ExtResource("3_rcrc8")
+shader_parameter/viewport_size = Vector2(640, 360)
+shader_parameter/horizon_bias = 0.6
+shader_parameter/horizon_fade_range = 0.25
+shader_parameter/star_density = 500.0
+shader_parameter/twinkle_min_freq = 0.5
+shader_parameter/twinkle_max_freq = 0.5
+shader_parameter/twinkle_amplitude = 0.4
+shader_parameter/twinkle_base = 0.6
+shader_parameter/twinkle_steps = 5
+shader_parameter/circular_motion_radius = 0.5
+shader_parameter/circular_motion_speed = 0.001
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oi30m"]
+shader = ExtResource("5_sfxhq")
+shader_parameter/horizon_bias = 0.8
+shader_parameter/bird_color = Color(0.7, 0.7, 0.8, 1)
+shader_parameter/bird_scale = 0.001
+shader_parameter/speed = 0.02
+shader_parameter/bird_count = 4
+shader_parameter/flock_spread = 0.1
+shader_parameter/flap_amount = 0.01
+shader_parameter/cluster_randomness = 0.01
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1l0aj"]
+shader = ExtResource("6_oi30m")
+shader_parameter/noise_scale = 2.0
+shader_parameter/fog_intensity = 0.35
+shader_parameter/fog_color = Color(0.5, 0.6, 0.7, 1)
+shader_parameter/speed = 0.01
+shader_parameter/shimmer_amount = 0.005
+shader_parameter/horizon = 1.0
+shader_parameter/fade_dist = -1.0
+
+[node name="StartMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("1_vq1hr")
+
+[node name="Shader" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkyRect" type="ColorRect" parent="Shader"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_rcrc8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Starfield" type="TextureRect" parent="Shader"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_nnn58")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_nnn58")
+
+[node name="Birds" type="ColorRect" parent="Shader"]
+material = SubResource("ShaderMaterial_oi30m")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Atmosphere" type="ColorRect" parent="Shader"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_1l0aj")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Fade" type="ColorRect" parent="Shader"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="MarginOuter" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NavMain" type="Control" parent="MarginOuter"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NavMenu" type="VBoxContainer" parent="MarginOuter/NavMain"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+size_flags_stretch_ratio = 3.0
+
+[node name="LabelTitle" type="Label" parent="MarginOuter/NavMain/NavMenu"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+size_flags_stretch_ratio = 2.0
+theme_type_variation = &"HeaderLarge"
+text = "[ PIXEL TRADER ]"
+
+[node name="NavButtons" type="VBoxContainer" parent="MarginOuter/NavMain/NavMenu"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+size_flags_stretch_ratio = 3.0
+
+[node name="NewGameButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "NEW"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="LoadGameButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "LOAD"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="SettingsButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "SETTINGS"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="ModsButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "MODS"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="QuitButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "QUIT"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="NavContent" type="VBoxContainer" parent="MarginOuter/NavMain"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 2
+mouse_filter = 2
+
+[connection signal="item_rect_changed" from="Shader" to="." method="_on_shader_item_rect_changed"]
+[connection signal="pressed" from="MarginOuter/NavMain/NavMenu/NavButtons/LoadGameButton" to="." method="_on_load_game_button_pressed"]

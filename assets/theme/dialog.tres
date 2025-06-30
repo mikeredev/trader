@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b1ls81hnrxdmt"]
+
+[ext_resource type="FontFile" uid="uid://bntryw06b5pwy" path="res://assets/font/F77MinecraftRegular-0VYv.ttf" id="1_ovgyf"]
+
+[resource]
+default_font = ExtResource("1_ovgyf")
+MarginContainer/constants/margin_bottom = 12
+MarginContainer/constants/margin_left = 24
+MarginContainer/constants/margin_right = 24
+MarginContainer/constants/margin_top = 12

@@ -1,0 +1,44 @@
+class_name Common extends RefCounted
+
+const PROJECT_SETTINGS: Dictionary[String, Variant] = {
+	"services/config/scene_base_size": Vector2i(640, 360), # tilemaps are designed around this base size
+	"services/config/max_autosaves": int(10), # user-configured autosaves cannot exceed this value
+}
+
+class Util:
+	static var json: JSONUtil = JSONUtil.new()
+
+	static func get_texture(p_path: String) -> Texture2D:
+		var texture: Texture2D
+		if p_path.begins_with("res://") or p_path.begins_with("uid://"):
+			texture = load(p_path) as Texture2D
+		if p_path.begins_with("user://"):
+			var image: Image = Image.new()
+			image.load(p_path)
+			texture = ImageTexture.create_from_image(image) as Texture2D
+		return texture
+
+
+	static func new_tween(p_object: Object, p_property: NodePath, p_final: Variant, p_duration: float, p_trans: Tween.TransitionType, p_ease: Tween.EaseType) -> Tween:
+			var tween: Tween = AppContext.create_tween()
+			tween.tween_property(p_object, p_property, p_final, p_duration) \
+			.set_trans(p_trans) \
+			.set_ease(p_ease)
+			return tween
+
+
+	static func pause(p_paused: bool) -> void:
+		Debug.log_debug("Paused: %s" % p_paused)
+		AppContext.get_tree().paused = p_paused
+
+
+	static func quit() -> void:
+		Debug.log_info("Goodbye.")
+		AppContext.get_tree().quit()
+
+
+	static func touch_directory(p_path: String) -> bool:
+		if not DirAccess.dir_exists_absolute(p_path):
+			var error: Error = DirAccess.make_dir_absolute(p_path)
+			if error: return false
+		return true

@@ -1,0 +1,23 @@
+tool
+class_name extends
+docstring
+
+signals
+enums
+constants
+
+static variables
+instance variables
+@export variables
+@onready variables
+
+optional built-in virtual _init method
+built-in virtual _ready method
+remaining built-in virtual methods
+
+static methods
+instance methods
+utility methods
+signal receiver methods
+
+inner classes

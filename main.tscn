@@ -1,0 +1,58 @@
+[gd_scene load_steps=6 format=3 uid="uid://ch4khc413ffcc"]
+
+[ext_resource type="Script" uid="uid://b5b5lemt88jrh" path="res://common/base/main/view.gd" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://b55xcxjhgtw0e" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://015a67bg42e2" path="res://color_scheme.gd" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://daqun3250wjls" path="res://common/base/main/ui.gd" id="2_h2yge"]
+
+[sub_resource type="Resource" id="Resource_qtu10"]
+script = ExtResource("2_1bvp3")
+primary_bg = Color(0.101961, 0.14902, 0.4, 1)
+secondary_bg = Color(0.101961, 0.2, 0.301961, 1)
+ternary_bg = Color(0.587146, 0.246036, 0.171356, 1)
+metadata/_custom_type_script = "uid://015a67bg42e2"
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h2yge")
+color_scheme = SubResource("Resource_qtu10")
+
+[node name="Management" type="Node" parent="."]
+
+[node name="Overworld" type="SubViewportContainer" parent="."]
+layout_mode = 0
+offset_right = 512.0
+offset_bottom = 512.0
+script = ExtResource("1_0xm2m")
+
+[node name="SubViewport" type="SubViewport" parent="Overworld"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Port" type="SubViewportContainer" parent="."]
+layout_mode = 0
+offset_right = 512.0
+offset_bottom = 512.0
+script = ExtResource("1_0xm2m")
+
+[node name="SubViewport" type="SubViewport" parent="Port"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Interior" type="SubViewportContainer" parent="."]
+layout_mode = 0
+offset_right = 512.0
+offset_bottom = 512.0
+script = ExtResource("1_0xm2m")
+
+[node name="SubViewport" type="SubViewport" parent="Interior"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("2_h2yge")
