@@ -14,8 +14,8 @@ func _ready() -> void:
 	# connect signals
 	item_rect_changed.connect(_on_item_rect_changed)
 
-	# do color
-	color_scheme.import()
+	# apply run-time color scheme
+	color_scheme.apply()
 
 	# start services
 	AppContext.start_service(StateManager.new(), Service.Type.STATE_MANAGER)

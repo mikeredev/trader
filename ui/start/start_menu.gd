@@ -8,14 +8,20 @@ var buttons: Array[UIButtonStartMenu]
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
 @onready var nav_menu: VBoxContainer = %NavMenu
-@onready var nav_buttons: VBoxContainer = %NavButtons
+@onready var nav_buttons: GridContainer = %NavButtons
 @onready var nav_content: VBoxContainer = %NavContent
 
 @onready var new_game_button: UIButtonStartMenu = %NewGameButton
 @onready var load_game_button: UIButtonStartMenu = %LoadGameButton
-@onready var settings_button: UIButtonStartMenu = %SettingsButton
 @onready var mods_button: UIButtonStartMenu = %ModsButton
+@onready var settings_button: UIButtonStartMenu = %SettingsButton
 @onready var quit_button: UIButtonStartMenu = %QuitButton
+
+@onready var arrow_icon_new: TextureRect = %ArrowIconNew
+@onready var arrow_icon_load: TextureRect = %ArrowIconLoad
+@onready var arrow_icon_mods: TextureRect = %ArrowIconMods
+@onready var arrow_icon_settings: TextureRect = %ArrowIconSettings
+@onready var arrow_icon_quit: TextureRect = %ArrowIconQuit
 
 @onready var sky_rect: ColorRect = %SkyRect
 @onready var starfield_texture: TextureRect = %Starfield
@@ -25,6 +31,15 @@ var buttons: Array[UIButtonStartMenu]
 
 
 func _ui_ready() -> void:
+	for child: Control in nav_buttons.get_children():
+		if child is UIButtonStartMenu:
+			var button: UIButtonStartMenu = child
+			buttons.append(button)
+
+		if child is TextureRect: # arrow selector
+			var texture: TextureRect = child
+			texture.modulate.a = 0.0
+
 	apply_color_scheme()
 	play_animation()
 
@@ -39,11 +54,8 @@ func apply_color_scheme() -> void:
 	sky_rect.material.set_shader_parameter("crest_color", secondary_bg.darkened(0.1))
 	atmosphere_rect.material.set_shader_parameter("fog_color", ternary_bg)
 
-	new_game_button.set_theme_type_variation("StartMenuButton")
-	load_game_button.set_theme_type_variation("StartMenuButton")
-	settings_button.set_theme_type_variation("StartMenuButton")
-	mods_button.set_theme_type_variation("StartMenuButton")
-	quit_button.set_theme_type_variation("StartMenuButton")
+	for button: UIButtonStartMenu in buttons:
+		button.set_theme_type_variation("StartMenuButton")
 
 
 func play_animation() -> void:
@@ -59,13 +71,10 @@ func play_animation() -> void:
 
 	# prepare titlebar and buttons
 	label_title.modulate.a = 0.0
-	for child: Control in nav_buttons.get_children():
-		if child is UIButtonStartMenu:
-			var button: UIButtonStartMenu = child
-			button.modulate.a = 0.0
-			button.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			button.focus_mode = Control.FOCUS_NONE
-			buttons.append(button)
+	for button: UIButtonStartMenu in buttons:
+		button.modulate.a = 0.0
+		button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.focus_mode = Control.FOCUS_NONE
 
 	# start intro
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
@@ -109,15 +118,16 @@ func transition_to(p_menu: SubMenu, p_path: String) -> void:
 	if active.has(p_menu):
 		menu = active.get(p_menu)
 		nav_menu.visible = false
+		menu.modulate.a = 0.0
 		menu.visible = true
 	else:
 		nav_menu.visible = false
 		menu = Service.scene_manager._create_from_path(p_path)#, UI.ContainerType.MENU)
+		menu.modulate.a = 0.0
 		nav_content.add_child(menu)
 		active[p_menu] = menu
 
 	# modulate menu to transparent and fade in
-	menu.modulate.a = 0.0
 	tween = Common.Util.new_tween(menu, "modulate:a", 1.0, 0.6, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 
@@ -125,11 +135,31 @@ func _connect_signals() -> void:
 	EventBus.menu_closed.connect(_on_menu_closed)
 	EventBus.viewport_resized.connect(_on_viewport_resized)
 
+	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
+	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
 	new_game_button.tweened.connect(transition_to.bind(SubMenu.NEW, FileLocation.UI_NEW_GAME_MENU))
+
 	# load
-	settings_button.tweened.connect(transition_to.bind(SubMenu.SETTINGS, FileLocation.UI_SETTINGS_MENU))
+
+	mods_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_mods))
+	mods_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_mods))
 	mods_button.tweened.connect(transition_to.bind(SubMenu.MODS, FileLocation.UI_MOD_MENU))
+
+	settings_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_settings))
+	settings_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_settings))
+	settings_button.tweened.connect(transition_to.bind(SubMenu.SETTINGS, FileLocation.UI_SETTINGS_MENU))
+
+	quit_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_quit))
+	quit_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_quit))
 	quit_button.tweened.connect(_on_quit_pressed)
+
+
+func _on_mouse_entered(p_selector: TextureRect) -> void:
+	p_selector.modulate.a = 1.0
+
+
+func _on_mouse_exited(p_selector: TextureRect) -> void:
+	p_selector.modulate.a = 0.0
 
 
 func _on_menu_closed(p_menu: Control) -> void:

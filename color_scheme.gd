@@ -5,7 +5,7 @@ class_name ColorScheme extends Resource
 @export var ternary_bg: Color = Color("6a0866")
 
 
-func import() -> void:
+func apply() -> void:
 	ProjectSettings.set_setting("gui/theme/scheme/primary_bg", primary_bg)
 	ProjectSettings.set_setting("gui/theme/scheme/secondary_bg", secondary_bg)
 	ProjectSettings.set_setting("gui/theme/scheme/ternary_bg", ternary_bg)

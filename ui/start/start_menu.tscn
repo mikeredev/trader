@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cc0wsa572eev2"]
+[gd_scene load_steps=13 format=3 uid="uid://cc0wsa572eev2"]
 
 [ext_resource type="Script" uid="uid://dho0gnv125ohv" path="res://ui/start/start_menu.gd" id="1_vq1hr"]
 [ext_resource type="Shader" uid="uid://cscchv2qusg1n" path="res://ui/start/shader/sky_rect.gdshader" id="2_37g20"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cldk5e7f3ynv7" path="res://assets/image/parallax/sea_stars.png" id="4_nnn58"]
 [ext_resource type="Shader" uid="uid://cowtwhtc7b223" path="res://ui/start/shader/birds.gdshader" id="5_sfxhq"]
 [ext_resource type="Shader" uid="uid://dhtwegab4bsl3" path="res://ui/start/shader/atmosphere_rect.gdshader" id="6_oi30m"]
+[ext_resource type="Texture2D" uid="uid://ciwg13m0r1h3v" path="res://assets/image/icon/arrow_right.png" id="7_1l0aj"]
 [ext_resource type="Script" uid="uid://cv7kgrkgcqrgt" path="res://data/component/ui_button_start_menu.gd" id="7_oi30m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rcrc8"]
@@ -156,16 +157,21 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
-size_flags_stretch_ratio = 2.0
 theme_type_variation = &"HeaderLarge"
 text = "[ PIXEL TRADER ]"
 
-[node name="NavButtons" type="VBoxContainer" parent="MarginOuter/NavMain/NavMenu"]
+[node name="NavButtons" type="GridContainer" parent="MarginOuter/NavMain/NavMenu"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 2
-size_flags_stretch_ratio = 3.0
+columns = 2
+
+[node name="ArrowIconNew" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
 
 [node name="NewGameButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
@@ -176,6 +182,12 @@ alignment = 0
 script = ExtResource("7_oi30m")
 metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
 
+[node name="ArrowIconLoad" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
+
 [node name="LoadGameButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 0)
@@ -184,6 +196,27 @@ text = "LOAD"
 alignment = 0
 script = ExtResource("7_oi30m")
 metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="ArrowIconMods" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
+
+[node name="ModsButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "MODS"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+
+[node name="ArrowIconSettings" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
 
 [node name="SettingsButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
@@ -194,14 +227,11 @@ alignment = 0
 script = ExtResource("7_oi30m")
 metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
 
-[node name="ModsButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+[node name="ArrowIconQuit" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
-text = "MODS"
-alignment = 0
-script = ExtResource("7_oi30m")
-metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
 
 [node name="QuitButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
@@ -224,4 +254,3 @@ size_flags_vertical = 2
 mouse_filter = 2
 
 [connection signal="item_rect_changed" from="Shader" to="." method="_on_shader_item_rect_changed"]
-[connection signal="pressed" from="MarginOuter/NavMain/NavMenu/NavButtons/LoadGameButton" to="." method="_on_load_game_button_pressed"]

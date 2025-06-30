@@ -37,18 +37,19 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 8
 size_flags_stretch_ratio = 2.0
-
-[node name="ReturnButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "RETURN"
-script = ExtResource("2_fh607")
-metadata/_custom_type_script = "uid://dg8figbfpd7wl"
 
 [node name="RestoreButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "RESTORE"
+script = ExtResource("2_fh607")
+metadata/_custom_type_script = "uid://dg8figbfpd7wl"
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RETURN"
 script = ExtResource("2_fh607")
 metadata/_custom_type_script = "uid://dg8figbfpd7wl"
