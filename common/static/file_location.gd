@@ -10,8 +10,9 @@ const THEME_MENU: String = "uid://og4pfjqwupc"
 
 const UI_START_MENU: String = "uid://cc0wsa572eev2"
 const UI_NEW_GAME_MENU: String = "uid://b661o0vqtly2s"
-const UI_SETTINGS_MENU: String = "uid://7gfio240f6ao"
+const UI_LOAD_MENU: String = "uid://b6ksv61spl61s"
 const UI_MOD_MENU: String = "uid://cbrqqypop7aww"
+const UI_SETTINGS_MENU: String = "uid://7gfio240f6ao"
 
 const USER_CONFIG_FILE: String = "user://settings/config.json"
 const USER_SAVE_DIR: String = "user://saves"

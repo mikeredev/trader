@@ -5,8 +5,8 @@ var cache: Dictionary[ConfigManager.Section, GridContainer]
 
 @onready var nav_bar: VBoxContainer = %NavBar
 @onready var nav_content: MarginContainer = %NavContent
-@onready var restore_button: Button = %RestoreButton
-@onready var return_button: Button = %ReturnButton
+@onready var restore_button: UIButton = %RestoreButton
+@onready var return_button: UIButton = %ReturnButton
 
 
 func _ready() -> void:
@@ -56,8 +56,8 @@ func restore_grid() -> void:
 
 
 func _connect_signals() -> void:
-	restore_button.tweened.connect(_on_restore_button_pressed)
-	return_button.tweened.connect(_on_return_button_pressed)
+	restore_button.pressed_tweened.connect(_on_restore_button_pressed)
+	return_button.pressed_tweened.connect(_on_return_button_pressed)
 
 
 func _set_button_shortcuts() -> void:

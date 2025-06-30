@@ -1,6 +1,6 @@
 extends Control
 
-@onready var return_button: Button = %ReturnButton
+@onready var return_button: UIButton = %ReturnButton
 
 
 func _ready() -> void:
@@ -9,7 +9,7 @@ func _ready() -> void:
 
 
 func _connect_signals() -> void:
-	return_button.tweened.connect(_on_return_button_pressed)
+	return_button.pressed_tweened.connect(_on_return_button_pressed)
 
 
 func _set_button_shortcuts() -> void:

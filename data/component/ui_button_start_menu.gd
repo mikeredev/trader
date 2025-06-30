@@ -1,6 +1,6 @@
 class_name UIButtonStartMenu extends Button
 
-signal tweened
+signal pressed_tweened
 
 
 func _ready() -> void:
@@ -12,12 +12,11 @@ func _ready() -> void:
 
 func _on_pressed() -> void:
 	await _play_press_tween()
-	tweened.emit()
+	pressed_tweened.emit()
 
 
 func _play_press_tween() -> void:
-	var tween: Tween
-	var return_to: int = position.x
+	var return_to: float = position.x
 	position.x += 5
-	tween = Common.Util.new_tween(self, "position:x", return_to, 0.1, Tween.TRANS_SPRING, Tween.EASE_OUT)
+	var tween: Tween = Common.Util.create_tween(self, "position:x", return_to, 0.1, Tween.TRANS_SPRING, Tween.EASE_OUT)
 	await tween.finished

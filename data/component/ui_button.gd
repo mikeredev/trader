@@ -1,6 +1,6 @@
 class_name UIButton extends Button
 
-signal tweened
+signal pressed_tweened
 
 
 func _ready() -> void:
@@ -11,12 +11,13 @@ func _ready() -> void:
 
 
 func _on_pressed() -> void:
-	await _play_press_tween()
-	tweened.emit()
+	#await _play_press_tween()
+	_play_press_tween()
+	pressed_tweened.emit()
 
 
 func _play_press_tween() -> void:
-	var tween = create_tween()
+	var tween: Tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(0.95, 0.95), 0.1)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.1)
 	#await tween.finished

@@ -10,8 +10,8 @@ extends Control
 @onready var disable_button: Button = %DisableButton
 @onready var increase_prio_button: Button = %IncreasePrioButton
 @onready var decrease_prio_button: Button = %DecreasePrioButton
-@onready var confirm_button: Button = %ConfirmButton
-@onready var return_button: Button = %ReturnButton
+@onready var confirm_button: UIButton = %ConfirmButton
+@onready var return_button: UIButton = %ReturnButton
 
 
 func _ready() -> void:
@@ -55,8 +55,8 @@ func _connect_signals() -> void:
 	disable_button.pressed.connect(_on_disable_button_pressed)
 	increase_prio_button.pressed.connect(_on_increase_prio_button_pressed)
 	decrease_prio_button.pressed.connect(_on_decrease_prio_button_pressed)
-	confirm_button.tweened.connect(_on_confirm_pressed)
-	return_button.tweened.connect(_on_return_button_pressed)
+	confirm_button.pressed_tweened.connect(_on_confirm_pressed)
+	return_button.pressed_tweened.connect(_on_return_button_pressed)
 
 
 func _set_button_shortcuts() -> void:
@@ -117,21 +117,22 @@ func _on_decrease_prio_button_pressed() -> void:
 
 func _on_confirm_pressed() -> void:
 	Debug.log_info("Processing new mod order...")
-	var active_mods: PackedStringArray = []
+	var new_active_mods: PackedStringArray = []
 
 	for i: int in range(1, enabled_list.get_item_count()): # ignore slot 0
 		var manifest: ModManifest = enabled_list.get_item_metadata(i)
-		active_mods.append(manifest.id)
+		new_active_mods.append(manifest.id)
 
-	if active_mods == Service.config_manager.get_active_mods():
+	if new_active_mods == Service.config_manager.get_active_mods(): # includes core
 		Debug.log_debug("No change to mod order")
 		return
 
-	Debug.log_debug("Reloading new mod order: %s" % active_mods)
-	Service.config_manager.set_active_mods(active_mods)
-	Service.config_manager.save_config()
-	Debug.log_info("Returning to setup...")
-	Service.state_manager.change_state(SetupState.new(active_mods))
+	if await Service.dialog_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
+		Debug.log_debug("Reloading new mod order: %s" % new_active_mods)
+		Service.config_manager.set_active_mods(new_active_mods)
+		Service.config_manager.save_config()
+		Debug.log_info("Returning to setup...")
+		Service.state_manager.change_state(SetupState.new(new_active_mods))
 
 
 func _on_return_button_pressed() -> void:

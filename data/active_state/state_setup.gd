@@ -5,10 +5,11 @@ var save_data: Dictionary
 var save_is_dirty: bool
 
 
-func _init(p_active_mods: PackedStringArray, p_save_data: Dictionary = {},
-	p_save_is_dirty: bool = false) -> void:
+func _init(p_active_mods: PackedStringArray, p_save_data: Dictionary = {}, p_save_is_dirty: bool = false) -> void:
 	name = "Setup"
 	active_mods = p_active_mods
+	save_data = p_save_data # unused
+	save_is_dirty = p_save_is_dirty
 
 
 func _main() -> void:

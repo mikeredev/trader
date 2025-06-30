@@ -19,7 +19,9 @@ class Util:
 		return texture
 
 
-	static func new_tween(p_object: Object, p_property: NodePath, p_final: Variant, p_duration: float, p_trans: Tween.TransitionType, p_ease: Tween.EaseType) -> Tween:
+	static func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
+		p_duration: float, p_trans: Tween.TransitionType = Tween.TRANS_LINEAR,
+		p_ease: Tween.EaseType = Tween.EASE_IN) -> Tween:
 			var tween: Tween = AppContext.create_tween()
 			tween.tween_property(p_object, p_property, p_final, p_duration) \
 			.set_trans(p_trans) \

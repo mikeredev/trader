@@ -4,11 +4,8 @@
 [ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://data/component/ui_button.gd" id="2_3if4e"]
 
 [node name="NewGame" type="VBoxContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 119.0
+offset_bottom = 128.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 script = ExtResource("1_wpl3o")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cc0wsa572eev2"]
+[gd_scene load_steps=14 format=3 uid="uid://cc0wsa572eev2"]
 
 [ext_resource type="Script" uid="uid://dho0gnv125ohv" path="res://ui/start/start_menu.gd" id="1_vq1hr"]
 [ext_resource type="Shader" uid="uid://cscchv2qusg1n" path="res://ui/start/shader/sky_rect.gdshader" id="2_37g20"]
@@ -57,6 +57,8 @@ shader_parameter/speed = 0.01
 shader_parameter/shimmer_amount = 0.005
 shader_parameter/horizon = 1.0
 shader_parameter/fade_dist = -1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_50ihv"]
 
 [node name="StartMenu" type="Control"]
 layout_mode = 3
@@ -154,9 +156,10 @@ size_flags_stretch_ratio = 3.0
 
 [node name="LabelTitle" type="Label" parent="MarginOuter/NavMain/NavMenu"]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_50ihv")
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 6
+size_flags_vertical = 0
 theme_type_variation = &"HeaderLarge"
 text = "[ PIXEL TRADER ]"
 
@@ -164,8 +167,23 @@ text = "[ PIXEL TRADER ]"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 2
+size_flags_vertical = 6
 columns = 2
+
+[node name="ArrowIconContinue" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_1l0aj")
+stretch_mode = 2
+
+[node name="ContinueButton" type="Button" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "CONTINUE"
+alignment = 0
+script = ExtResource("7_oi30m")
+metadata/_custom_type_script = "uid://cv7kgrkgcqrgt"
 
 [node name="ArrowIconNew" type="TextureRect" parent="MarginOuter/NavMain/NavMenu/NavButtons"]
 unique_name_in_owner = true
@@ -252,5 +270,3 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 2
 mouse_filter = 2
-
-[connection signal="item_rect_changed" from="Shader" to="." method="_on_shader_item_rect_changed"]
