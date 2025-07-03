@@ -1,7 +1,6 @@
 class_name StartState extends ActiveState
 
 
-
 func _init() -> void:
 	name = "Start"
 
@@ -17,9 +16,8 @@ func _main() -> void:
 	#Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
 
 
-
-
 func _start_services() -> void:
+	Debug.log_info("Starting services...")
 	# pass the is_dirty flag when restoring from save
 	AppContext.start_service(SessionManager.new(), Service.Type.SESSION_MANAGER)
 	AppContext.start_service(CharacterManager.new(), Service.Type.CHARACTER_MANAGER)

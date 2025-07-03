@@ -1,6 +1,6 @@
 class_name CountryManager extends Service
 
-var datastore: Dictionary[StringName, Country]
+var datastore: Dictionary[StringName, Country] = {}
 
 
 func create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:

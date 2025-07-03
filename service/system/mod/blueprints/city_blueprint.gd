@@ -7,8 +7,13 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
 	var data: Dictionary[StringName, Dictionary] = {}
 
 	for city_id: StringName in p_data.keys():
-		data[city_id] = {}
+		var city_data: Dictionary = p_data[city_id]
 
+		if city_data.get("remove", false):
+			Debug.log_verbose("  Ignoring city marked for removal: %s" % [city_id])
+			continue
+
+		data[city_id] = {}
 		for property: String in p_data[city_id].keys():
 			match property:
 				"position":
@@ -31,9 +36,9 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
 
 				"support":
 					var support: Dictionary[StringName, float] = {}
-					var city_data: Dictionary = p_data[city_id]["support"]
-					for country_id: StringName in city_data.keys():
-						var _value: float = city_data[country_id]
+					var _data: Dictionary = p_data[city_id]["support"]
+					for country_id: StringName in _data.keys():
+						var _value: float = _data[country_id]
 						support[country_id] = snappedf(_value, 0.1)
 					data[city_id]["support"] = support
 
@@ -66,24 +71,32 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
 static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 	for city_id: String in p_data.keys():
 		var city_data: Dictionary = p_data[city_id]
-		var _cache: Dictionary = {}
 
-		var support: Dictionary = city_data.get("support", {})
+		if city_data.has("remove"):
+			Debug.log_verbose("  Ignoring: %s" % [city_id])
+			continue
+
+		var cache: Dictionary = {}
+		var support: Dictionary = city_data.get("support", {}) # optional, city can start neutral
+
+		# validate all referenced countries in support dict
 		for country_id: String in support.keys():
-			_cache = p_cache["country"]["country_id"]
-			if not _cache.has(country_id):
+			cache = p_cache["country"]["country_id"]
+			if not cache.has(country_id):
 				Debug.log_warning("Unable to find supporting country: %s (%s)" % [country_id, city_id])
 				return false
 
+		# validate city assigned market
 		var market_id: String = city_data["trade"]["market"]
-		_cache = p_cache["trade"]["market_id"]
-		if not _cache.has(market_id):
+		cache = p_cache["trade"]["market_id"]
+		if not cache.has(market_id):
 			Debug.log_warning("Unable to find assigned market: %s (%s)" % [market_id, city_id])
 			return false
 
+		# validate assigned trade specialty
 		var specialty_id: String = city_data["trade"]["specialty"]["resource"]
-		_cache = p_cache["trade"]["resource_id"]
-		if not _cache.has(specialty_id):
+		cache = p_cache["trade"]["resource_id"]
+		if not cache.has(specialty_id):
 			Debug.log_warning("Unable to find specialty resource: %s (%s)" % [specialty_id, city_id])
 			return false
 

@@ -1,6 +1,6 @@
 class_name CharacterManager extends Service
 
-var datastore: Dictionary[StringName, Character]
+var datastore: Dictionary[StringName, Character] = {}
 
 
 func create_character(

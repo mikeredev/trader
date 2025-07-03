@@ -136,21 +136,32 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 
 			Category.CITY:
 				for city_id: String in metadata[category]:
-					staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
+					if metadata[category][city_id].get("remove", false):
+						Debug.log_warning("Marked city for removal: %s (%s)" % [city_id, p_manifest.id])
+					else:
+						staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
 
 			Category.COUNTRY:
 				for country_id: String in metadata[category]:
-					staging.cache["country"]["country_id"][country_id] = true # used for key lookup only
+
+					if metadata[category][country_id].get("remove", false):
+						Debug.log_warning("Marked country for removal: %s (%s)" % [country_id, p_manifest.id])
+					else: # used for key lookup only
+						staging.cache["country"]["country_id"][country_id] = true
 
 			Category.TRADE:
 				for resource_id: String in metadata[category]: # check city specialities exist
 					staging.cache["trade"]["resource_id"][resource_id] = false
-					var cache: Dictionary
 
+					if metadata[category][resource_id].get("remove", false):
+						Debug.log_warning("Marked trade resource for removal: %s (%s)" % [resource_id, p_manifest.id])
+						continue
+
+					var cache: Dictionary
 					for market_id: String in metadata[category][resource_id]["buy_price"]:
 						cache = staging.get_cached("trade", "market_id")
-						if not cache.has(market_id):
-							cache[market_id] = false
+						if not cache.has(market_id): # add market_id to cache
+							cache[market_id] = false # used for lookup only
 
 	# cross-checks (i.e., each market_id referenced in a city json actually exists)
 	Debug.log_verbose("Performing cross-check...")
@@ -194,7 +205,7 @@ func generate_blueprint() -> void:
 		staging.city_data.duplicate(),
 		staging.trade_data.duplicate(),
 	)
-	Debug.log_verbose("-> Generated blueprint")
+	Debug.log_verbose("Generated blueprint")
 
 
 func get_active_mods(p_include_core: bool = false) -> Dictionary[StringName, ModManifest]:

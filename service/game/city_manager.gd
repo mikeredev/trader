@@ -1,6 +1,6 @@
 class_name CityManager extends Service
 
-var datastore: Dictionary[StringName, City]
+var datastore: Dictionary[StringName, City] = {}
 
 
 func create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:

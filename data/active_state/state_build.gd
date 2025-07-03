@@ -35,6 +35,7 @@ func _main() -> void:
 
 
 func _start_services() -> void:
+	Debug.log_info("Starting services...")
 	AppContext.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
 	AppContext.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
 	AppContext.start_service(CityManager.new(), Service.Type.CITY_MANAGER)

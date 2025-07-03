@@ -20,7 +20,7 @@ func _main() -> void:
 	verify_user_content()
 	enable_user_content()
 
-	Debug.log_info("Generating blueprint from: %s" % str(Service.mod_manager.get_active_mods().keys()))
+	Debug.log_info("Generating blueprint: %s" % str(Service.mod_manager.get_active_mods(true).keys()))
 	Service.mod_manager.generate_blueprint()
 	Service.mod_manager.clear_staging()
 	Service.state_manager.change_state(StartState.new())

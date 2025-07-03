@@ -7,22 +7,27 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprin
 	var data: Dictionary[StringName, Dictionary] = {}
 
 	for country_id: StringName in p_data.keys():
-		data[country_id] = {}
+		var country_data: Dictionary = p_data[country_id]
 
-		for property: String in p_data[country_id].keys():
+		if country_data.get("remove", false):
+			Debug.log_verbose("  Ignoring country marked for removal: %s" % [country_id])
+			continue
+
+		data[country_id] = {}
+		for property: String in country_data.keys():
 			match property:
 				"capital":
-					var capital_id: StringName = p_data[country_id]["capital"]
+					var capital_id: StringName = country_data["capital"]
 					data[country_id]["capital"] = capital_id
 
 				"color":
-					var color: Color = Color(str(p_data[country_id]["color"]))
+					var color: Color = Color(str(country_data["color"]))
 					data[country_id]["color"] = color
 
 				"leader":
-					var country_data: Dictionary = p_data[country_id]["leader"]
-					var name: String = country_data.get("name")
-					var title: String = country_data.get("title", "KING")
+					var _data: Dictionary = country_data["leader"]
+					var name: String = _data.get("name")
+					var title: String = _data.get("title", "KING")
 					var leader: Dictionary[String, String] = {
 						"name": name,
 						"title": title,
@@ -30,7 +35,7 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprin
 					data[country_id]["leader"] = leader
 
 				"owner":
-					var owner: StringName = p_data[country_id]["owner"]
+					var owner: StringName = country_data["owner"]
 					data[country_id][property] = owner
 
 				_: Debug.log_warning("Ignoring unrecognized key: %s" % property)
@@ -43,6 +48,11 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprin
 static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 	for country_id: String in p_data.keys():
 		var country_data: Dictionary = p_data[country_id]
+
+		if country_data.has("remove"):
+			Debug.log_verbose("  Ignoring: %s" % [country_id])
+			continue
+
 		var _cache: Dictionary = p_cache["city"]["city_id"]
 		var capital_id: String = country_data.get("capital", "")
 
