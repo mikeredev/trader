@@ -1,6 +1,6 @@
 class_name Blueprint extends RefCounted
 
-#var player: Player
+var player: Character
 var city: CityBlueprint
 var country: CountryBlueprint
 var trade: TradeBlueprint
@@ -16,3 +16,10 @@ func _init(p_world: Dictionary[String, Dictionary],
 	country = CountryBlueprint.from_dict(p_country)
 	city = CityBlueprint.from_dict(p_city)
 	trade = TradeBlueprint.from_dict(p_trade)
+
+
+func get_list(p_blueprint: RefCounted) -> PackedStringArray:
+	match p_blueprint:
+		CountryBlueprint:
+			return country.datastore.keys()
+	return []

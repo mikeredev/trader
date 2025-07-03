@@ -134,28 +134,28 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 			Category.WORLD:
 				staging.cache["manifest"]["directory"] = p_manifest.local_path # builds path to map texture
 
-			#Category.CITY:
-				#for city_id: String in metadata[category]:
-					#staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
-#
-			#Category.COUNTRY:
-				#for country_id: String in metadata[category]:
-					#staging.cache["country"]["country_id"][country_id] = true # used for key lookup only
-#
-			#Category.TRADE:
-				#for resource_id: String in metadata[category]:
-					#staging.cache["trade"]["resource_id"][resource_id] = false
-					#var cache: Dictionary
-#
-					#cache = staging.get_cached("trade", "category_id")
-					#var category_id: String = metadata[category][resource_id]["category"]
-					#if not cache.has(category_id):
-						#cache[category_id] = false
-#
-					#for market_id: String in metadata[category][resource_id]["buy_price"]:
-						#cache = staging.get_cached("trade", "market_id")
-						#if not cache.has(market_id):
-							#cache[market_id] = false
+			Category.CITY:
+				for city_id: String in metadata[category]:
+					staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
+
+			Category.COUNTRY:
+				for country_id: String in metadata[category]:
+					staging.cache["country"]["country_id"][country_id] = true # used for key lookup only
+
+			Category.TRADE:
+				for resource_id: String in metadata[category]:
+					staging.cache["trade"]["resource_id"][resource_id] = false
+					var cache: Dictionary
+
+					cache = staging.get_cached("trade", "category_id")
+					var category_id: String = metadata[category][resource_id]["category"]
+					if not cache.has(category_id):
+						cache[category_id] = false
+
+					for market_id: String in metadata[category][resource_id]["buy_price"]:
+						cache = staging.get_cached("trade", "market_id")
+						if not cache.has(market_id):
+							cache[market_id] = false
 
 	# cross-check
 	Debug.log_verbose("Performing cross-check...")
@@ -163,12 +163,12 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 		match category:
 			Category.WORLD:
 				if not WorldBlueprint.validate(metadata[category], staging.cache): return false
-			#Category.COUNTRY:
-				#if not CountryBlueprint.validate(metadata[category], staging.cache): return false
-			#Category.CITY:
-				#if not CityBlueprint.validate(metadata[category], staging.cache): return false
-			#Category.TRADE: # TBD cross check market refs
-				#pass #if not TradeBlueprint.validate(metadata[category], staging.cache): return false
+			Category.COUNTRY:
+				if not CountryBlueprint.validate(metadata[category], staging.cache): return false
+			Category.CITY:
+				if not CityBlueprint.validate(metadata[category], staging.cache): return false
+			Category.TRADE: # TBD cross check market refs
+				pass #if not TradeBlueprint.validate(metadata[category], staging.cache): return false
 
 
 	# set owner information
@@ -176,7 +176,7 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 	for category: Category in metadata.keys():
 		var mod_data: Dictionary = metadata[category]
 		for property: String in mod_data:
-			mod_data[property]["owner"] = p_manifest.local_path
+			mod_data[property]["owner"] = p_manifest.id
 
 		# merge with staging
 		match category:
@@ -210,6 +210,10 @@ func get_active_mods(p_include_core: bool = false) -> Dictionary[StringName, Mod
 		if not mod.core_mod == true:
 			dict[mod.id] = _active_mods[mod.id]
 	return dict
+
+
+func get_blueprint() -> Blueprint:
+	return _blueprint
 
 
 func get_manifest(p_id: StringName) -> ModManifest:

@@ -5,7 +5,7 @@ var save_is_dirty: bool
 
 
 func _init(p_save_data: Dictionary = {}, p_save_is_dirty: bool = false) -> void:
-	name = "START"
+	name = "Start"
 	save_data = p_save_data
 	save_is_dirty = p_save_is_dirty
 
@@ -17,9 +17,8 @@ func _main() -> void:
 	#Service.scene_manager.hide_views()
 	#Service.scene_manager.add_menu(Filepath.START_MENU)
 
-	Service.scene_manager.create_scene("uid://cc0wsa572eev2", UI.ContainerType.MENU)
-
-	#Service.scene_manager.clear_ui(UI.ContainerType.MENU)
+	#Service.scene_manager.create_scene(FileLocation.UI_START_MENU, UI.ContainerType.MENU)
+	Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
 
 
 

@@ -5,5 +5,5 @@
 	"author": "admin",
 	"contact": "admin@cool.com",
 	"minimum": 0.1,
-	"tags": ["world"],
+	"tags": ["world", "country", "city", "trade"],
 }

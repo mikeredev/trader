@@ -1,0 +1,150 @@
+{
+	"C_ALEXANDRIA": {
+		"position": [ 1194, 335 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 720, "industry": 700 },
+		"support": { "K_OTTOMAN": 100, "K_SPAIN": 50 },
+		"trade": {
+			"market": "MARKET_E",
+			"specialty": {
+				"resource": "T_COTTON_CLOTH",
+				"price": 25,
+				"required": 200,
+			},
+		},
+	},
+
+	"C_AMSTERDAM": {
+		"position": [ 1051, 214 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 700, "industry": 730 },
+		"support": { "K_NETHERLANDS": 100 },
+		"trade": {
+			"market": "MARKET_B",
+			"specialty": {
+				"resource": "T_GLASS_BEADS",
+				"price": 3,
+				"required": 100,
+			},
+		},
+	},
+
+	"C_ATHENS": {
+		"position": [ 1158, 294 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 640, "industry": 540 },
+		"trade": {
+			"market": "MARKET_C",
+			"specialty": {
+				"resource": "T_ART",
+				"price": 310,
+				"required": 300,
+			},
+		},
+	},
+
+	"C_BARCELONA": {
+		"position": [ 1036, 274 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 590, "industry": 540 },
+		"support": { "K_SPAIN": 90 },
+		"trade": {
+			"market": "MARKET_A",
+			"specialty": {
+				"resource": "T_ROCK_SALT",
+				"required": 0,
+				"price": 45,
+			},
+		},
+	},
+
+	"C_ISTANBUL": {
+		"position": [ 1188, 278 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 810, "industry": 720 },
+		"support": { "K_OTTOMAN": 100 },
+		"trade": {
+			"market": "MARKET_E",
+			"specialty": {
+				"resource": "T_CARPET",
+				"required": 0,
+				"price": 210,
+			},
+		},
+	},
+
+	"C_LISBON": {
+		"position": [ 972, 289 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 780, "industry": 770 },
+		"support": { "K_PORTUGAL": 100 },
+		"trade": {
+			"market": "MARKET_A",
+			"specialty": {
+				"resource": "T_ROCK_SALT",
+				"required": 0,
+				"price": 38,
+			},
+		},
+	},
+
+	"C_LONDON": {
+		"position": [ 1023, 218 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 720, "industry": 740 },
+		"support": { "K_ENGLAND": 100 },
+		"trade": {
+			"market": "MARKET_B",
+			"specialty": {
+				"resource": "T_WOOL",
+				"required": 0,
+				"price": 45,
+			},
+		},
+	},
+
+	"C_SEVILLE": {
+		"position": [ 989, 299 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 770, "industry": 810 },
+		"support": { "K_SPAIN": 100 },
+		"trade": {
+			"market": "MARKET_A",
+			"specialty": {
+				"resource": "T_PORCELAIN",
+				"required": 0,
+				"price": 100,
+			},
+		},
+	},
+
+	"C_VENICE": {
+		"position": [ 1093, 252 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 740, "industry": 730 },
+		"support": { "K_ITALY": 100 },
+		"trade": {
+			"market": "MARKET_C",
+			"specialty": {
+				"resource": "T_GLASSWARE",
+				"required": 0,
+				"price": 180,
+			},
+		},
+	},
+
+	"C_TESTVILLE": {
+		"position": [ 1084, 288 ],
+		"buildings": [ "B_BANK" ],
+		"production": { "economy": 740, "industry": 730 },
+		"support": { "K_ITALY": 100 },
+		"trade": {
+			"market": "MARKET_C",
+			"specialty": {
+				"resource": "T_GLASSWARE",
+				"required": 0,
+				"price": 180,
+			},
+		},
+	},
+}

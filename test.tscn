@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://2xdixff84gnr"]
+
+[ext_resource type="Texture2D" uid="uid://caq8iff4sm8mg" path="res://core/world/map.png" id="1_37kl0"]
+[ext_resource type="Script" uid="uid://c4uuu5jpsusoa" path="res://data/component/camera.gd" id="2_8uh7m"]
+
+[node name="Test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -448.0
+offset_top = -188.0
+offset_right = 448.0
+offset_bottom = 244.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(2048, 1080)
+render_target_update_mode = 4
+
+[node name="Container" type="Node2D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldMap" type="Node2D" parent="SubViewportContainer/SubViewport/Container"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Container/WorldMap"]
+texture = ExtResource("1_37kl0")
+
+[node name="Camera" type="Camera2D" parent="SubViewportContainer/SubViewport/Container"]
+script = ExtResource("2_8uh7m")
+metadata/_custom_type_script = "uid://c4uuu5jpsusoa"

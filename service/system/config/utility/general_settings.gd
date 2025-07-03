@@ -2,7 +2,7 @@ class_name GeneralSettings extends ConfigUtility
 
 var system_max_autosaves: int = ProjectSettings.get_setting("services/config/max_autosaves")
 var max_autosaves: int = 5
-var skip_intro: bool
+var show_intro: bool = true
 
 
 func apply_config() -> void:
@@ -10,9 +10,9 @@ func apply_config() -> void:
 	set_max_autosaves(max_autosaves)
 
 
-func set_skip_intro(p_toggled_on: bool, p_save: bool = false) -> void:
-	skip_intro = p_toggled_on
-	Debug.log_debug("Set skip intro: %s" % p_toggled_on)
+func set_show_intro(p_toggled_on: bool, p_save: bool = false) -> void:
+	show_intro = p_toggled_on
+	Debug.log_debug("Set show intro: %s" % p_toggled_on)
 	if p_save: EventBus.config_changed.emit()
 
 
@@ -24,13 +24,13 @@ func set_max_autosaves(p_value: int, p_save: bool = false) -> void:
 
 func to_dict() -> Dictionary[String, Variant]:
 	return {
-		"skip_intro": skip_intro,
+		"show_intro": show_intro,
 		"max_autosaves": max_autosaves
 	}
 
 
 func to_grid() -> GridContainer:
-	var settings: Array[Variant] = [ skip_intro, max_autosaves ]
+	var settings: Array[Variant] = [ show_intro, max_autosaves ]
 	var grid: GridContainer = GridContainer.new()
 	grid.name = "GeneralSettings"
 	grid.columns = 2
@@ -40,11 +40,11 @@ func to_grid() -> GridContainer:
 		var ui_element: Control # variable
 
 		match setting:
-			skip_intro:
-				label_name.text = tr("SKIP_INTRO")
+			show_intro:
+				label_name.text = tr("SHOW_INTRO")
 				var check_button: CheckButton = CheckButton.new()
-				check_button.button_pressed = skip_intro
-				check_button.toggled.connect(set_skip_intro.bind(true))
+				check_button.button_pressed = show_intro
+				check_button.toggled.connect(set_show_intro.bind(true))
 				ui_element = check_button
 
 			max_autosaves:
@@ -67,7 +67,7 @@ func to_grid() -> GridContainer:
 static func from_dict(p_dict: Dictionary) -> GeneralSettings:
 	var out: GeneralSettings = GeneralSettings.new()
 
-	out.skip_intro = p_dict.get("skip_intro", out.skip_intro)
+	out.show_intro = p_dict.get("show_intro", out.show_intro)
 	out.max_autosaves = p_dict.get("max_autosaves", out.max_autosaves)
 
 	return out

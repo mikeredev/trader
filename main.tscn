@@ -7,9 +7,9 @@
 
 [sub_resource type="Resource" id="Resource_qtu10"]
 script = ExtResource("2_1bvp3")
-primary_bg = Color(0.101961, 0.14902, 0.4, 1)
+primary_bg = Color(0.235294, 0.294118, 0.431373, 1)
 secondary_bg = Color(0.101961, 0.2, 0.301961, 1)
-ternary_bg = Color(0.415686, 0.0313726, 0.4, 1)
+ternary_bg = Color(0.0805582, 5.50856e-05, 0.303392, 1)
 metadata/_custom_type_script = "uid://015a67bg42e2"
 
 [node name="Main" type="Control"]
@@ -25,9 +25,13 @@ color_scheme = SubResource("Resource_qtu10")
 [node name="Management" type="Node" parent="."]
 
 [node name="Overworld" type="SubViewportContainer" parent="."]
-layout_mode = 0
-offset_right = 512.0
-offset_bottom = 512.0
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_0xm2m")
 
 [node name="SubViewport" type="SubViewport" parent="Overworld"]
@@ -35,24 +39,32 @@ handle_input_locally = false
 render_target_update_mode = 4
 
 [node name="Port" type="SubViewportContainer" parent="."]
-layout_mode = 0
-offset_right = 512.0
-offset_bottom = 512.0
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_0xm2m")
 
 [node name="SubViewport" type="SubViewport" parent="Port"]
 handle_input_locally = false
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Interior" type="SubViewportContainer" parent="."]
-layout_mode = 0
-offset_right = 512.0
-offset_bottom = 512.0
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_0xm2m")
 
 [node name="SubViewport" type="SubViewport" parent="Interior"]
 handle_input_locally = false
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_h2yge")

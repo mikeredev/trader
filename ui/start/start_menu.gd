@@ -43,7 +43,7 @@ var buttons: Array[UIButtonStartMenu]
 func _ui_ready() -> void:
 	_housekeeping()
 	apply_color_scheme()
-	play_animation(Service.config_manager.general_settings.skip_intro)
+	play_animation(Service.config_manager.general_settings.show_intro)
 
 
 func apply_color_scheme() -> void:
@@ -61,8 +61,8 @@ func apply_color_scheme() -> void:
 		button.set_theme_type_variation("StartMenuButton")
 
 
-func play_animation(p_skip: bool = false) -> void:
-	if p_skip:
+func play_animation(p_show_intro: bool) -> void:
+	if not p_show_intro:
 		fade_rect.visible = false
 		return
 

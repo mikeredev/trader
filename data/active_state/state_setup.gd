@@ -36,7 +36,7 @@ func enable_core_content() -> bool:
 
 func verify_user_content() -> void:
 	Debug.log_info("Verifying user mods...")
-	var user_mod_directory: String = FileLocation.USER_MOD_DIR
+	var user_mod_directory: String = FileLocation.USER_ROOT_MOD_DIR
 	for subfolder: String in DirAccess.get_directories_at(user_mod_directory):
 		var path: String = "%s/%s" % [user_mod_directory, subfolder]
 		if not Service.mod_manager.create_manifest(path):

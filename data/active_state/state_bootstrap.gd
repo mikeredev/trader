@@ -9,7 +9,7 @@ func _init(p_node_tree: Array[Node]) -> void:
 
 
 func _main() -> void:
-	# confirm write access to user directory
+	# confirm write access to user directories
 	if not validate_userspace():
 		Debug.log_error("Error accessing userspace (check write permissions)")
 		return
@@ -64,7 +64,7 @@ func build_tree() -> bool:
 func set_project_settings() -> void:
 	Debug.log_info("Setting project settings...")
 
-	for setting: String in Common.PROJECT_SETTINGS:
+	for setting: String in Common.PROJECT_SETTINGS: # remove this and use consts in the services instead TBD
 		ProjectSettings.set_setting(setting, Common.PROJECT_SETTINGS[setting])
 		Debug.log_debug("Set %s: %s" % [setting, Common.PROJECT_SETTINGS[setting]])
 
@@ -75,14 +75,14 @@ func validate_userspace() -> bool:
 	var success: bool = true
 
 	var user_directories: Array[String] = [
-		FileLocation.USER_MOD_DIR,
-		FileLocation.USER_SAVE_DIR,
-		FileLocation.USER_SETTINGS_DIR,
+		FileLocation.USER_ROOT_MOD_DIR,
+		FileLocation.USER_ROOT_SAVE_DIR,
+		FileLocation.USER_ROOT_SETTINGS_DIR,
 	]
 
 	for path: String in user_directories:
 		if Common.Util.touch_directory(path):
-			Debug.log_verbose("Validated access: %s" % path)
+			Debug.log_verbose("  OK: %s" % path)
 		else:
 			Debug.log_warning("Unable to access directory: %s" % path)
 			success = false

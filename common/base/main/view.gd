@@ -32,23 +32,24 @@ func get_container(p_type: ContainerType) -> NodeContainer:
 	return containers.get(p_type, null)
 
 
-func setup() -> bool:
-	# validate node name
+func setup() -> bool: # TBD most of these should be in scene manager, inc this
+	# validate
 	if not Type.keys().has(self.name.to_upper()):
 		Debug.log_warning("Unrecognized view: %s" % self)
 		return false
 
-	# set type
-	for i: int in range(Type.size()):
-		if Type.keys()[i] == self.name.to_pascal_case().to_upper():
-			type = Type.values()[i]
-
-	# configure basic settings
 	if not (get_child_count() > 0 and get_child(0) is SubViewport):
 		Debug.log_warning("%s requires subviewport" % self)
 		return false
-	self.subviewport = self.get_child(0)
+
+	# set type
+	for i: int in range(Type.size()):
+		if Type.keys()[i] == self.name.to_upper():
+			type = Type.values()[i]
+
+	# configure basic settings
 	self.stretch = true
+	self.subviewport = self.get_child(0)
 
 	# assign node containers
 	var node_containers: Array[ContainerType] = []
@@ -68,9 +69,10 @@ func setup() -> bool:
 	self.subviewport.add_child(container_root)
 	Debug.log_verbose("  Created root: %s" % container_root.get_path())
 
-	# add to tree under container root
+	# add containers to tree under container root
 	for container_type: ContainerType in node_containers:
 		var node_container: NodeContainer = NodeContainer.new()
+		node_container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		node_container.name = str(ContainerType.keys()[container_type]).to_pascal_case()
 		container_root.add_child(node_container)
 

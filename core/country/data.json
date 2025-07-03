@@ -1,0 +1,51 @@
+{
+	"K_SPAIN": {
+		"capital": "C_SEVILLE",
+		"color": "#AD1519",
+		"leader": {
+			"name": "Carlos de Ávila"
+		},
+	},
+
+	"K_PORTUGAL": {
+		"capital": "C_LISBON",
+		"color": "#FFFF00",
+		"leader": {
+			"name": "João de Almeida"
+		},
+	},
+
+	"K_ENGLAND": {
+		"capital": "C_LONDON",
+		"color": "#DDDDDD",
+		"leader": {
+			"name": "Reginald Fitzroy"
+		},
+	},
+
+	"K_NETHERLANDS": {
+		"capital": "C_AMSTERDAM",
+		"color": "#FF9B00",
+		"leader": {
+			"name": "Willem van der Zaan"
+		},
+	},
+
+	"K_ITALY": {
+		"capital": "C_VENICE",
+		"color": "#5E0A80",
+		"leader": {
+			"name": "Lorenzo Morosini",
+			"title": "DOGE"
+		},
+	},
+
+	"K_OTTOMAN": {
+		"capital": "C_ISTANBUL",
+		"color": "#009000",
+		"leader": {
+			"name": "Süleyman Osmanlı",
+			"title": "SULTAN"
+		},
+	},
+}

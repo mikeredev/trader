@@ -4,12 +4,12 @@ var datastore: Dictionary[StringName, Dictionary]
 
 
 static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprint:
-	var data: Dictionary[StringName, Dictionary]
+	var data: Dictionary[StringName, Dictionary] = {}
 
 	for country_id: StringName in p_data.keys():
 		data[country_id] = {}
 
-		for property: String in p_data[country_id]:
+		for property: String in p_data[country_id].keys():
 			match property:
 				"capital":
 					var capital_id: StringName = p_data[country_id]["capital"]
@@ -23,7 +23,7 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprin
 					var country_data: Dictionary = p_data[country_id]["leader"]
 					var name: String = country_data.get("name")
 					var title: String = country_data.get("title", "KING")
-					var leader: Dictionary[String, Variant] = {
+					var leader: Dictionary[String, String] = {
 						"name": name,
 						"title": title,
 					}

@@ -1,8 +1,8 @@
 class_name Common extends RefCounted
 
-const PROJECT_SETTINGS: Dictionary[String, Variant] = {
+const PROJECT_SETTINGS: Dictionary[String, Variant] = { # TBD use consts instead
 	"services/config/scene_base_size": Vector2i(640, 360), # tilemaps are designed around this base size
-	"services/config/max_autosaves": int(10), # user-configured autosaves cannot exceed this value
+	"services/config/max_autosaves": 10, # user-configured autosaves cannot exceed this value
 }
 
 class Util:

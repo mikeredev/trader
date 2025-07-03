@@ -4,12 +4,12 @@ var datastore: Dictionary[StringName, Dictionary]
 
 
 static func from_dict(p_data: Dictionary[String, Dictionary]) -> TradeBlueprint:
-	var data: Dictionary[StringName, Dictionary]
+	var data: Dictionary[StringName, Dictionary] = {}
 
 	for resource_id: StringName in p_data.keys():
 		data[resource_id] = {}
 
-		for property: String in p_data[resource_id]:
+		for property: String in p_data[resource_id].keys():
 			match property:
 				"category":
 					var category_id: StringName = p_data[resource_id]["category"]

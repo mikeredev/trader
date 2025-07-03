@@ -55,7 +55,7 @@ func set_limits(p_limits: Vector2i) -> void:
 	limit_top = 0
 	limit_right = p_limits.x
 	limit_bottom = p_limits.y
-	Debug.log_debug("-> Camera limits: %s" % Vector2i(limit_right, limit_bottom))
+	Debug.log_debug("%s limits: %s" % [name, Vector2i(limit_right, limit_bottom)])
 
 
 func set_min_zoom(p_viewport: Vector2i, p_reference: Vector2i) -> void:
@@ -66,7 +66,7 @@ func set_min_zoom(p_viewport: Vector2i, p_reference: Vector2i) -> void:
 	min_zoom = Vector2(minimum, minimum)
 	zoom = min_zoom
 	EventBus.camera_zoomed.emit(zoom)
-	Debug.log_debug("Minimum zoom (%s): %s" % [name.to_upper(), min_zoom])
+	Debug.log_debug("%s minimum zoom: %s" % [name, min_zoom])
 
 
 #func unfollow() -> void:

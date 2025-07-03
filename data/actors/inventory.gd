@@ -1,0 +1,1 @@
+class_name Inventory extends RefCounted

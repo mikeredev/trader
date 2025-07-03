@@ -13,7 +13,7 @@
 shader = ExtResource("2_37g20")
 shader_parameter/horizon = 0.85
 shader_parameter/sky_color = Color(0.1, 0.15, 0.4, 1)
-shader_parameter/sea_color = Color(0.1, 0.2, 0.3, 1)
+shader_parameter/sea_color = Color(0.0951883, 0.199773, 0.208952, 1)
 shader_parameter/crest_color = Color(0.15, 0.2, 0.3, 1)
 shader_parameter/wave_amplitude = 0.005
 shader_parameter/wave_frequency = 10.0
@@ -35,7 +35,7 @@ shader_parameter/twinkle_amplitude = 0.4
 shader_parameter/twinkle_base = 0.6
 shader_parameter/twinkle_steps = 5
 shader_parameter/circular_motion_radius = 0.5
-shader_parameter/circular_motion_speed = 0.001
+shader_parameter/circular_motion_speed = 0.005
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oi30m"]
 shader = ExtResource("5_sfxhq")

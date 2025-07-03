@@ -4,12 +4,12 @@ var datastore: Dictionary[StringName, Dictionary]
 
 
 static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
-	var data: Dictionary[StringName, Dictionary]
+	var data: Dictionary[StringName, Dictionary] = {}
 
 	for city_id: StringName in p_data.keys():
 		data[city_id] = {}
 
-		for property: String in p_data[city_id]:
+		for property: String in p_data[city_id].keys():
 			match property:
 				"position":
 					var x: int = p_data[city_id]["position"][0]
