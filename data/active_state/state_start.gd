@@ -1,13 +1,9 @@
 class_name StartState extends ActiveState
 
-var save_data: Dictionary
-var save_is_dirty: bool
 
 
-func _init(p_save_data: Dictionary = {}, p_save_is_dirty: bool = false) -> void:
+func _init() -> void:
 	name = "Start"
-	save_data = p_save_data
-	save_is_dirty = p_save_is_dirty
 
 
 func _main() -> void:
@@ -17,8 +13,8 @@ func _main() -> void:
 	#Service.scene_manager.hide_views()
 	#Service.scene_manager.add_menu(Filepath.START_MENU)
 
-	#Service.scene_manager.create_scene(FileLocation.UI_START_MENU, UI.ContainerType.MENU)
-	Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
+	Service.scene_manager.create_scene(FileLocation.UI_START_MENU, UI.ContainerType.MENU)
+	#Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
 
 
 
@@ -26,6 +22,7 @@ func _main() -> void:
 func _start_services() -> void:
 	# pass the is_dirty flag when restoring from save
 	AppContext.start_service(SessionManager.new(), Service.Type.SESSION_MANAGER)
+	AppContext.start_service(CharacterManager.new(), Service.Type.CHARACTER_MANAGER)
 
 
 func _exit() -> void:

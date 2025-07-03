@@ -33,6 +33,8 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CountryBlueprin
 					var owner: StringName = p_data[country_id]["owner"]
 					data[country_id][property] = owner
 
+				_: Debug.log_warning("Ignoring unrecognized key: %s" % property)
+
 	var out: CountryBlueprint = CountryBlueprint.new()
 	out.datastore = data
 	return out

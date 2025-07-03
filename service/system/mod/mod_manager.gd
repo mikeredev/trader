@@ -143,21 +143,16 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 					staging.cache["country"]["country_id"][country_id] = true # used for key lookup only
 
 			Category.TRADE:
-				for resource_id: String in metadata[category]:
+				for resource_id: String in metadata[category]: # check city specialities exist
 					staging.cache["trade"]["resource_id"][resource_id] = false
 					var cache: Dictionary
-
-					cache = staging.get_cached("trade", "category_id")
-					var category_id: String = metadata[category][resource_id]["category"]
-					if not cache.has(category_id):
-						cache[category_id] = false
 
 					for market_id: String in metadata[category][resource_id]["buy_price"]:
 						cache = staging.get_cached("trade", "market_id")
 						if not cache.has(market_id):
 							cache[market_id] = false
 
-	# cross-check
+	# cross-checks (i.e., each market_id referenced in a city json actually exists)
 	Debug.log_verbose("Performing cross-check...")
 	for category: Category in metadata.keys():
 		match category:
@@ -167,14 +162,14 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 				if not CountryBlueprint.validate(metadata[category], staging.cache): return false
 			Category.CITY:
 				if not CityBlueprint.validate(metadata[category], staging.cache): return false
-			Category.TRADE: # TBD cross check market refs
-				pass #if not TradeBlueprint.validate(metadata[category], staging.cache): return false
 
 
-	# set owner information
+	# prepare for staging
 	Debug.log_verbose("Merging with staging...")
 	for category: Category in metadata.keys():
-		var mod_data: Dictionary = metadata[category]
+		var mod_data: Dictionary = metadata[category] # keyed by variants (string/string names)
+
+		# add owner information
 		for property: String in mod_data:
 			mod_data[property]["owner"] = p_manifest.id
 

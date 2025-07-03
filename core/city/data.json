@@ -132,19 +132,4 @@
 			},
 		},
 	},
-
-	"C_TESTVILLE": {
-		"position": [ 1084, 288 ],
-		"buildings": [ "B_BANK" ],
-		"production": { "economy": 740, "industry": 730 },
-		"support": { "K_ITALY": 100 },
-		"trade": {
-			"market": "MARKET_C",
-			"specialty": {
-				"resource": "T_GLASSWARE",
-				"required": 0,
-				"price": 180,
-			},
-		},
-	},
 }

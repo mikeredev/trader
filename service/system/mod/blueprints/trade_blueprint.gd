@@ -29,16 +29,18 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> TradeBlueprint:
 					var price_data: Dictionary = p_data[resource_id]["sell_price"]
 					for market_id: StringName in price_data.keys():
 						var price: int = price_data[market_id]["price"]
-						var required: int = price_data[market_id]["required"]
+						var economy: int = price_data[market_id]["economy"]
 						sell_price[market_id] = {
 							"price": price,
-							"required": required,
+							"economy": economy,
 						}
 					data[resource_id]["sell_price"] = sell_price
 
 				"owner":
 					var owner: StringName = p_data[resource_id]["owner"]
 					data[resource_id]["owner"] = owner
+
+				_: Debug.log_warning("Ignoring unrecognized key: %s" % property)
 
 	var out: TradeBlueprint = TradeBlueprint.new()
 	out.datastore = data

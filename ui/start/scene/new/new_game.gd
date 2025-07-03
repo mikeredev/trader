@@ -19,7 +19,7 @@ func populate_countries() -> void:
 
 func start_session(p_profile_name: StringName, p_country_id: StringName) -> void:
 	Debug.log_info("Starting new session...")
-	var player: Character = CharacterManager.create_character_no_register(Character.Role.PLAYER, p_profile_name, p_country_id, Rank.Level.COMMONER)
+	var player: Character = Service.character_manager.create_character(Character.Role.PLAYER, p_profile_name, p_country_id, Rank.Level.COMMONER)
 	var new_game: bool = true
 	Service.session_manager.start_session(player, new_game)
 

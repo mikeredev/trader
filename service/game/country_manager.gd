@@ -5,8 +5,7 @@ var datastore: Dictionary[StringName, Country]
 
 func create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	var profile: Dictionary = p_metadata["leader"]
-	var leader: Character = Service.character_manager.create_character_no_register(Character.Role.LEADER, profile.name, p_country_id, Rank.Level.KING, profile.title)
-	Service.character_manager.register_character(leader)
+	var leader: Character = Service.character_manager.create_character(Character.Role.LEADER, profile.name, p_country_id, Rank.Level.KING, profile.title)
 
 	var country: Country = Country.new()
 	var capital_id: StringName = p_metadata.get("capital")

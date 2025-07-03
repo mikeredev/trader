@@ -16,7 +16,6 @@ var cache: Dictionary[String, Dictionary] = {
 	},
 	"trade": {
 		"market_id": {},
-		"category_id": {},
 		"resource_id": {},
 	},
 }

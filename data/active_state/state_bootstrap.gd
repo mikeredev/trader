@@ -63,8 +63,7 @@ func build_tree() -> bool:
 
 func set_project_settings() -> void:
 	Debug.log_info("Setting project settings...")
-
-	for setting: String in Common.PROJECT_SETTINGS: # remove this and use consts in the services instead TBD
+	for setting: String in Common.PROJECT_SETTINGS:
 		ProjectSettings.set_setting(setting, Common.PROJECT_SETTINGS[setting])
 		Debug.log_debug("Set %s: %s" % [setting, Common.PROJECT_SETTINGS[setting]])
 

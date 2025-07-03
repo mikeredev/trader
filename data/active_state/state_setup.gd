@@ -20,10 +20,10 @@ func _main() -> void:
 	verify_user_content()
 	enable_user_content()
 
-	Debug.log_info("Running with mods: %s" % str(Service.mod_manager.get_active_mods().keys()))
+	Debug.log_info("Generating blueprint from: %s" % str(Service.mod_manager.get_active_mods().keys()))
 	Service.mod_manager.generate_blueprint()
 	Service.mod_manager.clear_staging()
-	Service.state_manager.change_state(StartState.new(save_data, save_is_dirty))
+	Service.state_manager.change_state(StartState.new())
 
 
 func enable_core_content() -> bool:

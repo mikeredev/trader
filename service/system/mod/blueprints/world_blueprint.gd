@@ -17,6 +17,8 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> WorldBlueprint:
 				var timestamp: String = p_data["clock"]["timestamp"]
 				var owner: StringName = p_data["clock"]["owner"]
 				out.clock = { "timestamp": timestamp, "owner": owner }
+
+			_: Debug.log_warning("Ignoring unrecognized key: %s" % property)
 	return out
 
 

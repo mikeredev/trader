@@ -1,7 +1,5 @@
 class_name CityManager extends Service
 
-const MAX_PRODUCTION: int = 1000
-
 var datastore: Dictionary[StringName, City]
 
 
@@ -23,8 +21,9 @@ func create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:
 	# production
 	var economy: int = p_metadata.get("production")["economy"]
 	var industry: int = p_metadata.get("production")["industry"]
-	city.economy = clampi(economy, 0, MAX_PRODUCTION)
-	city.industry = clampi(industry, 0, MAX_PRODUCTION)
+	var ceiling: int = ProjectSettings.get_setting("services/city/max_production")
+	city.economy = clampi(economy, 0, ceiling)
+	city.industry = clampi(industry, 0, ceiling)
 
 	# support
 

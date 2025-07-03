@@ -18,7 +18,7 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
 					data[city_id]["position"] = position
 
 				"buildings":
-					var buildings: Array = p_data[city_id].get("buildings")
+					var buildings: Array = p_data[city_id]["buildings"]
 					data[city_id]["buildings"] = buildings
 
 				"production":
@@ -55,6 +55,8 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> CityBlueprint:
 				"owner":
 					var owner: StringName = p_data[city_id]["owner"]
 					data[city_id][property] = owner
+
+				_: Debug.log_warning("Ignoring unrecognized key: %s" % property)
 
 	var out: CityBlueprint = CityBlueprint.new()
 	out.datastore = data
