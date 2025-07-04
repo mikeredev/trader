@@ -5,6 +5,7 @@ const PROJECT_SETTINGS: Dictionary[String, Variant] = {
 	"services/config/max_autosaves": 10, # user-configured autosaves cannot exceed this value
 	"services/city/max_production": 1000, # city economy/industry maximum value
 	"services/trade/max_price": 65536, # an individual trade resource's maximum buy or sell price
+	"services/trade/max_monthly_investment": 50000, # a city cannot received more than this per month in investments
 }
 
 class Util:

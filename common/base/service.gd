@@ -14,8 +14,6 @@ enum Type {
 	WORLD_MANAGER,
 }
 
-var name: StringName
-
 
 static func setup() -> void:
 	EventBus.game_reset.connect(_on_game_reset) # tbd, for soft reset refs

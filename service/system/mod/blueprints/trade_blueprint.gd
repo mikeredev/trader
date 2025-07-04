@@ -34,10 +34,10 @@ static func from_dict(p_data: Dictionary[String, Dictionary]) -> TradeBlueprint:
 					var price_data: Dictionary = trade_data["sell_price"]
 					for market_id: StringName in price_data.keys():
 						var price: int = price_data[market_id]["price"]
-						var economy: int = price_data[market_id]["economy"]
+						var required: int = price_data[market_id]["required"]
 						sell_price[market_id] = {
 							"price": price,
-							"economy": economy,
+							"required": required,
 						}
 					data[resource_id]["sell_price"] = sell_price
 

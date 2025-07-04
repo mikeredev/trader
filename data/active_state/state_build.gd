@@ -16,14 +16,14 @@ func _main() -> void:
 	Debug.log_info("Creating world...")
 	create_world()
 
-	Debug.log_info("Creating countries...")
-	create_countries()
+	Debug.log_info("Creating markets...")
+	create_markets()
 
 	Debug.log_info("Creating cities...")
 	create_cities()
 
-	Debug.log_info("Creating markets...")
-	create_markets()
+	Debug.log_info("Creating countries...")
+	create_countries()
 
 	Debug.log_info("Creating ships...")
 	create_ships()

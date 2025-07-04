@@ -17,7 +17,7 @@
 			"MARKET_M": 80,
 		},
 		"sell_price": {
-			"MARKET_M": { "price": 120, "economy": 400 },
+			"MARKET_M": { "price": 120, "required": 400 },
 		},
 	},
 
@@ -39,7 +39,7 @@
 			"MARKET_M": 52,
 		},
 		"sell_price": {
-			"MARKET_J": { "price": 400, "economy": 75 },
+			"MARKET_J": { "price": 400, "required": 75 },
 		},
 	},
 
@@ -61,9 +61,9 @@
 			"MARKET_M": 20,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 30, "economy": 0 },
-			"MARKET_B": { "price": 25, "economy": 0 },
-			"MARKET_E": { "price": 30, "economy": 0 },
+			"MARKET_A": { "price": 30, "required": 0 },
+			"MARKET_B": { "price": 25, "required": 0 },
+			"MARKET_E": { "price": 30, "required": 0 },
 		},
 	},
 
@@ -85,11 +85,11 @@
 			"MARKET_M": 18,
 		},
 		"sell_price": {
-			"MARKET_B": { "price": 45, "economy": 0 },
-			"MARKET_C": { "price": 38, "economy": 0 },
-			"MARKET_E": { "price": 65, "economy": 200 },
-			"MARKET_J": { "price": 15, "economy": 0 },
-			"MARKET_K": { "price": 25, "economy": 0 },
+			"MARKET_B": { "price": 45, "required": 0 },
+			"MARKET_C": { "price": 38, "required": 0 },
+			"MARKET_E": { "price": 65, "required": 200 },
+			"MARKET_J": { "price": 15, "required": 0 },
+			"MARKET_K": { "price": 25, "required": 0 },
 		},
 	},
 
@@ -111,9 +111,9 @@
 			"MARKET_M": 40,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 70, "economy": 0 },
-			"MARKET_B": { "price": 60, "economy": 400 },
-			"MARKET_J": { "price": 32, "economy": 200 },
+			"MARKET_A": { "price": 70, "required": 0 },
+			"MARKET_B": { "price": 60, "required": 400 },
+			"MARKET_J": { "price": 32, "required": 200 },
 		},
 	},
 
@@ -135,15 +135,15 @@
 			"MARKET_M": 3,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 20, "economy": 0 },
-			"MARKET_B": { "price": 20, "economy": 0 },
-			"MARKET_C": { "price": 25, "economy": 0 },
-			"MARKET_D": { "price": 25, "economy": 0 },
-			"MARKET_F": { "price": 25, "economy": 0 },
-			"MARKET_G": { "price": 15, "economy": 0 },
-			"MARKET_I": { "price": 20, "economy": 0 },
-			"MARKET_J": { "price": 15, "economy": 0 },
-			"MARKET_M": { "price": 10, "economy": 0 },
+			"MARKET_A": { "price": 20, "required": 0 },
+			"MARKET_B": { "price": 20, "required": 0 },
+			"MARKET_C": { "price": 25, "required": 0 },
+			"MARKET_D": { "price": 25, "required": 0 },
+			"MARKET_F": { "price": 25, "required": 0 },
+			"MARKET_G": { "price": 15, "required": 0 },
+			"MARKET_I": { "price": 20, "required": 0 },
+			"MARKET_J": { "price": 15, "required": 0 },
+			"MARKET_M": { "price": 10, "required": 0 },
 		},
 	},
 
@@ -165,10 +165,10 @@
 			"MARKET_M": 14,
 		},
 		"sell_price": {
-			"MARKET_D": { "price": 35, "economy": 0 },
-			"MARKET_F": { "price": 35, "economy": 0 },
-			"MARKET_I": { "price": 30, "economy": 150 },
-			"MARKET_K": { "price": 8, "economy": 0 },
+			"MARKET_D": { "price": 35, "required": 0 },
+			"MARKET_F": { "price": 35, "required": 0 },
+			"MARKET_I": { "price": 30, "required": 150 },
+			"MARKET_K": { "price": 8, "required": 0 },
 		},
 	},
 
@@ -190,8 +190,8 @@
 			"MARKET_M": 2,
 		},
 		"sell_price": {
-			"MARKET_B": { "price": 3, "economy": 0 },
-			"MARKET_C": { "price": 3, "economy": 400 },
+			"MARKET_B": { "price": 3, "required": 0 },
+			"MARKET_C": { "price": 3, "required": 400 },
 		},
 	},
 
@@ -233,11 +233,11 @@
 			"MARKET_M": 5,
 		},
 		"sell_price": {
-			"MARKET_B": { "price": 20, "economy": 0 },
-			"MARKET_C": { "price": 18, "economy": 0 },
-			"MARKET_E": { "price": 14, "economy": 0 },
-			"MARKET_H": { "price": 25, "economy": 0 },
-			"MARKET_K": { "price": 12, "economy": 0 },
+			"MARKET_B": { "price": 20, "required": 0 },
+			"MARKET_C": { "price": 18, "required": 0 },
+			"MARKET_E": { "price": 14, "required": 0 },
+			"MARKET_H": { "price": 25, "required": 0 },
+			"MARKET_K": { "price": 12, "required": 0 },
 		},
 	},
 
@@ -259,8 +259,8 @@
 			"MARKET_M": 140,
 		},
 		"sell_price": {
-			"MARKET_B": { "price": 110, "economy": 700 },
-			"MARKET_H": { "price": 90, "economy": 300 },
+			"MARKET_B": { "price": 110, "required": 700 },
+			"MARKET_H": { "price": 90, "required": 300 },
 		},
 	},
 
@@ -282,12 +282,12 @@
 			"MARKET_M": 15,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 50, "economy": 0 },
-			"MARKET_C": { "price": 50, "economy": 0 },
-			"MARKET_D": { "price": 50, "economy": 400 },
-			"MARKET_F": { "price": 45, "economy": 300 },
-			"MARKET_K": { "price": 30, "economy": 150 },
-			"MARKET_M": { "price": 25, "economy": 100 },
+			"MARKET_A": { "price": 50, "required": 0 },
+			"MARKET_C": { "price": 50, "required": 0 },
+			"MARKET_D": { "price": 50, "required": 400 },
+			"MARKET_F": { "price": 45, "required": 300 },
+			"MARKET_K": { "price": 30, "required": 150 },
+			"MARKET_M": { "price": 25, "required": 100 },
 		},
 	},
 
@@ -309,10 +309,10 @@
 			"MARKET_M": 7,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 28, "economy": 0 },
-			"MARKET_C": { "price": 30, "economy": 0 },
-			"MARKET_D": { "price": 35, "economy": 0 },
-			"MARKET_J": { "price": 10, "economy": 0 },
+			"MARKET_A": { "price": 28, "required": 0 },
+			"MARKET_C": { "price": 30, "required": 0 },
+			"MARKET_D": { "price": 35, "required": 0 },
+			"MARKET_J": { "price": 10, "required": 0 },
 		},
 	},
 
@@ -334,8 +334,8 @@
 			"MARKET_M": 12,
 		},
 		"sell_price": {
-			"MARKET_B": { "price": 90, "economy": 750 },
-			"MARKET_M": {  "price": 30, "economy": 300 },
+			"MARKET_B": { "price": 90, "required": 750 },
+			"MARKET_M": {  "price": 30, "required": 300 },
 		},
 	},
 
@@ -357,8 +357,8 @@
 			"MARKET_M": 70,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 36, "economy": 300 },
-			"MARKET_C": { "price": 40, "economy": 300 },
+			"MARKET_A": { "price": 36, "required": 300 },
+			"MARKET_C": { "price": 40, "required": 300 },
 		},
 	},
 
@@ -380,11 +380,11 @@
 			"MARKET_M": 5,
 		},
 		"sell_price": {
-			"MARKET_D": { "price": 60, "economy": 300 },
-			"MARKET_E": { "price": 55, "economy": 300 },
-			"MARKET_G": { "price": 40, "economy": 300 },
-			"MARKET_I": { "price": 18, "economy": 200 },
-			"MARKET_J": { "price": 20, "economy": 300 },
+			"MARKET_D": { "price": 60, "required": 300 },
+			"MARKET_E": { "price": 55, "required": 300 },
+			"MARKET_G": { "price": 40, "required": 300 },
+			"MARKET_I": { "price": 18, "required": 200 },
+			"MARKET_J": { "price": 20, "required": 300 },
 		},
 	},
 
@@ -466,7 +466,7 @@
 			"MARKET_M": 310,
 		},
 		"sell_price": {
-			"MARKET_A": { "price": 80, "economy": 500 },
+			"MARKET_A": { "price": 80, "required": 500 },
 		},
 	},
 
@@ -488,10 +488,10 @@
 			"MARKET_M": 23,
 		},
 		"sell_price": {
-			"MARKET_C": { "price": 65, "economy": 600 },
-			"MARKET_D": { "price": 70, "economy": 400 },
-			"MARKET_E": { "price": 60, "economy": 400 },
-			"MARKET_J": { "price": 30, "economy": 0 },
+			"MARKET_C": { "price": 65, "required": 600 },
+			"MARKET_D": { "price": 70, "required": 400 },
+			"MARKET_E": { "price": 60, "required": 400 },
+			"MARKET_J": { "price": 30, "required": 0 },
 		},
 	},
 
@@ -513,7 +513,7 @@
 			"MARKET_M": 70,
 		},
 		"sell_price": {
-			"MARKET_J": { "price": 45, "economy": 200 },
+			"MARKET_J": { "price": 45, "required": 200 },
 		},
 	},
 }

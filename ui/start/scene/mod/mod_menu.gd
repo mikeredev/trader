@@ -121,7 +121,7 @@ func _on_confirm_pressed() -> void:
 
 	for i: int in range(1, enabled_list.get_item_count()): # ignore slot 0
 		var manifest: ModManifest = enabled_list.get_item_metadata(i)
-		new_active_mods.append(manifest.id)
+		new_active_mods.append(manifest.mod_id)
 
 	if new_active_mods == Service.config_manager.get_active_mods(): # includes core
 		Debug.log_debug("No change to mod order")

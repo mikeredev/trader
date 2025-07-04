@@ -94,7 +94,7 @@ func create_manifest(p_directory: String) -> ModManifest:
 	# create manifest
 	var manifest: ModManifest = ModManifest.new()
 	manifest.name = mod_name
-	manifest.id = mod_id
+	manifest.mod_id = mod_id
 	manifest.version = mod_version
 	manifest.author = mod_author
 	manifest.contact = mod_contact
@@ -112,13 +112,13 @@ func create_manifest(p_directory: String) -> ModManifest:
 	#manifest.checksum = checksum
 
 	# store manifest and return
-	Debug.log_debug("Created manifest: %s" % manifest.id)
-	_manifests[manifest.id] = manifest
+	Debug.log_debug("Created manifest: %s" % manifest.mod_id)
+	_manifests[manifest.mod_id] = manifest
 	return manifest
 
 
 func enable_mod(p_manifest: ModManifest) -> bool:
-	Debug.log_verbose("Enabling mod: %s" % p_manifest.id)
+	Debug.log_verbose("Enabling mod: %s" % p_manifest.mod_id)
 	var raw: Dictionary = staging.get_cached("datastore", p_manifest.local_path)
 
 	var metadata: Dictionary[Category, Dictionary] = {}
@@ -136,32 +136,34 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 
 			Category.CITY:
 				for city_id: String in metadata[category]:
-					if metadata[category][city_id].get("remove", false):
-						Debug.log_warning("Marked city for removal: %s (%s)" % [city_id, p_manifest.id])
+					var _dict: Dictionary = metadata[category][city_id]
+					if _dict.get("remove", false):
+						Debug.log_warning("City marked for removal: %s (%s)" % [city_id, p_manifest.mod_id])
 					else:
 						staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
 
 			Category.COUNTRY:
 				for country_id: String in metadata[category]:
-
-					if metadata[category][country_id].get("remove", false):
-						Debug.log_warning("Marked country for removal: %s (%s)" % [country_id, p_manifest.id])
+					var _dict: Dictionary = metadata[category][country_id]
+					if _dict.get("remove", false):
+						Debug.log_warning("Country marked for removal: %s (%s)" % [country_id, p_manifest.mod_id])
 					else: # used for key lookup only
 						staging.cache["country"]["country_id"][country_id] = true
 
 			Category.TRADE:
 				for resource_id: String in metadata[category]: # check city specialities exist
-					staging.cache["trade"]["resource_id"][resource_id] = false
-
 					if metadata[category][resource_id].get("remove", false):
-						Debug.log_warning("Marked trade resource for removal: %s (%s)" % [resource_id, p_manifest.id])
-						continue
+						Debug.log_warning("Trade resource marked for removal: %s (%s)" % [resource_id, p_manifest.mod_id])
+					else:
+						# cache resource_id
+						staging.cache["trade"]["resource_id"][resource_id] = false
 
-					var cache: Dictionary
-					for market_id: String in metadata[category][resource_id]["buy_price"]:
-						cache = staging.get_cached("trade", "market_id")
-						if not cache.has(market_id): # add market_id to cache
-							cache[market_id] = false # used for lookup only
+						# cache market_id
+						var cache: Dictionary
+						for market_id: String in metadata[category][resource_id]["buy_price"]:
+							cache = staging.get_cached("trade", "market_id")
+							if not cache.has(market_id): # add market_id to cache
+								cache[market_id] = false # used for lookup only
 
 	# cross-checks (i.e., each market_id referenced in a city json actually exists)
 	Debug.log_verbose("Performing cross-check...")
@@ -182,7 +184,7 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 
 		# add owner information
 		for property: String in mod_data:
-			mod_data[property]["owner"] = p_manifest.id
+			mod_data[property]["owner"] = p_manifest.mod_id
 
 		# merge with staging
 		match category:
@@ -192,9 +194,9 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 			Category.TRADE: staging.merge(staging.trade_data, mod_data)
 
 	# update active mods
-	_active_mods[p_manifest.id] = p_manifest
+	_active_mods[p_manifest.mod_id] = p_manifest
 
-	Debug.log_debug("Enabled mod: %s (%s)" % [p_manifest.id, p_manifest.local_path])
+	Debug.log_debug("Enabled mod: %s (%s)" % [p_manifest.mod_id, p_manifest.local_path])
 	return true
 
 
@@ -214,7 +216,7 @@ func get_active_mods(p_include_core: bool = false) -> Dictionary[StringName, Mod
 	var dict: Dictionary[StringName, ModManifest] = {}
 	for mod: ModManifest in _active_mods.values():
 		if not mod.core_mod == true:
-			dict[mod.id] = _active_mods[mod.id]
+			dict[mod.mod_id] = _active_mods[mod.mod_id]
 	return dict
 
 

@@ -2,24 +2,30 @@ extends Node
 
 var _services: Dictionary[StringName, Service]
 
+
 func _ready() -> void:
-	var list: PackedStringArray = Service.Type.keys()
-	list.sort() # pre-populate alphabetically
-	for _name: StringName in list:
-		_services[_name.to_pascal_case()] = null
+	 # pre-populate keys alphabetically for convenience
+	var services: PackedStringArray = Service.Type.keys()
+	services.sort()
+	for service_id: StringName in services:
+		_services[service_id.to_pascal_case()] = null
 
 
 func get_service(p_type: Service.Type) -> Service:
-	var _name: StringName = _get_name(p_type)
-	return _services.get(_name, null)
+	var display_name: StringName = _get_name(p_type)
+	return _services.get(display_name, null)
 
 
 func start_service(p_service: Service, p_type: Service.Type) -> void:
-	var _name: StringName = _get_name(p_type)
-	if _services.get(_name): # and not quickload
-		Debug.log_warning("Restarting service: %s" % _name)
-	_services[_name] = p_service
-	Debug.log_debug("Started service: %s" % _name)
+	var display_name: StringName = _get_name(p_type)
+
+	# log if service is already running / TBD quickload considerations
+	if _services.get(display_name):
+		Debug.log_warning("Restarting service: %s" % display_name)
+
+	# add to existing slot (created in _ready())
+	_services[display_name] = p_service
+	Debug.log_debug("Started service: %s" % display_name)
 
 
 func _get_name(p_type: Service.Type) -> StringName:

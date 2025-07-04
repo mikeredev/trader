@@ -1,6 +1,6 @@
 class_name ModManifest extends RefCounted
 
-var id: StringName
+var mod_id: StringName
 var name: String
 var local_path: StringName
 var core_mod: bool

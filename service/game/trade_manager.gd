@@ -1,7 +1,7 @@
 class_name TradeManager extends Service
 
-var _resource_datastore: Dictionary[StringName, TradeResource] = {}
 var _category_datastore: Dictionary[StringName, TradeCategory] = {}
+var _resource_datastore: Dictionary[StringName, TradeResource] = {}
 var _market_datastore: Dictionary[StringName, TradeMarket] = {}
 
 
@@ -69,10 +69,10 @@ func _configure_sell_price(p_resource: TradeResource, p_metadata: Dictionary) ->
 		# update market sell price with resource price and required economy level
 		var price: int = sell_price[market_id]["price"]
 		var price_ceiling: int = ProjectSettings.get_setting("services/trade/max_price")
-		var economy: int = sell_price[market_id]["economy"]
+		var required: int = sell_price[market_id]["required"]
 		var production_ceiling: int = ProjectSettings.get_setting("services/city/max_production")
 		market.sell_price[p_resource.resource_id]["price"] = clampi(price, 0, price_ceiling)
-		market.sell_price[p_resource.resource_id]["economy"] = clampi(economy, 0, production_ceiling)
+		market.sell_price[p_resource.resource_id]["required"] = clampi(required, 0, production_ceiling)
 
 		# update resource with markets it is sold in
 		p_resource.markets[market_id] = market
