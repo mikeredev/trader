@@ -21,12 +21,12 @@ func _ready() -> void:
 	AppContext.start_service(StateManager.new(), Service.Type.STATE_MANAGER)
 
 	# setup any statics
-	Debug.setup()
-	Service.setup()
+	Debug.connect_signals()
+	Service.connect_signals()
 
-	# bootstrap environment
+	# initialize environment
 	var node_tree: Array[Node] = self.get_children()
-	Service.state_manager.change_state(BootstrapState.new(node_tree))
+	Service.state_manager.change_state(InitState.new(node_tree))
 
 
 func _on_item_rect_changed() -> void:

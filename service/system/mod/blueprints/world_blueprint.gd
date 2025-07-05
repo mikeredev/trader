@@ -26,11 +26,12 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 	for property: String in p_data.keys():
 		match property:
 			"map":
-				var path: String = p_cache["manifest"]["directory"]
-				var world_category: String = ModManager.Category.keys()[ModManager.Category.WORLD]
+				# construct the full path to the map texture
+				var dir: String = p_cache["manifest"]["directory"]
+				var folder: String = str(ModManager.Category.keys()[ModManager.Category.WORLD]).to_lower()
 				var map_data: Dictionary = p_data["map"]
-				var texture: String = map_data.get("texture", "")
-				var texture_path: String = "%s/%s/%s" % [path, world_category.to_lower(), texture]
+				var texture: String = p_data["map"]["texture"]
+				var texture_path: String = "%s/%s/%s" % [dir, folder, texture]
 
 				if not FileAccess.file_exists(texture_path):
 					Debug.log_warning("Unable to access map texture: %s" % texture_path)
@@ -38,7 +39,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 
 				# update data with full path
 				p_data["map"]["texture"] = texture_path
-
+				Debug.log_verbose("  Validated map texture: %s" % texture_path)
 		# regex timestamp
 	return true
 
@@ -60,12 +61,7 @@ func build() -> void:
 	camera.set_limits(world_map.texture.get_size())
 	camera.set_min_zoom(DisplayServer.screen_get_size(), world_map.texture.get_size())
 
-	# TESTING
-	camera.enabled = true
-	camera.cam_control = true
-
 	if Service.config_manager.developer_settings.enable_astar:
-
 		# create A* grid
 		var astar: Dictionary[String, Variant] = {
 			"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,

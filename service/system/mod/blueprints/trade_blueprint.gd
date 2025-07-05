@@ -63,6 +63,10 @@ func build() -> void:
 		Service.trade_manager.resource_datastore.size() ])
 
 
+static func validate(_p_data: Dictionary, _p_cache: Dictionary) -> bool:
+	return true # specialties and market_id checked in CityBlueprint:validate()
+
+
 func _create_resource(resource_id: StringName, p_metadata: Dictionary) -> void:
 	var resource: TradeResource = TradeResource.new()
 	resource.resource_id = resource_id

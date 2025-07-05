@@ -21,7 +21,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_h2yge")
-log_level = 1
 color_scheme = SubResource("Resource_qtu10")
 
 [node name="Management" type="Node" parent="."]
@@ -42,7 +41,6 @@ handle_input_locally = false
 render_target_update_mode = 4
 
 [node name="Port" type="SubViewportContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,10 +51,9 @@ script = ExtResource("1_0xm2m")
 
 [node name="SubViewport" type="SubViewport" parent="Port"]
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="Interior" type="SubViewportContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,7 +64,7 @@ script = ExtResource("1_0xm2m")
 
 [node name="SubViewport" type="SubViewport" parent="Interior"]
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("2_h2yge")

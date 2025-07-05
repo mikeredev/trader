@@ -4,7 +4,7 @@ var is_new_game: bool
 
 
 func _init(p_is_new_game: bool = false) -> void:
-	name = "Ready"
+	name = "ready"
 	is_new_game = p_is_new_game
 
 

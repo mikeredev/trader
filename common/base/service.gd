@@ -15,7 +15,7 @@ enum Type {
 }
 
 
-static func setup() -> void:
+static func connect_signals() -> void:
 	EventBus.game_reset.connect(_on_game_reset) # tbd, for soft reset refs
 
 static var character_manager: CharacterManager:

@@ -73,7 +73,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 		var city_data: Dictionary = p_data[city_id]
 
 		if city_data.has("remove"):
-			Debug.log_verbose("  Ignoring: %s" % [city_id])
+			Debug.log_verbose("  Skipping validation due to pending removal: %s" % [city_id])
 			continue
 
 		var cache: Dictionary = {}
@@ -86,7 +86,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 				Debug.log_warning("Unable to find supporting country: %s (%s)" % [country_id, city_id])
 				return false
 
-		# validate city assigned market
+		# validate city assigned market_id
 		var market_id: String = city_data["trade"]["market"]
 		cache = p_cache["trade"]["market_id"]
 		if not cache.has(market_id):
@@ -106,8 +106,8 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 func build() -> void:
 	for city_id: StringName in datastore.keys():
 		var metadata: Dictionary = datastore[city_id]
-		_create_city(city_id, metadata) # also registers with CityManager
-	Debug.log_debug("Created %d cities" % Service.city_manager.datastore.size())
+		_create_city(city_id, metadata)
+	Debug.log_debug("Created %d cities" % datastore.size())
 
 
 func _create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:

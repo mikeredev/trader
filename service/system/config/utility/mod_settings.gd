@@ -1,5 +1,6 @@
 class_name ModSettings extends ConfigUtility
 
+var active: PackedStringArray = []
 
 
 func apply_config() -> void:
@@ -10,6 +11,7 @@ func apply_config() -> void:
 
 func to_dict() -> Dictionary[String, Variant]:
 	return {
+		"active": active,
 	}
 
 

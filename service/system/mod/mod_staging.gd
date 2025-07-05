@@ -6,19 +6,20 @@ var city_data: Dictionary[String, Dictionary] = {}
 var trade_data: Dictionary[String, Dictionary] = {}
 
 var cache: Dictionary[String, Dictionary] = {
-	"manifest": {},
-	"datastore": {},
+	"manifest": {}, # WorldBlueprint
+	"datastore": {}, # used during mod staging
 	"country": {
-		"country_id": {}
+		"country_id": {} # CityBlueprint
 	},
 	"city": {
-		"city_id": {}
+		"city_id": {} # CountryBlueprint
 	},
 	"trade": {
-		"market_id": {},
-		"resource_id": {},
+		"market_id": {}, # CityBlueprint
+		"resource_id": {}, # CityBlueprint
 	},
 }
+
 
 func get_cached(p_cache: String, p_key: String) -> Dictionary:
 	return cache[p_cache].get(p_key, {})

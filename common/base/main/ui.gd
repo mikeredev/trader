@@ -1,34 +1,22 @@
 class_name UI extends CanvasLayer
 
-enum ContainerType { SPLASH, MENU, DIALOG, NOTIFICATION }
-
-var containers: Dictionary[ContainerType, UIContainer]
+var _ui_layers: Dictionary[UILayer.Type, UILayer]
 
 
-func setup() -> void:
-	# create UI containers
-	for container_name: String in ContainerType.keys():
-		var node: UIContainer = UIContainer.new()
-		node.name = container_name.to_pascal_case()
-		self.add_child(node)
-
-		node.size = node.get_parent_area_size()
-		node.set_anchors_preset(Control.PRESET_FULL_RECT)
-		node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-		# match name to type
-		var type: ContainerType
-		for i: int in range(ContainerType.size()):
-			if container_name == ContainerType.keys()[i]:
-				type = ContainerType.values()[i]
-				containers[type] = node
-				Debug.log_verbose("󱣴  Created UI container: %s" % node.get_path())
-
-		# set theme by type
-		match type:
-			ContainerType.DIALOG: node.theme = load(FileLocation.THEME_DIALOG)
-			ContainerType.MENU: node.theme = load(FileLocation.THEME_MENU)
+func add_ui_layer(p_ui_layer: UILayer) -> void:
+	_ui_layers[p_ui_layer.type] = p_ui_layer
 
 
-func get_container(p_type: ContainerType) -> UIContainer:
-	return containers.get(p_type, null)
+func get_ui_layer(p_type: UILayer.Type) -> UILayer:
+	return _ui_layers.get(p_type, null)
+
+
+func clear_ui_layer(p_layer: UILayer.Type) -> void:
+	var ui_layer: UILayer = get_ui_layer(p_layer)
+	Debug.log_info("Clearing UI layer: %s" % ui_layer.get_path())
+
+	for node: Node in ui_layer.get_children():
+		ui_layer.remove_child(node)
+		node.call_deferred("queue_free")
+		Debug.log_verbose("Freed scene: %s" % node)
+	Debug.log_debug("Cleared UI layer: %s" % layer)

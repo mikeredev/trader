@@ -34,7 +34,7 @@ static func log_error(p_text: Variant) -> void:
 	_notify(p_text, Severity.ERROR)
 
 
-static func setup() -> void:
+static func connect_signals() -> void:
 	EventBus.state_entered.connect(_on_state_entered)
 
 

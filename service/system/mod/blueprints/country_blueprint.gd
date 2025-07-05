@@ -50,7 +50,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 		var country_data: Dictionary = p_data[country_id]
 
 		if country_data.has("remove"):
-			Debug.log_verbose("  Ignoring: %s" % [country_id])
+			Debug.log_verbose("  Skipping validation due to pending removal: %s" % [country_id])
 			continue
 
 		var _cache: Dictionary = p_cache["city"]["city_id"]
@@ -60,22 +60,25 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 			Debug.log_warning("Unable to find capital: %s (%s)" % [capital_id, country_id])
 			return false
 
-		if _cache[capital_id] == true:
+		#if _cache[capital_id] == true:
+		if _cache.get(capital_id, false):
 			Debug.log_warning("Unable to claim existing capital: %s" % [capital_id])
 			return false
 
 		# mark capital as claimed
 		_cache[capital_id] = true
+		Debug.log_verbose("  Validated capital: %s (%s)" % [capital_id, country_id])
 	return true
 
 
 func build() -> void:
 	for country_id: StringName in datastore.keys():
-		_create_country(country_id, datastore[country_id])
-	Debug.log_debug("Created %d countries" % Service.country_manager.datastore.size())
+		var country: Country = _create_country(country_id, datastore[country_id])
+		Service.country_manager.register_country(country)
+	Debug.log_debug("Created %d countries" % datastore.size())
 
 
-func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
+func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> Country:
 	var country: Country = Country.new()
 	var capital_id: StringName = p_metadata.get("capital")
 	var color: Color = p_metadata.get("color", Color.CYAN) # default to
@@ -91,13 +94,11 @@ func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	country.color = color
 	country.leader = leader
 
-	# register for lookup
-	Service.country_manager.register_country(country)
-
 	# done
 	Debug.log_verbose("  Created country: %s (%s, %s, %s)" % [ country.country_id,
 	country.capital_id, country.leader.profile.profile_name,
 	country.leader.profile.rank.title.to_pascal_case() ])
+	return country # for registration
 
 
 func merge_savedata(p_save_data: Variant) -> void:
