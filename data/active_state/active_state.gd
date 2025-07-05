@@ -1,6 +1,6 @@
-class_name ActiveState extends RefCounted
+class_name ActiveState extends RefCounted # runs on System
 
-var name: StringName
+var state_id: StringName
 var start_tick: int = Time.get_ticks_msec()
 
 

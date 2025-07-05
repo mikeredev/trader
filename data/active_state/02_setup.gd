@@ -6,7 +6,7 @@ var save_is_dirty: bool
 
 
 func _init(p_active_mods: PackedStringArray, p_save_data: Dictionary = {}, p_save_is_dirty: bool = false) -> void:
-	name = "setup"
+	state_id = "setup"
 	active_mods = p_active_mods
 	save_data = p_save_data # unused
 	save_is_dirty = p_save_is_dirty
@@ -23,7 +23,7 @@ func _main() -> void:
 	Debug.log_info("Generating blueprint: %s" % str(Service.mod_manager.get_active_mods(true).keys()))
 	Service.mod_manager.generate_blueprint()
 	#Service.mod_manager.clear_staging()
-	Service.state_manager.change_state(StartState.new())
+	System.change_state(StartState.new())
 
 
 func stage_core_content() -> bool:
@@ -60,4 +60,4 @@ func stage_user_content() -> void:
 
 
 func _start_services() -> void:
-	System.start_service(ModManager.new(), Service.Type.MOD_MANAGER)
+	System.start_service(ModManager.new(), Service.ServiceType.MOD_MANAGER)

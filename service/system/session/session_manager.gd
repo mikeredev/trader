@@ -9,4 +9,4 @@ func start_session(p_player: Character, p_is_new_game: bool = false) -> void:
 	blueprint.player = p_player
 
 	# advance to build state
-	Service.state_manager.change_state(BuildState.new(p_is_new_game))
+	System.change_state(BuildState.new(p_is_new_game))

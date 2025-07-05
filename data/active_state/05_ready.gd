@@ -4,7 +4,7 @@ var is_new_game: bool
 
 
 func _init(p_is_new_game: bool = false) -> void:
-	name = "ready"
+	state_id = "ready"
 	is_new_game = p_is_new_game
 
 
@@ -15,7 +15,7 @@ func _main() -> void:
 
 
 func _start_services() -> void:
-	pass#System.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+	pass#System.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
 
 
 func start() -> void:

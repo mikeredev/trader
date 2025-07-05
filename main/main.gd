@@ -17,16 +17,13 @@ func _ready() -> void:
 	# apply run-time color scheme
 	color_scheme.apply()
 
-	# start services
-	System.start_service(StateManager.new(), Service.Type.STATE_MANAGER)
-
 	# setup any statics
 	Debug.connect_signals()
 	Service.connect_signals()
 
 	# initialize environment
 	var node_tree: Array[Node] = self.get_children()
-	Service.state_manager.change_state(InitState.new(node_tree))
+	System.change_state(InitState.new(node_tree))
 
 
 func _on_item_rect_changed() -> void:

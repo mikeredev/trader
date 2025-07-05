@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://ch4khc413ffcc"]
+[gd_scene load_steps=6 format=3 uid="uid://ch4khc413ffcc"]
 
 [ext_resource type="Script" uid="uid://b5b5lemt88jrh" path="res://main/view.gd" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://b55xcxjhgtw0e" path="res://main/main.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://015a67bg42e2" path="res://color_scheme.gd" id="2_1bvp3"]
 [ext_resource type="Script" uid="uid://daqun3250wjls" path="res://main/ui.gd" id="2_h2yge"]
-[ext_resource type="Script" uid="uid://cefs26ddjlchl" path="res://main/management.gd" id="3_lquwl"]
 
 [sub_resource type="Resource" id="Resource_qtu10"]
 script = ExtResource("2_1bvp3")
@@ -22,9 +21,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_h2yge")
 color_scheme = SubResource("Resource_qtu10")
-
-[node name="Management" type="Node" parent="."]
-script = ExtResource("3_lquwl")
 
 [node name="Overworld" type="SubViewportContainer" parent="."]
 texture_filter = 1

@@ -4,7 +4,7 @@ var node_tree: Array[Node]
 
 
 func _init(p_node_tree: Array[Node]) -> void:
-	name = "init"
+	state_id = "init"
 	node_tree = p_node_tree
 
 
@@ -13,17 +13,17 @@ func _main() -> void:
 	if not build_tree():
 		Debug.log_error("Error building node tree")
 		return
-
 	set_project_settings()
 	apply_config()
+
 	var active_mods: PackedStringArray = Service.config_manager.get_active_mods()
-	Service.state_manager.change_state(SetupState.new(active_mods))
+	System.change_state(SetupState.new(active_mods))
 
 
 func _start_services() -> void:
-	System.start_service(SceneManager.new(), Service.Type.SCENE_MANAGER)
-	System.start_service(ConfigManager.new(), Service.Type.CONFIG_MANAGER)
-	System.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+	System.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
+	System.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
+	System.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
 
 
 func validate_userspace() -> bool: # confirm write access to user directories

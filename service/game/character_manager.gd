@@ -5,8 +5,7 @@ var player: Character # quick lookup for player access
 
 
 func cache(p_body: CharacterBody) -> void:
-	var mgmt: ManagementNode = Service.scene_manager.get_management_node()
-	var node_cache: Node2D = mgmt.get_cache()
+	var node_cache: Node2D = System.get_cache()
 	p_body.velocity = Vector2.ZERO
 
 	if p_body.get_parent(): p_body.reparent(node_cache)

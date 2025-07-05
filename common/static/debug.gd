@@ -85,4 +85,4 @@ static func _get_text(p_text: Variant) -> String:
 
 
 static func _on_state_entered(p_state: ActiveState) -> void:
-	active_state = p_state.name.to_upper()
+	active_state = p_state.state_id.to_upper()

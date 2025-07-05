@@ -45,8 +45,8 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 
 
 func build() -> void:
-	var overworld: View = Service.scene_manager.get_view(View.Type.OVERWORLD)
-	var container: NodeContainer = overworld.get_container(NodeContainer.Type.MAP)
+	var overworld: View = Service.scene_manager.get_view(View.ViewType.OVERWORLD)
+	var container: NodeContainer = overworld.get_container(View.ContainerType.MAP)
 
 	# create world map
 	var texture: String = map.texture

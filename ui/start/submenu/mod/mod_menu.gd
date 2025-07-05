@@ -130,7 +130,7 @@ func _on_confirm_pressed() -> void:
 		Service.config_manager.set_active_mods(new_active_mods)
 		Service.config_manager.save_config()
 		Debug.log_info("Returning to setup...")
-		Service.state_manager.change_state(SetupState.new(new_active_mods))
+		System.change_state(SetupState.new(new_active_mods))
 
 
 func _on_return_button_pressed() -> void:

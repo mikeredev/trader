@@ -43,7 +43,8 @@ var buttons: Array[UIButtonStartMenu]
 func _ui_ready() -> void:
 	_housekeeping()
 	apply_color_scheme()
-	play_animation(Service.config_manager.general_settings.show_intro)
+
+	if Service.config_manager.general_settings.show_intro: play_animation()
 
 
 func apply_color_scheme() -> void:
@@ -61,13 +62,10 @@ func apply_color_scheme() -> void:
 		button.set_theme_type_variation("StartMenuButton")
 
 
-func play_animation(p_show_intro: bool) -> void:
-	if not p_show_intro:
-		fade_rect.visible = false
-		return
-
+func play_animation() -> void:
 	# prepare tween, title, buttons
 	var tween: Tween
+	fade_rect.visible = true
 	label_title.modulate.a = 0.0
 	for button: UIButtonStartMenu in buttons:
 		button.modulate.a = 0.0
@@ -118,7 +116,7 @@ func transition_to(p_submenu: SubMenu, p_path: String) -> void:
 		submenu.modulate.a = 0.0
 		submenu.visible = true
 	else:
-		submenu = Service.scene_manager.create_scene(p_path)
+		submenu = Service.scene_manager._create_from_path(p_path)
 		submenu.modulate.a = 0.0
 		nav_content.add_child(submenu)
 		active[p_submenu] = submenu
@@ -157,6 +155,8 @@ func _connect_signals() -> void:
 
 
 func _housekeeping() -> void:
+	fade_rect.visible = false # TESTING
+
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:
 			var button: UIButtonStartMenu = node
@@ -196,7 +196,7 @@ func _on_menu_closed(p_submenu: Control) -> void:
 
 func _on_quit_pressed() -> void:
 	if await Service.dialog_manager.get_confirmation("QUIT TO DESKTOP?"):
-		System.quit()
+		System.quit_game()
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:

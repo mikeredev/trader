@@ -1,22 +1,24 @@
 class_name UI extends CanvasLayer
 
-var _containers: Dictionary[UIContainer.Type, UIContainer]
+enum ContainerType { SPLASH, MENU, DIALOG, NOTIFICATION }
+
+var _containers: Dictionary[ContainerType, UIContainer]
 
 
-func add_container(p_container: UIContainer) -> void:
-	_containers[p_container.type] = p_container
+func add_container(p_type: ContainerType, p_container: UIContainer) -> void:
+	_containers[p_type] = p_container
 
 
-func get_container(p_type: UIContainer.Type) -> UIContainer:
+func get_container(p_type: ContainerType) -> UIContainer:
 	return _containers.get(p_type, null)
 
 
 func clear_all_containers() -> void:
-	for type: UIContainer.Type in _containers.keys():
+	for type: ContainerType in _containers.keys():
 		clear_container(type)
 
 
-func clear_container(p_type: UIContainer.Type) -> void:
+func clear_container(p_type: ContainerType) -> void:
 	var container: UIContainer = get_container(p_type)
 	_free_children(container)
 

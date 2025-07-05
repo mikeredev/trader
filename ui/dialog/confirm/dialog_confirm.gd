@@ -43,9 +43,9 @@ func configure(p_text: String, p_confirm_text: String, p_cancel_text: String) ->
 
 
 func await_input() -> bool:
-	System.pause(true)
+	System.pause_game(true)
 	var result: bool = await completed
-	System.pause(false)
+	System.pause_game(false)
 	self.queue_free()
 	return result
 

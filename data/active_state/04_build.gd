@@ -5,11 +5,14 @@ var is_new_game: bool
 
 
 func _init(p_is_new_game: bool = false) -> void:
-	name = "build"
+	state_id = "build"
 	is_new_game = p_is_new_game
 
 
 func _main() -> void:
+	Debug.log_info("Creating utilities...")
+	create_utils()
+
 	Debug.log_info("Creating player...")
 	create_player()
 
@@ -28,14 +31,14 @@ func _main() -> void:
 	create_ships()
 	create_inventory_items()
 
-	Service.state_manager.change_state(ReadyState.new(is_new_game))
+	System.change_state(ReadyState.new(is_new_game))
 
 
 func _start_services() -> void:
-	System.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
-	System.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
-	System.start_service(CityManager.new(), Service.Type.CITY_MANAGER)
-	System.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
+	System.start_service(WorldManager.new(), Service.ServiceType.WORLD_MANAGER)
+	System.start_service(CountryManager.new(), Service.ServiceType.COUNTRY_MANAGER)
+	System.start_service(CityManager.new(), Service.ServiceType.CITY_MANAGER)
+	System.start_service(TradeManager.new(), Service.ServiceType.TRADE_MANAGER)
 
 
 func create_player() -> void:
@@ -44,6 +47,10 @@ func create_player() -> void:
 	var body: PlayerBody = Service.character_manager.create_body(player)
 	player.body = body
 	Service.character_manager.cache(player.body) # cache until ready for use
+
+
+func create_utils() -> void:
+	System.create_cache() # body cache
 
 
 func create_ships() -> void:
