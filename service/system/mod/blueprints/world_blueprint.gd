@@ -41,3 +41,42 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 
 		# regex timestamp
 	return true
+
+
+func build() -> void:
+	var overworld: View = Service.scene_manager.get_view(View.Type.OVERWORLD)
+	var container: NodeContainer = overworld.get_container(View.ContainerType.MAP)
+
+	# create world map
+	var texture: String = map.texture
+	var world_map: WorldMap = WorldMap.new(texture)
+	container.add_child(world_map)
+
+	# register world map
+	Service.world_manager.map = world_map
+
+	# create and bind camera
+	var camera: Camera = overworld.get_camera()
+	camera.set_limits(world_map.texture.get_size())
+	camera.set_min_zoom(DisplayServer.screen_get_size(), world_map.texture.get_size())
+
+	# TESTING
+	camera.enabled = true
+	camera.cam_control = true
+
+	if Service.config_manager.developer_settings.enable_astar:
+
+		# create A* grid
+		var astar: Dictionary[String, Variant] = {
+			"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+			"estimate": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+			"diagonal": AStarGrid2D.DIAGONAL_MODE_ALWAYS,
+			"jumping": true }
+
+		var grid: WorldGrid = WorldGrid.new(world_map.texture, astar)
+
+		# register A* grid
+		Service.world_manager.grid = grid
+
+	else:
+		Debug.log_warning("Overworld A* is disabled")

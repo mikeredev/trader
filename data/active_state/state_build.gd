@@ -14,21 +14,18 @@ func _main() -> void:
 	create_player()
 
 	Debug.log_info("Creating world...")
-	create_world()
+	blueprint.world.build()
 
 	Debug.log_info("Creating markets...")
-	create_markets()
+	blueprint.trade.build()
 
 	Debug.log_info("Creating cities...")
-	create_cities()
+	blueprint.city.build()
 
 	Debug.log_info("Creating countries...")
-	create_countries()
+	blueprint.country.build()
 
-	Debug.log_info("Creating ships...")
 	create_ships()
-
-	Debug.log_info("Creating items...")
 	create_inventory_items()
 
 	Service.state_manager.change_state(ReadyState.new(is_new_game))
@@ -42,43 +39,17 @@ func _start_services() -> void:
 	AppContext.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
 
 
-func create_player() -> void: # player object has already been created, so just register it
-	# TBD create and cache body
-	#Service.character_manager.register_character(blueprint.player)
-	Debug.log_debug("TBD - Creat player here: %s" % blueprint.player.profile.profile_name)
-
-
-func create_world() -> void:
-	Service.world_manager.create_world(blueprint.world)
-
-
-func create_countries() -> void:
-	var countries: CountryBlueprint = blueprint.country
-	for country_id: StringName in countries.datastore.keys():
-		Service.country_manager.create_country(country_id, countries.datastore[country_id])
-	Debug.log_debug("Created %d countries" % Service.country_manager.datastore.size())
-
-
-func create_cities() -> void:
-	var cities: CityBlueprint = blueprint.city
-	for city_id: StringName in cities.datastore.keys():
-		Service.city_manager.create_city(city_id, cities.datastore[city_id])
-	Debug.log_debug("Created %d cities" % Service.city_manager.datastore.size())
-
-
-func create_markets() -> void:
-	var trade: TradeBlueprint = blueprint.trade
-	for resource_id: StringName in trade.datastore.keys():
-		Service.trade_manager.create_resource(resource_id, trade.datastore[resource_id])
-	Debug.log_debug("Created: %d categories, %d markets, %d resources" % [
-		Service.trade_manager._category_datastore.size(),
-		Service.trade_manager._market_datastore.size(),
-		Service.trade_manager._resource_datastore.size() ])
+func create_player() -> void:
+	var profile_id: StringName = blueprint.player.profile.profile_id
+	var player: Character = Service.character_manager.get_character(profile_id)
+	var body: PlayerBody = Service.character_manager.create_body(player)
+	player.body = body
+	Service.character_manager.cache(player.body) # cache until ready for use
 
 
 func create_ships() -> void:
-	pass
+	Debug.log_info("Creating ships (TBD)...")
 
 
 func create_inventory_items() -> void:
-	pass
+	Debug.log_info("Creating items (TBD)...")

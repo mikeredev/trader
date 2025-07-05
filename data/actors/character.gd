@@ -6,3 +6,4 @@ var role: Role
 var profile: Profile
 var inventory: Inventory
 var fleet: Fleet
+var body: CharacterBody

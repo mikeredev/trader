@@ -117,7 +117,7 @@ func create_manifest(p_directory: String) -> ModManifest:
 	return manifest
 
 
-func enable_mod(p_manifest: ModManifest) -> bool:
+func enable_mod(p_manifest: ModManifest) -> bool: # technically more like staging
 	Debug.log_verbose("Enabling mod: %s" % p_manifest.mod_id)
 	var raw: Dictionary = staging.get_cached("datastore", p_manifest.local_path)
 
@@ -137,23 +137,21 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 			Category.CITY:
 				for city_id: String in metadata[category]:
 					var _dict: Dictionary = metadata[category][city_id]
-					if _dict.get("remove", false):
-						Debug.log_warning("City marked for removal: %s (%s)" % [city_id, p_manifest.mod_id])
-					else:
-						staging.cache["city"]["city_id"][city_id] = false # toggled during country validation
+					if _dict.get("remove", false): Debug.log_warning("City marked for removal: %s (%s)" % [city_id, p_manifest.mod_id])
+					else: # bool flag toggled true by country validation if capital
+						staging.cache["city"]["city_id"][city_id] = false
 
 			Category.COUNTRY:
 				for country_id: String in metadata[category]:
 					var _dict: Dictionary = metadata[category][country_id]
-					if _dict.get("remove", false):
-						Debug.log_warning("Country marked for removal: %s (%s)" % [country_id, p_manifest.mod_id])
+					if _dict.get("remove", false): Debug.log_warning("Country marked for removal: %s (%s)" % [country_id, p_manifest.mod_id])
 					else: # used for key lookup only
 						staging.cache["country"]["country_id"][country_id] = true
 
 			Category.TRADE:
 				for resource_id: String in metadata[category]: # check city specialities exist
-					if metadata[category][resource_id].get("remove", false):
-						Debug.log_warning("Trade resource marked for removal: %s (%s)" % [resource_id, p_manifest.mod_id])
+					var _dict: Dictionary = metadata[category][resource_id]
+					if _dict.get("remove", false): Debug.log_warning("Trade resource marked for removal: %s (%s)" % [resource_id, p_manifest.mod_id])
 					else:
 						# cache resource_id
 						staging.cache["trade"]["resource_id"][resource_id] = false
@@ -176,7 +174,6 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 			Category.CITY:
 				if not CityBlueprint.validate(metadata[category], staging.cache): return false
 
-
 	# prepare for staging
 	Debug.log_verbose("Merging with staging...")
 	for category: Category in metadata.keys():
@@ -196,6 +193,7 @@ func enable_mod(p_manifest: ModManifest) -> bool:
 	# update active mods
 	_active_mods[p_manifest.mod_id] = p_manifest
 
+	# done
 	Debug.log_debug("Enabled mod: %s (%s)" % [p_manifest.mod_id, p_manifest.local_path])
 	return true
 

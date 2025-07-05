@@ -118,7 +118,7 @@ func transition_to(p_submenu: SubMenu, p_path: String) -> void:
 		submenu.modulate.a = 0.0
 		submenu.visible = true
 	else:
-		submenu = Service.scene_manager._create_from_path(p_path)#, UI.ContainerType.MENU)
+		submenu = Service.scene_manager.create_scene(p_path)
 		submenu.modulate.a = 0.0
 		nav_content.add_child(submenu)
 		active[p_submenu] = submenu

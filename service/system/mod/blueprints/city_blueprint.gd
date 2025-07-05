@@ -101,3 +101,171 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 			return false
 
 	return true
+
+
+func build() -> void:
+	for city_id: StringName in datastore.keys():
+		var metadata: Dictionary = datastore[city_id]
+		_create_city(city_id, metadata) # also registers with CityManager
+	Debug.log_debug("Created %d cities" % Service.city_manager.datastore.size())
+
+
+func _create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:
+	var city: City = City.new()
+	city.city_id = p_city_id
+	city.uid = city.city_id.hash()
+
+	var position: Vector2i = p_metadata["position"]
+	_set_position(city, position)
+
+	# buildings
+	var default: PackedStringArray = ProjectSettings.get_setting("service/city/default_buildings")
+	for building_id: StringName in default:
+		_create_building(city, building_id)
+
+	# production
+	var economy: int = p_metadata["production"]["economy"]
+	var industry: int = p_metadata["production"]["industry"]
+	_set_production(city, economy, industry)
+
+	# support
+	var support: Dictionary = p_metadata.get("support", {}) # optional
+	_set_support(city, support)
+
+	# trade
+	var market: Market = city.buildings["B_MARKET"] # created as default building
+	var trade: Dictionary = p_metadata["trade"]
+	_set_trade(city, market, trade)
+
+	# body
+	var body: CityBody = _create_body(city.city_id, city.position)
+	_set_body(city, body)
+
+	# astar
+	if Service.config_manager.developer_settings.enable_astar:
+		_set_astar(city)
+
+	# register for lookup
+	Service.city_manager.register_city(city)
+
+	# done
+	Debug.log_verbose("  Created city: %s |  %s |   %s |   %s |   %s" % [
+		city.city_id, city.position, Vector2i(city.economy, city.industry),
+		Service.city_manager.get_support_normalized(city), market.specialty.get("resource_id")])
+
+
+func _create_body(p_city_id: StringName, p_position: Vector2i, p_color: Color = Color.AQUA) -> CityBody:
+	var body: CityBody = CityBody.new()
+
+	body.city_id = p_city_id
+	body.name = tr(p_city_id)
+	body.position = p_position
+	body.color = p_color
+
+	# create sprite
+	body.sprite = Sprite2D.new()
+	body.sprite.texture = load(FileLocation.DEFAULT_MOD_ICON) # citybody ico
+	body.sprite.scale = Vector2(0.0625, 0.0625) # resolves to 1px size from a 16px tile
+	body.sprite.name = "Sprite2D"
+	body.add_child(body.sprite)
+
+	#var interaction: CollisionArea = CollisionArea.new(25, color, 0.1)
+	#interaction.collision_layer = Common.CollisionLayer.INTERACTION
+	#interaction.collision_mask = 0
+	#interaction.monitoring = false
+	#interaction.monitorable = true
+	#interaction.name = "Interaction"
+	#sprite.add_child(interaction)
+#
+	#var detection: CollisionArea = CollisionArea.new(100, color, 0.1)
+	#detection.collision_layer = Common.CollisionLayer.DETECTION
+	#detection.collision_mask = 0
+	#detection.monitoring = false
+	#detection.monitorable = true
+	#detection.name = "Detection"
+	#sprite.add_child(detection)
+	return body
+
+
+func _create_building(p_city: City, p_building_id: StringName) -> void: # TBD refactor later
+	var building: Building
+	match p_building_id:
+		"B_MARKET":
+			var market: Market = Market.new()
+			market.building_id = p_building_id
+			building = market
+
+	if building:
+		p_city.buildings[p_building_id] = building
+
+
+func _set_astar(p_city: City) -> void:
+	var grid: WorldGrid = Service.world_manager.get_grid()
+
+	# get neighbour cells
+	var scale: int = 1
+	for x: int in range(-scale, scale + 1):
+		for y: int in range(-scale, scale + 1):
+			if x == 0 and y == 0: continue  # skip centre
+			var direction: Vector2i = Vector2i(x, y)
+			p_city.body.neighbors[direction] = p_city.position + direction
+
+	# get neighbour water cells
+	for direction: Vector2i in p_city.body.neighbors.keys():
+		var cell: Vector2i = p_city.body.neighbors[direction]
+		if not grid.is_point_solid(cell):
+			p_city.body.water_direction.append(direction)
+
+	# set city as A* walkable
+	grid.set_point_solid(p_city.position, false)
+
+	if p_city.body.water_direction.is_empty():
+		Debug.log_warning("City is landlocked: %s" % p_city.city_id)
+
+
+func _set_body(p_city: City, p_body: CityBody) -> void:
+	var overworld: View = Service.scene_manager.get_view(View.Type.OVERWORLD)
+	var city_container: NodeContainer = overworld.get_container(View.ContainerType.CITY)
+	city_container.add_child(p_body)
+	p_city.body = p_body
+
+
+func _set_position(p_city: City, p_pos: Vector2i) -> void:
+	var map_size: Vector2i = Service.world_manager.get_map_size()
+	var pos_x: int = clampi(p_pos.x, 0, map_size.x)
+	var pos_y: int = clampi(p_pos.y, 0, map_size.y)
+	p_city.position = Vector2i(pos_x, pos_y)
+
+
+func _set_production(p_city: City, p_economy: int, p_industry: int) -> void:
+	var ceiling: int = ProjectSettings.get_setting("services/city/max_production")
+	p_city.economy = clampi(p_economy, 0, ceiling)
+	p_city.industry = clampi(p_industry, 0, ceiling)
+
+
+func _set_support(p_city: City, p_support: Dictionary) -> void:
+	var support: Dictionary[StringName, float] = {}
+	for country_id: StringName in p_support.keys():
+		var value: float = p_support[country_id]
+		support[country_id] = snappedf(value, 0.1)
+	p_city.support = support
+
+
+func _set_trade(p_city: City, p_market: Market, p_specialty: Dictionary) -> void:
+	var market_id: StringName = p_specialty["market"]
+	p_market.market_id = market_id
+
+	# update specialty if not removed by mods
+	var resource_id: StringName = p_specialty["specialty"]["resource"]
+
+	if Service.trade_manager.get_resource(resource_id): # creates dependency on TradeManager
+		var price: int = p_specialty["specialty"]["price"]
+		var required: int = p_specialty["specialty"]["required"]
+		p_market.specialty["resource_id"] = resource_id
+		p_market.specialty["price"] = price
+		p_market.specialty["required"] = required
+
+	else: Debug.log_warning("Unable to add specialty: %s (%s)" % [resource_id, p_city.city_id])
+
+	# add market to city
+	p_city.buildings[p_market.building_id] = p_market

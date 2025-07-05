@@ -9,14 +9,20 @@ func _init(p_is_new_game: bool = false) -> void:
 
 
 func _main() -> void:
-	print("new game %s" % is_new_game)
-	var city: City = Service.city_manager.get_city("C_ALEXANDRIA")
-	print(Service.city_manager.get_support_normalized(city))
-	city = Service.city_manager.get_city("C_ATHENS")
-	print(Service.city_manager.get_support_normalized(city))
-	city = Service.city_manager.get_city("C_LISBON")
-	print(Service.city_manager.get_support_normalized(city))
+	Debug.log_info("New game: %s" % is_new_game)
+	if is_new_game: start()
+	else: resume()
 
 
 func _start_services() -> void:
-	AppContext.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+	pass#AppContext.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+
+
+func start() -> void:
+	var player: Character = Service.character_manager.get_player()
+	var capital: City = Service.country_manager.get_capital(player.profile.country_id)
+	Debug.log_debug("Starting in: %s, %s" % [capital.city_id, player.profile.profile_name])
+
+
+func resume() -> void:
+	pass

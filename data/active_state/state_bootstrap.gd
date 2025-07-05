@@ -49,6 +49,10 @@ func build_tree() -> bool:
 	var success: bool = true
 
 	for node: Node in node_tree:
+		if node is ManagementNode:
+			var mgmt: ManagementNode = node
+			Service.scene_manager.setup_management_node(mgmt)
+
 		if node is View:
 			var view: View = node
 			if not Service.scene_manager.setup_view(view):
@@ -63,14 +67,13 @@ func build_tree() -> bool:
 
 func set_project_settings() -> void:
 	Debug.log_info("Setting project settings...")
-	for setting: String in Common.PROJECT_SETTINGS:
-		ProjectSettings.set_setting(setting, Common.PROJECT_SETTINGS[setting])
-		Debug.log_debug("Set %s: %s" % [setting, Common.PROJECT_SETTINGS[setting]])
+	for s: String in Common.PROJECT_SETTINGS:
+		ProjectSettings.set_setting(s, Common.PROJECT_SETTINGS[s])
+		Debug.log_debug("Set %s: %s" % [s, Common.PROJECT_SETTINGS[s]])
 
 
 func validate_userspace() -> bool:
 	Debug.log_info("Validating userspace...")
-
 	var success: bool = true
 
 	var user_directories: Array[String] = [

@@ -69,6 +69,37 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 	return true
 
 
+func build() -> void:
+	for country_id: StringName in datastore.keys():
+		_create_country(country_id, datastore[country_id])
+	Debug.log_debug("Created %d countries" % Service.country_manager.datastore.size())
+
+
+func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
+	var country: Country = Country.new()
+	var capital_id: StringName = p_metadata.get("capital")
+	var color: Color = p_metadata.get("color", Color.CYAN) # default to
+
+	# create leader
+	var profile: Dictionary = p_metadata["leader"]
+	var leader: Character = Service.character_manager.create_character(Character.Role.LEADER,
+	str(profile.name), p_country_id, Rank.Level.KING, str(profile.title))
+
+	# assign basic properties
+	country.country_id = p_country_id
+	country.capital_id = capital_id
+	country.color = color
+	country.leader = leader
+
+	# register for lookup
+	Service.country_manager.register_country(country)
+
+	# done
+	Debug.log_verbose("  Created country: %s (%s, %s, %s)" % [ country.country_id,
+	country.capital_id, country.leader.profile.profile_name,
+	country.leader.profile.rank.title.to_pascal_case() ])
+
+
 func merge_savedata(p_save_data: Variant) -> void:
 	if not typeof(p_save_data) == TYPE_DICTIONARY:
 		Debug.log_warning("Invalid save data")

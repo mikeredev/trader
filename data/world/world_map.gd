@@ -4,6 +4,7 @@ class_name WorldMap extends Sprite2D
 func _init(p_path: String) -> void:
 	name = "WorldMap"
 
+	# load project or user-provided texture
 	if p_path.begins_with("res://") or p_path.begins_with("uid://"):
 		texture = load(p_path) as Texture2D
 	else:
