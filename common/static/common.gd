@@ -25,27 +25,6 @@ class Util:
 		return texture
 
 
-	static func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
-		p_duration: float, p_trans: Tween.TransitionType = Tween.TRANS_LINEAR,
-		p_ease: Tween.EaseType = Tween.EASE_IN) -> Tween:
-
-			var tween: Tween = AppContext.create_tween() # needs any node reference
-			tween.tween_property(p_object, p_property, p_final, p_duration) \
-			.set_trans(p_trans) \
-			.set_ease(p_ease)
-			return tween
-
-
-	static func pause(p_paused: bool) -> void:
-		Debug.log_debug("Paused: %s" % p_paused)
-		AppContext.get_tree().paused = p_paused
-
-
-	static func quit() -> void:
-		Debug.log_info("Goodbye.")
-		AppContext.get_tree().quit()
-
-
 	static func touch_directory(p_path: String) -> bool:
 		if not DirAccess.dir_exists_absolute(p_path):
 			var error: Error = DirAccess.make_dir_absolute(p_path)

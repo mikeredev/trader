@@ -75,13 +75,13 @@ func play_animation(p_show_intro: bool) -> void:
 		button.focus_mode = Control.FOCUS_NONE
 
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
-	tween = Common.Util.create_tween(fade_rect, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween = Service.scene_manager.create_tween(fade_rect, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 
 	# wait a little, and play the rest
 	await get_tree().create_timer(PAUSE).timeout
 
 	# fade in title: TRANS_BACK/EASE_OUT creates a pop effect
-	tween = Common.Util.create_tween(label_title, "modulate:a", 1.0, TITLE_IN, Tween.TRANS_BACK, Tween.EASE_OUT)
+	tween = Service.scene_manager.create_tween(label_title, "modulate:a", 1.0, TITLE_IN, Tween.TRANS_BACK, Tween.EASE_OUT)
 	await get_tree().create_timer(PAUSE).timeout
 
 	# fade in menu buttons: reposition x with TRANS_QUAD/EASE_OUT creates a snap-back effect
@@ -89,9 +89,9 @@ func play_animation(p_show_intro: bool) -> void:
 	for button: Button in buttons:
 		var pos: float = button.position.x
 		button.position.x += 100
-		tween = Common.Util.create_tween(button, "modulate:a", 1.0, BUTTON_ALPHA, Tween.TRANS_BACK, Tween.EASE_OUT)
+		tween = Service.scene_manager.create_tween(button, "modulate:a", 1.0, BUTTON_ALPHA, Tween.TRANS_BACK, Tween.EASE_OUT)
 		await tween.finished
-		tween = Common.Util.create_tween(button, "position:x", pos, BUTTON_SLIDE, Tween.TRANS_QUAD, Tween.EASE_OUT)
+		tween = Service.scene_manager.create_tween(button, "position:x", pos, BUTTON_SLIDE, Tween.TRANS_QUAD, Tween.EASE_OUT)
 		button.mouse_filter = Control.MOUSE_FILTER_STOP
 		button.focus_mode = Control.FOCUS_ALL
 
@@ -101,14 +101,14 @@ func play_animation(p_show_intro: bool) -> void:
 		var return_to: Color = continue_button.modulate
 		continue_button.scale = Vector2(1.2, 1.2)
 		continue_button.modulate = highlight
-		tween = Common.Util.create_tween(continue_button, "scale", Vector2(1.0, 1.0), 1.5, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+		tween = Service.scene_manager.create_tween(continue_button, "scale", Vector2(1.0, 1.0), 1.5, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
 		tween.parallel().tween_property(continue_button, "modulate", return_to, 1.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 		await tween.finished
 
 
 func transition_to(p_submenu: SubMenu, p_path: String) -> void:
 	var tween: Tween
-	tween = Common.Util.create_tween(label_title, "modulate:a", 0.0, MENU_OUT)
+	tween = Service.scene_manager.create_tween(label_title, "modulate:a", 0.0, MENU_OUT)
 	tween.parallel().tween_property(nav_menu, "modulate:a", 0.0, MENU_OUT)
 	await tween.finished
 
@@ -124,7 +124,7 @@ func transition_to(p_submenu: SubMenu, p_path: String) -> void:
 		active[p_submenu] = submenu
 
 	# modulate submenu to transparent and fade in
-	tween = Common.Util.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
+	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
 
 
 func _connect_signals() -> void:
@@ -179,7 +179,7 @@ func _on_menu_closed(p_submenu: Control) -> void:
 	var tween: Tween
 
 	# fade out menu (reset menu here if needed)
-	tween = Common.Util.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween = Service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	await tween.finished
 	p_submenu.visible = false
 
@@ -190,13 +190,13 @@ func _on_menu_closed(p_submenu: Control) -> void:
 	label_title.visible = true
 	nav_menu.visible = true
 
-	tween = Common.Util.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	tween.parallel().tween_property(label_title, "modulate:a", 1.0, MENU_IN)
 
 
 func _on_quit_pressed() -> void:
 	if await Service.dialog_manager.get_confirmation("QUIT TO DESKTOP?"):
-		Common.Util.quit()
+		System.quit()
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:

@@ -12,7 +12,6 @@ var _active: bool: # debug mode
 		_active = p
 		return _active
 
-
 func add_container(p_container: NodeContainer) -> void:
 	containers[p_container.type] = p_container
 

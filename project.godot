@@ -17,7 +17,7 @@ config/icon="res://assets/image/icon/icon.svg"
 
 [autoload]
 
-AppContext="*res://common/global/app_context.gd"
+System="*res://common/global/system.gd"
 EventBus="*res://common/global/event_bus.gd"
 
 [debug]

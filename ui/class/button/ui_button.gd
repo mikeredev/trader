@@ -1,6 +1,6 @@
-class_name UIButton extends Button
+class_name UIButton extends Button ## A button that plays an animation.
 
-signal pressed_tweened
+signal pressed_tweened # connect from externally to this, not pressed
 
 
 func _ready() -> void:
@@ -11,13 +11,11 @@ func _ready() -> void:
 
 
 func _on_pressed() -> void:
-	#await _play_press_tween()
 	_play_press_tween()
 	pressed_tweened.emit()
 
 
-func _play_press_tween() -> void:
-	var tween: Tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(0.95, 0.95), 0.1)
-	tween.tween_property(self, "scale", Vector2.ONE, 0.1)
-	#await tween.finished
+func _play_press_tween() -> void: # overwrite this in any subclasses to modify tween animation
+	var return_to: Vector2 = scale
+	scale = Vector2(0.95, 0.95)
+	var tween: Tween = Service.scene_manager.create_tween(self, "scale", return_to, 0.1)

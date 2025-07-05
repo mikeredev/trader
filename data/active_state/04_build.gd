@@ -32,10 +32,10 @@ func _main() -> void:
 
 
 func _start_services() -> void:
-	AppContext.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
-	AppContext.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
-	AppContext.start_service(CityManager.new(), Service.Type.CITY_MANAGER)
-	AppContext.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
+	System.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
+	System.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
+	System.start_service(CityManager.new(), Service.Type.CITY_MANAGER)
+	System.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
 
 
 func create_player() -> void:

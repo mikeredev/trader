@@ -12,13 +12,13 @@ func get_container(p_type: UIContainer.Type) -> UIContainer:
 
 
 func clear_all_containers() -> void:
-	for ui_container: UIContainer in _containers.values():
-		_free_children(ui_container)
+	for type: UIContainer.Type in _containers.keys():
+		clear_container(type)
 
 
-func clear_container(p_layer: UIContainer.Type) -> void:
-	var ui_container: UIContainer = get_container(p_layer)
-	_free_children(ui_container)
+func clear_container(p_type: UIContainer.Type) -> void:
+	var container: UIContainer = get_container(p_type)
+	_free_children(container)
 
 
 func _free_children(p_container: UIContainer) -> void:

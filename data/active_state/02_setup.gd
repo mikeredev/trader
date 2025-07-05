@@ -60,4 +60,4 @@ func stage_user_content() -> void:
 
 
 func _start_services() -> void:
-	AppContext.start_service(ModManager.new(), Service.Type.MOD_MANAGER)
+	System.start_service(ModManager.new(), Service.Type.MOD_MANAGER)

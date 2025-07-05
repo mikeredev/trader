@@ -163,6 +163,17 @@ func create_scene(p_scene: Variant, p_layer: UIContainer.Type = -1) -> Node:
 	return node
 
 
+func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
+	p_duration: float, p_trans: Tween.TransitionType = Tween.TRANS_LINEAR,
+	p_ease: Tween.EaseType = Tween.EASE_IN) -> Tween:
+
+		var tween: Tween = System.create_tween() # needs any node reference
+		tween.tween_property(p_object, p_property, p_final, p_duration) \
+		.set_trans(p_trans) \
+		.set_ease(p_ease)
+		return tween
+
+
 func get_management_node() -> ManagementNode:
 	return _management
 

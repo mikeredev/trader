@@ -28,5 +28,15 @@ func start_service(p_service: Service, p_type: Service.Type) -> void:
 	Debug.log_debug("Started service: %s" % display_name)
 
 
+func pause(p_paused: bool) -> void:
+	Debug.log_debug("Paused: %s" % p_paused)
+	System.get_tree().paused = p_paused
+
+
+func quit() -> void:
+	Debug.log_info("Goodbye.")
+	System.get_tree().quit()
+
+
 func _get_name(p_type: Service.Type) -> StringName:
 	return str(Service.Type.keys()[p_type]).to_pascal_case()

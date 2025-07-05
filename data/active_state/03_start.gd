@@ -18,8 +18,8 @@ func _main() -> void:
 
 func _start_services() -> void:
 	# pass the is_dirty flag when restoring from save
-	AppContext.start_service(SessionManager.new(), Service.Type.SESSION_MANAGER)
-	AppContext.start_service(CharacterManager.new(), Service.Type.CHARACTER_MANAGER)
+	System.start_service(SessionManager.new(), Service.Type.SESSION_MANAGER)
+	System.start_service(CharacterManager.new(), Service.Type.CHARACTER_MANAGER)
 
 
 func _exit() -> void:

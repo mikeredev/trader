@@ -15,7 +15,7 @@ func _main() -> void:
 
 
 func _start_services() -> void:
-	pass#AppContext.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+	pass#System.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
 
 
 func start() -> void:

@@ -43,9 +43,9 @@ func configure(p_text: String, p_confirm_text: String, p_cancel_text: String) ->
 
 
 func await_input() -> bool:
-	Common.Util.pause(true)
+	System.pause(true)
 	var result: bool = await completed
-	Common.Util.pause(false)
+	System.pause(false)
 	self.queue_free()
 	return result
 

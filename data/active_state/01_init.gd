@@ -21,9 +21,9 @@ func _main() -> void:
 
 
 func _start_services() -> void:
-	AppContext.start_service(SceneManager.new(), Service.Type.SCENE_MANAGER)
-	AppContext.start_service(ConfigManager.new(), Service.Type.CONFIG_MANAGER)
-	AppContext.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
+	System.start_service(SceneManager.new(), Service.Type.SCENE_MANAGER)
+	System.start_service(ConfigManager.new(), Service.Type.CONFIG_MANAGER)
+	System.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
 
 
 func validate_userspace() -> bool: # confirm write access to user directories

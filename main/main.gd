@@ -18,7 +18,7 @@ func _ready() -> void:
 	color_scheme.apply()
 
 	# start services
-	AppContext.start_service(StateManager.new(), Service.Type.STATE_MANAGER)
+	System.start_service(StateManager.new(), Service.Type.STATE_MANAGER)
 
 	# setup any statics
 	Debug.connect_signals()
