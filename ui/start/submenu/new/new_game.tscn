@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b661o0vqtly2s"]
 
-[ext_resource type="Script" uid="uid://crhrti0ecynm" path="res://ui/start/scene/new/new_game.gd" id="1_wpl3o"]
-[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://data/component/ui_button.gd" id="2_3if4e"]
+[ext_resource type="Script" uid="uid://crhrti0ecynm" path="res://ui/start/submenu/new/new_game.gd" id="1_wpl3o"]
+[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="2_3if4e"]
 
 [node name="NewGame" type="VBoxContainer"]
 anchors_preset = 8

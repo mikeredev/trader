@@ -12,8 +12,8 @@ func _main() -> void:
 	#Service.scene_manager.hide_views()
 	#Service.scene_manager.add_menu(Filepath.START_MENU)
 
-	Service.scene_manager.create_scene(FileLocation.UI_START_MENU, UILayer.Type.MENU)
-	#Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UILayer.Type.MENU)
+	Service.scene_manager.create_scene(FileLocation.UI_START_MENU, UIContainer.Type.MENU)
+	#Service.scene_manager.create_scene(FileLocation.UI_NEW_GAME_MENU, UIContainer.Type.MENU)
 
 
 func _start_services() -> void:
@@ -24,4 +24,4 @@ func _start_services() -> void:
 
 func _exit() -> void:
 	var ui: UI = Service.scene_manager.get_ui()
-	ui.clear_ui_layer(UILayer.Type.MENU)
+	ui.clear_container(UIContainer.Type.MENU)

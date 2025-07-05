@@ -1,4 +1,4 @@
-extends Control
+extends UISubMenu
 
 var active_section: ConfigManager.Section
 var cache: Dictionary[ConfigManager.Section, GridContainer]
@@ -9,9 +9,7 @@ var cache: Dictionary[ConfigManager.Section, GridContainer]
 @onready var return_button: UIButton = %ReturnButton
 
 
-func _ready() -> void:
-	_connect_signals()
-	_set_button_shortcuts()
+func _ui_ready() -> void:
 	create_nav()
 
 

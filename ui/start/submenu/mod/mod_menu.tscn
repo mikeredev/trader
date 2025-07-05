@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbrqqypop7aww"]
 
-[ext_resource type="Script" uid="uid://dokg7reirlky3" path="res://ui/start/scene/mod/mod_menu.gd" id="1_5qat0"]
-[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://data/component/ui_button.gd" id="2_hwst3"]
+[ext_resource type="Script" uid="uid://dokg7reirlky3" path="res://ui/start/submenu/mod/mod_menu.gd" id="1_5qat0"]
+[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="2_hwst3"]
 
 [node name="ModMenu" type="VBoxContainer"]
 offset_right = 157.0

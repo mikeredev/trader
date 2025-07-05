@@ -1,4 +1,4 @@
-extends Control
+extends UISubMenu
 
 @onready var manifests: Dictionary[StringName, ModManifest] = Service.mod_manager.get_manifests()
 @onready var active_mods: Dictionary[StringName, ModManifest] = Service.mod_manager.get_active_mods(true)
@@ -14,9 +14,7 @@ extends Control
 @onready var return_button: UIButton = %ReturnButton
 
 
-func _ready() -> void:
-	_connect_signals()
-	_set_button_shortcuts()
+func _ui_ready() -> void:
 	populate_enabled()
 	populate_available()
 

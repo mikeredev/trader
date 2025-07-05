@@ -225,7 +225,7 @@ func _set_astar(p_city: City) -> void:
 
 func _set_body(p_city: City, p_body: CityBody) -> void:
 	var overworld: View = Service.scene_manager.get_view(View.Type.OVERWORLD)
-	var city_container: NodeContainer = overworld.get_container(View.ContainerType.CITY)
+	var city_container: NodeContainer = overworld.get_container(NodeContainer.Type.CITY)
 	city_container.add_child(p_body)
 	p_city.body = p_body
 

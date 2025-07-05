@@ -56,7 +56,7 @@ func _build_view(p_view: View) -> bool:
 	p_view.stretch = true
 	p_view.subviewport = p_view.get_child(0)
 
-	# create parent for containers
+	# create containers parent
 	var container_parent: Node2D = Node2D.new()
 	container_parent.name = "Containers"
 	container_parent.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -64,30 +64,30 @@ func _build_view(p_view: View) -> bool:
 	Debug.log_verbose("  Created container parent: %s" % container_parent.get_path())
 
 	# assign containers to View
-	var node_containers: Array[View.ContainerType] = []
+	var default_containers: Array[NodeContainer.Type] = []
 	match p_view.type:
 		View.Type.OVERWORLD:
-			node_containers = [
-				View.ContainerType.MAP, View.ContainerType.VILLAGE, View.ContainerType.SUPPLY_PORT,
-				View.ContainerType.CITY, View.ContainerType.SHIP, View.ContainerType.CAMERA ]
+			default_containers = [
+				NodeContainer.Type.MAP, NodeContainer.Type.VILLAGE, NodeContainer.Type.SUPPLY_PORT,
+				NodeContainer.Type.CITY, NodeContainer.Type.SHIP, NodeContainer.Type.CAMERA ]
 		View.Type.PORT:
-			node_containers = [ View.ContainerType.SCENE, View.ContainerType.CAMERA ]
+			default_containers = [ NodeContainer.Type.SCENE, NodeContainer.Type.CAMERA ]
 		View.Type.INTERIOR:
-			node_containers = [ View.ContainerType.SCENE, View.ContainerType.CAMERA ]
+			default_containers = [ NodeContainer.Type.SCENE, NodeContainer.Type.CAMERA ]
 
 	# add containers to container parent
-	for container_type: View.ContainerType in node_containers:
-		var node_container: NodeContainer = NodeContainer.new()
-		node_container.name = str(View.ContainerType.keys()[container_type]).to_pascal_case()
-		container_parent.add_child(node_container)
+	for type: NodeContainer.Type in default_containers:
+		var container: NodeContainer = NodeContainer.new()
+		container.name = str(NodeContainer.Type.keys()[type]).to_pascal_case()
+		container.type = type
+		container_parent.add_child(container)
 
-		# register container for lookup by ContainerType
-		#p_view.add_container() # set type on cont
-		p_view._containers[container_type] = node_container
-		Debug.log_verbose("  Created container: %s" % node_container.get_path())
+		# register for lookup
+		p_view.add_container(container)
+		Debug.log_verbose("  Created container: %s" % container.get_path())
 
 	# create camera
-	var camera_container: NodeContainer = p_view.get_container(View.ContainerType.CAMERA) # TBD move to NodeContainer.Type
+	var camera_container: NodeContainer = p_view.get_container(NodeContainer.Type.CAMERA) # TBD move to NodeContainer.Type
 	var camera: Camera = Camera.new()
 	camera.name = "%s%s" % [p_view.name, "Camera"]
 	camera_container.add_child(camera)
@@ -105,8 +105,8 @@ func _build_view(p_view: View) -> bool:
 
 func _build_ui(p_ui: UI) -> void:
 	# create UI layers
-	for layer_name: String in UILayer.Type.keys():
-		var layer: UILayer = UILayer.new()
+	for layer_name: String in UIContainer.Type.keys():
+		var layer: UIContainer = UIContainer.new()
 		layer.name = layer_name.to_pascal_case()
 		p_ui.add_child(layer)
 
@@ -116,18 +116,19 @@ func _build_ui(p_ui: UI) -> void:
 		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 		# get type and register
-		for i: int in range(UILayer.Type.size()):
-			if layer_name == UILayer.Type.keys()[i]:
-				layer.type = UILayer.Type.values()[i]
-				p_ui.add_ui_layer(layer)
+		for i: int in range(UIContainer.Type.size()):
+			if layer_name == UIContainer.Type.keys()[i]:
+				layer.type = UIContainer.Type.values()[i]
+				p_ui.add_container(layer)
 
 		# apply theme
 		match layer.type:
-			UILayer.Type.DIALOG: layer.theme = load(FileLocation.THEME_DIALOG)
-			UILayer.Type.MENU: layer.theme = load(FileLocation.THEME_MENU)
+			UIContainer.Type.DIALOG: layer.theme = load(FileLocation.THEME_DIALOG)
+			UIContainer.Type.MENU: layer.theme = load(FileLocation.THEME_MENU)
 
-		Debug.log_verbose("󱣴  Created UI layer: %s" % layer.get_path())
+		Debug.log_verbose("󱣴  Created UI container: %s" % layer.get_path())
 
+	# register for lookup
 	_ui = p_ui
 	Debug.log_debug("Registered UI: %s" % _ui)
 
@@ -139,7 +140,7 @@ func center_window(p_resolution: Vector2i) -> void:
 	Debug.log_debug("Centered window: %s" % center)
 
 
-func create_scene(p_scene: Variant, p_layer: UILayer.Type = -1) -> Node:
+func create_scene(p_scene: Variant, p_layer: UIContainer.Type = -1) -> Node:
 	var node: Node
 	var _type: int = typeof(p_scene)
 	match _type:
@@ -154,7 +155,7 @@ func create_scene(p_scene: Variant, p_layer: UILayer.Type = -1) -> Node:
 			return null
 
 	if p_layer >= 0:
-		var layer: UILayer = _ui.get_ui_layer(p_layer)
+		var layer: UIContainer = _ui.get_container(p_layer)
 		layer.add_child(node)
 
 	var display_name: String = str(node.get_path()) if p_layer >= 0 else str(node.name)
@@ -170,8 +171,8 @@ func get_ui() -> UI:
 	return _ui
 
 
-func get_view(p_scope: View.Type) -> View:
-	return _views.get(p_scope, null)
+func get_view(p_type: View.Type) -> View:
+	return _views.get(p_type, null)
 
 
 func _create_from_packed(p_preload: PackedScene) -> Node:

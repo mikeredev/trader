@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://b1ls81hnrxdmt" path="res://assets/theme/dialog.tres" id="1_uongy"]
 [ext_resource type="Script" uid="uid://73nt43y1k8qb" path="res://ui/dialog/confirm/dialog_confirm.gd" id="2_ngmx8"]
-[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://data/component/ui_button.gd" id="3_0jnfy"]
+[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="3_0jnfy"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_yobuf"]
 device = -1
