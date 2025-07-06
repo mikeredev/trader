@@ -114,6 +114,7 @@ func create_manifest(p_directory: String) -> ModManifest:
 
 
 func generate_blueprint() -> void:
+	Debug.log_info("Generating blueprint: %s" % str(_active_mods.keys()))
 	_blueprint = Blueprint.new(
 		staging.world_data.duplicate(),
 		staging.country_data.duplicate(),

@@ -6,7 +6,7 @@ var _cache: Node2D # ensure wiped on reset
 
 
 func _ready() -> void:
-	 # pre-populate service IDs alphabetically for convenience
+	 # pre-populate _services alphabetically for convenience
 	for service: Service.ServiceType in Service.ServiceType.values():
 		var service_id: StringName = _get_service_id(service)
 		_services[service_id] = null

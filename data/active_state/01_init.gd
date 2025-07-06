@@ -9,49 +9,17 @@ func _init(p_node_tree: Array[Node]) -> void:
 
 
 func _main() -> void:
-	# housekeeping
+	# establish environment
 	if not directory_access(): return
 	if not build_tree(node_tree): return
 
-	# apply settings
-	apply_project_settings()
+	# apply runtime settings
+	apply_project_settings(Common.PROJECT_SETTINGS)
 	apply_user_settings()
 
-	# inject any user saved mods
-	var saved_mod_ids: PackedStringArray = Service.config_manager.mod_settings.get_saved_mods()
-	System.change_state(SetupState.new(saved_mod_ids))
-
-
-func apply_project_settings() -> void:
-	Debug.log_info("Applying project settings...")
-	for s: String in Common.PROJECT_SETTINGS:
-		ProjectSettings.set_setting(s, Common.PROJECT_SETTINGS[s])
-		Debug.log_debug("Set %s: %s" % [s, Common.PROJECT_SETTINGS[s]])
-
-
-func apply_user_settings() -> void:
-	Debug.log_info("Applying user settings...")
-	Service.config_manager.load_config()
-	Service.config_manager.apply_config()
-
-
-func build_tree(p_node_tree: Array[Node]) -> bool:
-	Debug.log_info("Building node tree...")
-	var success: bool = true
-
-	for node: Node in p_node_tree:
-		if node is View:
-			var view: View = node
-			if not _build_view(view):
-				success = false
-
-		if node is UI:
-			var ui: UI = node
-			_build_ui(ui)
-
-	if not success:
-		Debug.log_error("Error building node tree")
-	return success
+	# move to second core loop state: inject saved mod IDs
+	var saved_mods: PackedStringArray = Service.config_manager.mod_settings.get_saved_mods()
+	System.change_state(SetupState.new(saved_mods))
 
 
 func directory_access() -> bool:
@@ -75,6 +43,38 @@ func directory_access() -> bool:
 	else:
 		Debug.log_error("Error accessing directory (check write permissions)")
 	return success
+
+
+func build_tree(p_node_tree: Array[Node]) -> bool:
+	Debug.log_info("Building node tree...")
+	var success: bool = true
+
+	for node: Node in p_node_tree:
+		if node is View:
+			var view: View = node
+			if not _build_view(view):
+				success = false
+
+		if node is UI:
+			var ui: UI = node
+			_build_ui(ui)
+
+	if not success:
+		Debug.log_error("Error building node tree")
+	return success
+
+
+func apply_project_settings(p_dict: Dictionary[String, Variant]) -> void:
+	Debug.log_info("Applying project settings...")
+	for setting: String in p_dict.keys():
+		ProjectSettings.set_setting(setting, p_dict[setting])
+		Debug.log_debug("Set %s: %s" % [setting, p_dict[setting]])
+
+
+func apply_user_settings() -> void:
+	Debug.log_info("Applying user settings...")
+	Service.config_manager.load_config()
+	Service.config_manager.apply_config()
 
 
 func _build_ui(p_ui: UI) -> void:
@@ -125,18 +125,18 @@ func _build_view(p_view: View) -> bool:
 		if View.ViewType.keys()[i] == p_view.name.to_upper():
 			type = View.ViewType.values()[i]
 
-	# set common properties across all Views
+	# set properties common across all Views
 	p_view.subviewport = p_view.get_child(0)
 	p_view.stretch = true
 
-	# create containers parent
+	# create parent Node2D for containers
 	var container_parent: Node2D = Node2D.new()
 	container_parent.name = "View"
 	container_parent.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	p_view.subviewport.add_child(container_parent)
 	Debug.log_verbose("  Created container parent: %s" % container_parent.get_path())
 
-	# assign containers to View
+	# assign containers
 	var default_containers: Array[View.ContainerType] = []
 	match type:
 		View.ViewType.OVERWORLD:
@@ -165,7 +165,7 @@ func _build_view(p_view: View) -> bool:
 	p_view.add_camera(camera)
 	Debug.log_verbose("  Created camera: %s" % camera.get_path())
 
-	# start inactive
+	# start as inactive
 	p_view.set_active(false)
 
 	# register View for lookup

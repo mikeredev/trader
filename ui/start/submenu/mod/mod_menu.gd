@@ -22,8 +22,8 @@ func _ui_ready() -> void:
 func populate_enabled() -> void:
 	for mod_id: StringName in active_mods.keys():
 		var manifest: ModManifest = manifests.get(mod_id)
-		var is_disabled: bool = true if manifest.core_mod == true else false
-		add_to_enabled(manifest, is_disabled)
+		var is_disabled: bool = true if manifest.core_mod else false
+		add_to_enabled(manifest, is_disabled) # display but disable core mods
 
 
 func populate_available() -> void:
@@ -118,9 +118,10 @@ func _on_confirm_pressed() -> void:
 	var mods_to_save: PackedStringArray = []
 
 	# add each mod_id to list
-	for i: int in range(1, ui_enabled_list.get_item_count()): # ignore slot 0
-		var manifest: ModManifest = ui_enabled_list.get_item_metadata(i)
-		mods_to_save.append(manifest.mod_id)
+	for i: int in range(ui_enabled_list.get_item_count()):
+		if not ui_enabled_list.is_item_disabled(i): # ignore disabled (core) mods
+			var manifest: ModManifest = ui_enabled_list.get_item_metadata(i)
+			mods_to_save.append(manifest.mod_id)
 
 	# compare list to currently active mods
 	if mods_to_save == Service.config_manager.mod_settings.get_saved_mods():

@@ -9,7 +9,7 @@
 script = ExtResource("2_1bvp3")
 primary_bg = Color(0.235294, 0.294118, 0.431373, 1)
 secondary_bg = Color(0.101961, 0.2, 0.301961, 1)
-ternary_bg = Color(0.0805582, 5.50856e-05, 0.303392, 1)
+ternary_bg = Color(0.623307, 0.212482, 0.692802, 1)
 metadata/_custom_type_script = "uid://015a67bg42e2"
 
 [node name="Main" type="Control"]

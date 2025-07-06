@@ -12,8 +12,8 @@ var developer_settings: DeveloperSettings
 
 
 func _init() -> void:
-	EventBus.config_changed.connect(save_config)
 	path = FileLocation.USER_CONFIG_FILE
+	EventBus.config_changed.connect(save_config)
 
 
 func apply_config() -> void:

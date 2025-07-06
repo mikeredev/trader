@@ -119,7 +119,7 @@ func _create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:
 	_set_position(city, position)
 
 	# buildings
-	var default: PackedStringArray = ProjectSettings.get_setting("service/city/default_buildings")
+	var default: PackedStringArray = ProjectSettings.get_setting("services/city/default_buildings")
 	for building_id: StringName in default:
 		_create_building(city, building_id)
 

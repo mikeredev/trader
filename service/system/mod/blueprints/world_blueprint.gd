@@ -29,7 +29,6 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 				# construct the full path to the map texture
 				var dir: String = p_cache["manifest"]["directory"]
 				var folder: String = str(ModManager.Category.keys()[ModManager.Category.WORLD]).to_lower()
-				var map_data: Dictionary = p_data["map"]
 				var texture: String = p_data["map"]["texture"]
 				var texture_path: String = "%s/%s/%s" % [dir, folder, texture]
 

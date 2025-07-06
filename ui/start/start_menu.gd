@@ -12,6 +12,7 @@ const MENU_OUT: float = 0.2
 
 var active: Dictionary[SubMenu, Control]
 var buttons: Array[UIButtonStartMenu]
+var tween: Tween
 
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
@@ -64,7 +65,6 @@ func apply_color_scheme() -> void:
 
 func play_animation() -> void:
 	# prepare tween, title, buttons
-	var tween: Tween
 	fade_rect.visible = true
 	label_title.modulate.a = 0.0
 	for button: UIButtonStartMenu in buttons:
@@ -105,7 +105,6 @@ func play_animation() -> void:
 
 
 func transition_to(p_submenu: SubMenu, p_path: String) -> void:
-	var tween: Tween
 	tween = Service.scene_manager.create_tween(label_title, "modulate:a", 0.0, MENU_OUT)
 	tween.parallel().tween_property(nav_menu, "modulate:a", 0.0, MENU_OUT)
 	await tween.finished
@@ -176,8 +175,6 @@ func _on_mouse_exited(p_icon: TextureRect) -> void:
 
 
 func _on_menu_closed(p_submenu: Control) -> void:
-	var tween: Tween
-
 	# fade out menu (reset menu here if needed)
 	tween = Service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	await tween.finished

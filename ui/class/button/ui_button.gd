@@ -11,7 +11,7 @@ func _ready() -> void:
 
 
 func _on_pressed() -> void:
-	_play_press_tween()
+	await _play_press_tween()
 	pressed_tweened.emit()
 
 
@@ -19,3 +19,4 @@ func _play_press_tween() -> void: # overwrite this in any subclasses to modify t
 	var return_to: Vector2 = scale
 	scale = Vector2(0.95, 0.95)
 	var tween: Tween = Service.scene_manager.create_tween(self, "scale", return_to, 0.1)
+	await tween.finished
