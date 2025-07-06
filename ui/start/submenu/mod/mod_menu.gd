@@ -1,17 +1,17 @@
-extends UISubMenu
+extends UISubMenu # vbox
 
 @onready var manifests: Dictionary[StringName, ModManifest] = Service.mod_manager.get_manifests()
-@onready var active_mods: Dictionary[StringName, ModManifest] = Service.mod_manager.get_active_mods(true)
+@onready var active_mods: Dictionary[StringName, ModManifest] = Service.mod_manager.get_active_mods()
 
-@onready var available_list: ItemList = %AvailableList
-@onready var enabled_list: ItemList = %EnabledList
-@onready var mod_info_label: Label = %ModInfoLabel
-@onready var enable_button: Button = %EnableButton
-@onready var disable_button: Button = %DisableButton
-@onready var increase_prio_button: Button = %IncreasePrioButton
-@onready var decrease_prio_button: Button = %DecreasePrioButton
-@onready var confirm_button: UIButton = %ConfirmButton
-@onready var return_button: UIButton = %ReturnButton
+@onready var ui_available_list: ItemList = %AvailableList
+@onready var ui_enabled_list: ItemList = %EnabledList
+@onready var ui_mod_info_label: Label = %ModInfoLabel
+@onready var ui_enable_button: Button = %EnableButton
+@onready var ui_disable_button: Button = %DisableButton
+@onready var ui_increase_prio_button: Button = %IncreasePrioButton
+@onready var ui_decrease_prio_button: Button = %DecreasePrioButton
+@onready var ui_confirm_button: UIButton = %ConfirmButton
+@onready var ui_return_button: UIButton = %ReturnButton
 
 
 func _ui_ready() -> void:
@@ -22,8 +22,8 @@ func _ui_ready() -> void:
 func populate_enabled() -> void:
 	for mod_id: StringName in active_mods.keys():
 		var manifest: ModManifest = manifests.get(mod_id)
-		var disabled: bool = true if manifest.core_mod == true else false
-		add_to_enabled(manifest, disabled)
+		var is_disabled: bool = true if manifest.core_mod == true else false
+		add_to_enabled(manifest, is_disabled)
 
 
 func populate_available() -> void:
@@ -34,27 +34,27 @@ func populate_available() -> void:
 
 
 func add_to_enabled(p_manifest: ModManifest, p_disabled: bool = false) -> void:
-	var idx: int = enabled_list.add_item(p_manifest.name, p_manifest.icon)
-	enabled_list.set_item_metadata(idx, p_manifest)
+	var idx: int = ui_enabled_list.add_item(p_manifest.name, p_manifest.icon)
+	ui_enabled_list.set_item_metadata(idx, p_manifest)
 	if p_disabled:
-		enabled_list.set_item_disabled(idx, true)
+		ui_enabled_list.set_item_disabled(idx, true)
 
 
 func add_to_available(p_manifest: ModManifest) -> void:
-	var idx: int = available_list.add_item(p_manifest.name, p_manifest.icon)
-	available_list.set_item_metadata(idx, p_manifest)
+	var idx: int = ui_available_list.add_item(p_manifest.name, p_manifest.icon)
+	ui_available_list.set_item_metadata(idx, p_manifest)
 
 
 func _connect_signals() -> void:
-	available_list.item_activated.connect(_on_available_list_item_activated)
-	available_list.item_selected.connect(_on_available_list_item_selected)
-	enabled_list.item_activated.connect(_on_enabled_list_item_activated)
-	enable_button.pressed.connect(_on_enable_button_pressed)
-	disable_button.pressed.connect(_on_disable_button_pressed)
-	increase_prio_button.pressed.connect(_on_increase_prio_button_pressed)
-	decrease_prio_button.pressed.connect(_on_decrease_prio_button_pressed)
-	confirm_button.pressed_tweened.connect(_on_confirm_pressed)
-	return_button.pressed_tweened.connect(_on_return_button_pressed)
+	ui_available_list.item_activated.connect(_on_ui_available_list_item_activated)
+	ui_available_list.item_selected.connect(_on_ui_available_list_item_selected)
+	ui_enabled_list.item_activated.connect(_on_ui_enabled_list_item_activated)
+	ui_enable_button.pressed.connect(_on_ui_enable_button_pressed)
+	ui_disable_button.pressed.connect(_on_ui_disable_button_pressed)
+	ui_increase_prio_button.pressed.connect(_on_ui_increase_prio_button_pressed)
+	ui_decrease_prio_button.pressed.connect(_on_ui_decrease_prio_button_pressed)
+	ui_confirm_button.pressed_tweened.connect(_on_confirm_pressed)
+	ui_return_button.pressed_tweened.connect(_on_ui_return_button_pressed)
 
 
 func _set_button_shortcuts() -> void:
@@ -62,18 +62,18 @@ func _set_button_shortcuts() -> void:
 	var event: InputEventAction = InputEventAction.new()
 	event.action = "ui_cancel"
 	shortcut.events.append(event)
-	return_button.shortcut = shortcut
+	ui_return_button.shortcut = shortcut
 
 
-func _on_available_list_item_activated(index: int) -> void: # moves mod to enabled list
-	var manifest: ModManifest = available_list.get_item_metadata(index)
-	available_list.remove_item(index)
+func _on_ui_available_list_item_activated(index: int) -> void: # moves mod to enabled list
+	var manifest: ModManifest = ui_available_list.get_item_metadata(index)
+	ui_available_list.remove_item(index)
 	add_to_enabled(manifest)
 
 
-func _on_available_list_item_selected(index: int) -> void:
-	var manifest: ModManifest = available_list.get_item_metadata(index)
-	mod_info_label.text = "%s v%.01f by %s (%s)" % [
+func _on_ui_available_list_item_selected(index: int) -> void:
+	var manifest: ModManifest = ui_available_list.get_item_metadata(index)
+	ui_mod_info_label.text = "%s v%.01f by %s (%s)" % [
 		manifest.name,
 		manifest.version,
 		manifest.author,
@@ -81,57 +81,58 @@ func _on_available_list_item_selected(index: int) -> void:
 	]
 
 
-func _on_enabled_list_item_activated(index: int) -> void: # moves mod to available list (i.e., disables)
-	var manifest: ModManifest = enabled_list.get_item_metadata(index)
-	enabled_list.remove_item(index)
+func _on_ui_enabled_list_item_activated(index: int) -> void: # moves mod to available list (i.e., disables)
+	var manifest: ModManifest = ui_enabled_list.get_item_metadata(index)
+	ui_enabled_list.remove_item(index)
 	add_to_available(manifest)
 
 
-func _on_enable_button_pressed() -> void:
-	if not available_list.is_anything_selected(): return
-	var selected: int = available_list.get_selected_items()[0]
-	_on_available_list_item_activated(selected)
+func _on_ui_enable_button_pressed() -> void:
+	if not ui_available_list.is_anything_selected(): return
+	var selected: int = ui_available_list.get_selected_items()[0]
+	_on_ui_available_list_item_activated(selected)
 
 
-func _on_disable_button_pressed() -> void:
-	if not enabled_list.is_anything_selected(): return
-	var selected: int = enabled_list.get_selected_items()[0]
-	_on_enabled_list_item_activated(selected)
+func _on_ui_disable_button_pressed() -> void:
+	if not ui_enabled_list.is_anything_selected(): return
+	var selected: int = ui_enabled_list.get_selected_items()[0]
+	_on_ui_enabled_list_item_activated(selected)
 
 
-func _on_increase_prio_button_pressed() -> void:
-	if not enabled_list.is_anything_selected(): return
-	var selected: int = enabled_list.get_selected_items()[0]
+func _on_ui_increase_prio_button_pressed() -> void:
+	if not ui_enabled_list.is_anything_selected(): return
+	var selected: int = ui_enabled_list.get_selected_items()[0]
 	if selected == 1: return # core mod in slot 0
-	enabled_list.move_item(selected - 1, selected)
+	ui_enabled_list.move_item(selected - 1, selected)
 
 
-func _on_decrease_prio_button_pressed() -> void:
-	if not enabled_list.is_anything_selected(): return
-	var selected: int = enabled_list.get_selected_items()[0]
-	if selected == enabled_list.get_item_count() - 1: return
-	enabled_list.move_item(selected, selected + 1)
+func _on_ui_decrease_prio_button_pressed() -> void:
+	if not ui_enabled_list.is_anything_selected(): return
+	var selected: int = ui_enabled_list.get_selected_items()[0]
+	if selected == ui_enabled_list.get_item_count() - 1: return
+	ui_enabled_list.move_item(selected, selected + 1)
 
 
 func _on_confirm_pressed() -> void:
 	Debug.log_info("Processing new mod order...")
-	var new_active_mods: PackedStringArray = []
+	var mods_to_save: PackedStringArray = []
 
-	for i: int in range(1, enabled_list.get_item_count()): # ignore slot 0
-		var manifest: ModManifest = enabled_list.get_item_metadata(i)
-		new_active_mods.append(manifest.mod_id)
+	# add each mod_id to list
+	for i: int in range(1, ui_enabled_list.get_item_count()): # ignore slot 0
+		var manifest: ModManifest = ui_enabled_list.get_item_metadata(i)
+		mods_to_save.append(manifest.mod_id)
 
-	if new_active_mods == Service.config_manager.get_active_mods(): # includes core
+	# compare list to currently active mods
+	if mods_to_save == Service.config_manager.mod_settings.get_saved_mods():
 		Debug.log_debug("No change to mod order")
 		return
 
 	if await Service.dialog_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
-		Debug.log_debug("Reloading new mod order: %s" % new_active_mods)
-		Service.config_manager.set_active_mods(new_active_mods)
-		Service.config_manager.save_config()
+		Debug.log_debug("Reloading new mod order: %s" % mods_to_save)
+		Service.config_manager.mod_settings.set_saved_mods(mods_to_save, true)
 		Debug.log_info("Returning to setup...")
-		System.change_state(SetupState.new(new_active_mods))
+		System.change_state(SetupState.new(mods_to_save))
 
 
-func _on_return_button_pressed() -> void:
+func _on_ui_return_button_pressed() -> void:
 	EventBus.menu_closed.emit(self)

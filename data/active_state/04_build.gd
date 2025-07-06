@@ -46,7 +46,7 @@ func create_player() -> void:
 	var player: Character = Service.character_manager.get_character(profile_id)
 	var body: PlayerBody = Service.character_manager.create_body(player)
 	player.body = body
-	Service.character_manager.cache(player.body) # cache until ready for use
+	Service.character_manager.cache_body(player.body) # cache until ready for use
 
 
 func create_utils() -> void:

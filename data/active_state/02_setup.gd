@@ -20,7 +20,7 @@ func _main() -> void:
 	verify_user_content()
 	stage_user_content()
 
-	Debug.log_info("Generating blueprint: %s" % str(Service.mod_manager.get_active_mods(true).keys()))
+	Debug.log_info("Generating blueprint: %s" % str(Service.mod_manager.get_active_mods().keys()))
 	Service.mod_manager.generate_blueprint()
 	#Service.mod_manager.clear_staging()
 	System.change_state(StartState.new())

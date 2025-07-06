@@ -10,9 +10,9 @@ func _ui_ready() -> void:
 	populate_countries()
 
 
-func populate_countries() -> void:
+func populate_countries() -> void: # pull directly from blueprint as nothing is registered yet
 	var blueprint: Blueprint = Service.mod_manager.get_blueprint()
-	var countries: PackedStringArray = blueprint.get_list(CountryBlueprint)
+	var countries: PackedStringArray = blueprint.country.datastore.keys()
 	for country_id: StringName in countries:
 		ui_country_list.add_item(country_id)
 

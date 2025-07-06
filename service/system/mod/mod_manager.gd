@@ -123,14 +123,8 @@ func generate_blueprint() -> void:
 	Debug.log_verbose("  Generated blueprint")
 
 
-func get_active_mods(p_include_core: bool = false) -> Dictionary[StringName, ModManifest]:
-	if p_include_core:
-		return _active_mods
-	var dict: Dictionary[StringName, ModManifest] = {}
-	for mod: ModManifest in _active_mods.values():
-		if not mod.core_mod == true:
-			dict[mod.mod_id] = _active_mods[mod.mod_id]
-	return dict
+func get_active_mods() -> Dictionary[StringName, ModManifest]:
+	return _active_mods
 
 
 func get_blueprint() -> Blueprint:

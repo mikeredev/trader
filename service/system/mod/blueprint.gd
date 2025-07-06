@@ -14,10 +14,3 @@ func _init(p_world: Dictionary[String, Dictionary], p_country: Dictionary[String
 	country = CountryBlueprint.from_dict(p_country)
 	city = CityBlueprint.from_dict(p_city)
 	trade = TradeBlueprint.from_dict(p_trade)
-
-
-func get_list(p_blueprint: RefCounted) -> PackedStringArray:
-	match p_blueprint:
-		CountryBlueprint:
-			return country.datastore.keys()
-	return []

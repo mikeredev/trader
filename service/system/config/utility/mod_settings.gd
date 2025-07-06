@@ -1,17 +1,16 @@
 class_name ModSettings extends ConfigUtility
 
-var active: PackedStringArray = []
+var saved_mods: PackedStringArray = []
 
 
 func apply_config() -> void:
 	Debug.log_info("Applying mod settings...")
-
-
+	set_saved_mods(saved_mods)
 
 
 func to_dict() -> Dictionary[String, Variant]:
 	return {
-		"active": active,
+		"saved_mods": saved_mods,
 	}
 
 
@@ -42,12 +41,20 @@ func to_grid() -> GridContainer:
 	return grid
 
 
-static func from_dict(_p_dict: Dictionary) -> ModSettings:
+static func from_dict(p_dict: Dictionary) -> ModSettings:
 	var out: ModSettings = ModSettings.new()
-
-	#out.max_autosaves = p_dict.get("max_autosaves", out.max_autosaves)
-
+	out.saved_mods = p_dict.get("saved_mods", out.saved_mods)
 	return out
+
+
+func get_saved_mods() -> PackedStringArray:
+	return saved_mods
+
+
+func set_saved_mods(p_active_mods: PackedStringArray, p_save: bool = false) -> void:
+	saved_mods = p_active_mods
+	Debug.log_debug("Set saved_mods mods: %s" % p_active_mods)
+	if p_save: EventBus.config_changed.emit()
 
 
 #func _get_max_autosaves(p_value: float, p_save: bool) -> void:

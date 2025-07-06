@@ -4,7 +4,7 @@ var datastore: Dictionary[StringName, Character] = {}
 var player: Character # quick lookup for player access
 
 
-func cache(p_body: CharacterBody) -> void:
+func cache_body(p_body: CharacterBody) -> void:
 	var node_cache: Node2D = System.get_cache()
 	p_body.velocity = Vector2.ZERO
 

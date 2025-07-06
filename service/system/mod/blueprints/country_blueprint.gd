@@ -73,12 +73,11 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 
 func build() -> void:
 	for country_id: StringName in datastore.keys():
-		var country: Country = _create_country(country_id, datastore[country_id])
-		Service.country_manager.register_country(country)
+		_create_country(country_id, datastore[country_id])
 	Debug.log_debug("Created %d countries" % datastore.size())
 
 
-func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> Country:
+func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	var country: Country = Country.new()
 	var capital_id: StringName = p_metadata.get("capital")
 	var color: Color = p_metadata.get("color", Color.CYAN) # default to
@@ -94,11 +93,13 @@ func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> Countr
 	country.color = color
 	country.leader = leader
 
+	# register for lookup
+	Service.country_manager.register_country(country)
+
 	# done
 	Debug.log_verbose("  Created country: %s (%s, %s, %s)" % [ country.country_id,
 	country.capital_id, country.leader.profile.profile_name,
 	country.leader.profile.rank.title.to_pascal_case() ])
-	return country # for registration
 
 
 func merge_savedata(p_save_data: Variant) -> void:

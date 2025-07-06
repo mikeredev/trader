@@ -9,7 +9,7 @@ var display_settings: DisplaySettings
 var mod_settings: ModSettings
 var locale_settings: LocaleSettings
 var developer_settings: DeveloperSettings
-var _active_mods: PackedStringArray
+
 
 func _init() -> void:
 	EventBus.config_changed.connect(save_config)
@@ -21,14 +21,6 @@ func apply_config() -> void:
 		general_settings, audio_settings, display_settings, mod_settings, locale_settings, developer_settings ]
 	for utility: ConfigUtility in utilities:
 		utility.apply_config()
-
-
-func get_active_mods() -> PackedStringArray:
-	return _active_mods
-
-
-func set_active_mods(p_active_mods: PackedStringArray) -> void:
-	_active_mods = p_active_mods
 
 
 ## Attempts to load user settings from [path], using default settings if not found or unreadable.
@@ -60,8 +52,6 @@ func load_config() -> void:
 				locale_settings = LocaleSettings.from_dict(_dict)
 			Section.DEVELOPER:
 				developer_settings = DeveloperSettings.from_dict(_dict)
-
-	_active_mods = raw.get("mods", [])
 
 	# save default settings, if required
 	if create_default: save_config()
@@ -111,8 +101,6 @@ func save_config() -> void:
 			Section.MODS: data[_name] = mod_settings.to_dict()
 			Section.LOCALE: data[_name] = locale_settings.to_dict()
 			Section.DEVELOPER: data[_name] = developer_settings.to_dict()
-
-	if _active_mods: data["mods"] = _active_mods
 	Common.Util.json.save_dict(path, data)
 
 
