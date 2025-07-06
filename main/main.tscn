@@ -36,7 +36,7 @@ script = ExtResource("1_0xm2m")
 handle_input_locally = false
 render_target_update_mode = 4
 
-[node name="Port" type="SubViewportContainer" parent="."]
+[node name="City" type="SubViewportContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,7 +45,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0xm2m")
 
-[node name="SubViewport" type="SubViewport" parent="Port"]
+[node name="SubViewport" type="SubViewport" parent="City"]
 handle_input_locally = false
 render_target_update_mode = 4
 

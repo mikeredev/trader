@@ -14,7 +14,7 @@ func _connect_signals() -> void: pass
 func _set_minimum_size() -> void:
 	if get_node_or_null("%MarginOuter") and get_node_or_null("%NavMain"):
 		var margin_outer: MarginContainer = get_node("%MarginOuter")
-		var margin_value: int = 256
+		var margin_value: int = 256 # magic, move to ProjSettings
 		margin_outer.add_theme_constant_override("margin_top", margin_value)
 		margin_outer.add_theme_constant_override("margin_left", margin_value)
 		margin_outer.add_theme_constant_override("margin_bottom", margin_value)
@@ -29,7 +29,7 @@ func _set_minimum_size() -> void:
 		Debug.log_warning("Cannot size all UI elements: %s" % self)
 
 
-func _set_color_scheme() -> void:
+func _set_color_scheme() -> void: # unused rn
 	if get_node_or_null("%Background"):
 		var background: ColorRect = get_node("%Background")
 		var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")

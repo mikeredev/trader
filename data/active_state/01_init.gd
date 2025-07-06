@@ -143,7 +143,7 @@ func _build_view(p_view: View) -> bool:
 			default_containers = [
 				View.ContainerType.MAP, View.ContainerType.VILLAGE, View.ContainerType.SUPPLY_PORT,
 				View.ContainerType.CITY, View.ContainerType.SHIP ]
-		View.ViewType.PORT:
+		View.ViewType.CITY:
 			default_containers = [ View.ContainerType.SCENE ]
 		View.ViewType.INTERIOR:
 			default_containers = [ View.ContainerType.SCENE ]

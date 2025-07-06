@@ -10,7 +10,7 @@ func _init(p_saved_mods: PackedStringArray) -> void:
 
 func _main() -> void:
 	# core mod is required
-	if not stage_core_mod(): return
+	if not stage_core_mod(FileLocation.CORE_MOD_DIR): return
 
 	# process user content
 	parse_all_mods(FileLocation.USER_ROOT_MOD_DIR)
@@ -26,12 +26,12 @@ func _main() -> void:
 	System.change_state(StartState.new())
 
 
-func stage_core_mod() -> bool:
+func stage_core_mod(p_core_mod_dir: String) -> bool:
 	Debug.log_info("Staging core mod...")
 	var success: bool
 
 	# attempt to get manifest
-	var manifest: ModManifest = Service.mod_manager.create_manifest(FileLocation.CORE_MOD_DIR)
+	var manifest: ModManifest = Service.mod_manager.create_manifest(p_core_mod_dir)
 	if not manifest: success = false
 
 	# attempt to stage mod

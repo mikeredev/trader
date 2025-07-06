@@ -32,6 +32,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 				var texture: String = p_data["map"]["texture"]
 				var texture_path: String = "%s/%s/%s" % [dir, folder, texture]
 
+				# validate file exists (not that it is a valid map)
 				if not FileAccess.file_exists(texture_path):
 					Debug.log_warning("Unable to access map texture: %s" % texture_path)
 					return false
@@ -39,7 +40,8 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 				# update data with full path
 				p_data["map"]["texture"] = texture_path
 				Debug.log_verbose("  Validated map texture: %s" % texture_path)
-		# regex timestamp
+
+			# regex timestamp
 	return true
 
 
@@ -55,23 +57,24 @@ func build() -> void:
 	# register world map
 	Service.world_manager.map = world_map
 
-	# create and bind camera
+	# bind camera
 	var camera: Camera = overworld.get_camera()
 	camera.set_limits(world_map.texture.get_size())
 	camera.set_min_zoom(DisplayServer.screen_get_size(), world_map.texture.get_size())
 
-	if Service.config_manager.developer_settings.enable_astar:
-		# create A* grid
-		var astar: Dictionary[String, Variant] = {
-			"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,
-			"estimate": AStarGrid2D.HEURISTIC_EUCLIDEAN,
-			"diagonal": AStarGrid2D.DIAGONAL_MODE_ALWAYS,
-			"jumping": true }
-
-		var grid: WorldGrid = WorldGrid.new(world_map.texture, astar)
-
-		# register A* grid
-		Service.world_manager.grid = grid
-
-	else:
+	# create A* grid
+	var enable_astar: bool = Service.config_manager.developer_settings.enable_astar
+	if not enable_astar:
 		Debug.log_warning("Overworld A* is disabled")
+		return
+
+	var astar: Dictionary[String, Variant] = {
+		"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+		"estimate": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+		"diagonal": AStarGrid2D.DIAGONAL_MODE_ALWAYS,
+		"jumping": true }
+
+	var grid: WorldGrid = WorldGrid.new(world_map.texture, astar)
+
+	# register A* grid
+	Service.world_manager.grid = grid
