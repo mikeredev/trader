@@ -4,8 +4,12 @@ var saved_mods: PackedStringArray # Array[ModManifest.mod_id]
 
 
 func _init(p_saved_mods: PackedStringArray) -> void:
-	state_id = "setup"
+	state_id = "Setup"
 	saved_mods = p_saved_mods
+
+
+func _start_services() -> void:
+	System.start_service(ModManager.new(), Service.ServiceType.MOD_MANAGER)
 
 
 func _main() -> void:
@@ -72,7 +76,3 @@ func stage_saved_mods(p_saved_mods: PackedStringArray) -> void:
 		if not Service.mod_manager.stage_mod(manifest):
 			Debug.log_error("Failed to stage mod: %s" % mod_id)
 			continue # non-fatal error
-
-
-func _start_services() -> void:
-	System.start_service(ModManager.new(), Service.ServiceType.MOD_MANAGER)

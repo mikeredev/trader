@@ -66,6 +66,7 @@ const SHORELINE_INNER_MASK: Dictionary = {
 var city: City
 var scene: CityScene
 var tile_map: Dictionary[String, Vector2i]
+var ground_rect: Rect2i
 
 
 func _init(p_city: City, p_scene: CityScene, p_tile_map: Dictionary[String, Vector2i]) -> void:
@@ -78,7 +79,7 @@ func draw_terrain(p_grid_size: Vector2i) -> void:
 	var water_direction: Vector2 = _get_water_direction()
 	var city_orientation: Dictionary[String, float] = _get_orientation(water_direction)
 	draw_water(p_grid_size, city_orientation)
-	var ground_rect: Rect2i = draw_ground(p_grid_size)
+	ground_rect = draw_ground(p_grid_size)
 	draw_shore(city_orientation, ground_rect)
 	draw_inner_ring(ground_rect)
 
@@ -117,7 +118,7 @@ func draw_water(p_grid_size: Vector2i, p_city_orientation: Dictionary[String, fl
 				scene.water_layer.set_cell(coords, 1, tile_map.get("water"))
 
 	# done
-	Debug.log_verbose("  Water direction: %s" % p_city_orientation)
+	Debug.log_debug("Water direction: %s" % p_city_orientation)
 
 
 func draw_ground(p_grid_size: Vector2i) -> Rect2i:
@@ -128,7 +129,7 @@ func draw_ground(p_grid_size: Vector2i) -> Rect2i:
 			if id == -1: # get every "not water" cell in the whole grid
 				scene.ground_layer.set_cell(coords, 1, tile_map.get("grass"))
 	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
-	Debug.log_verbose("  Ground rect: %s" % ground_rect)
+	Debug.log_debug("Ground rect: %s" % ground_rect)
 	return ground_rect
 
 

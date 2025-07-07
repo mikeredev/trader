@@ -5,8 +5,15 @@ var is_new_game: bool
 
 
 func _init(p_is_new_game: bool = false) -> void:
-	state_id = "build"
+	state_id = "Build"
 	is_new_game = p_is_new_game
+
+
+func _start_services() -> void:
+	System.start_service(WorldManager.new(), Service.ServiceType.WORLD_MANAGER)
+	System.start_service(CountryManager.new(), Service.ServiceType.COUNTRY_MANAGER)
+	System.start_service(CityManager.new(), Service.ServiceType.CITY_MANAGER)
+	System.start_service(TradeManager.new(), Service.ServiceType.TRADE_MANAGER)
 
 
 func _main() -> void:
@@ -32,13 +39,6 @@ func _main() -> void:
 	create_inventory_items()
 
 	System.change_state(ReadyState.new(is_new_game))
-
-
-func _start_services() -> void:
-	System.start_service(WorldManager.new(), Service.ServiceType.WORLD_MANAGER)
-	System.start_service(CountryManager.new(), Service.ServiceType.COUNTRY_MANAGER)
-	System.start_service(CityManager.new(), Service.ServiceType.CITY_MANAGER)
-	System.start_service(TradeManager.new(), Service.ServiceType.TRADE_MANAGER)
 
 
 func create_player() -> void:

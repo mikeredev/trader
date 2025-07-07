@@ -99,7 +99,6 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 		if not cache.has(specialty_id):
 			Debug.log_warning("Unable to find specialty resource: %s (%s)" % [specialty_id, city_id])
 			return false
-
 	return true
 
 
@@ -133,7 +132,7 @@ func _create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:
 	_set_support(city, support)
 
 	# trade
-	var market: Market = city.buildings["B_MARKET"] # created as default building
+	var market: Market = city.buildings["B_MARKET"] # created with default buildings
 	var trade: Dictionary = p_metadata["trade"]
 	_set_trade(city, market, trade)
 

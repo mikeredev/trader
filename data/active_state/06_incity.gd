@@ -1,54 +1,51 @@
 class_name InCityState extends ActiveState
 
-var city_id: StringName
-var view: View = Service.scene_manager.get_view(View.ViewType.CITY)
+var city: City
+var scene: CityScene
+var camera: Camera
+var base_size: Vector2i
 
 
 func _init(p_city_id: StringName) -> void:
 	state_id = "InCity"
-	city_id = p_city_id
+	city = Service.city_manager.get_city(p_city_id)
+
+
+func _connect_signals() -> void:
+	EventBus.viewport_resized.connect(_on_viewport_resized)
 
 
 func _main() -> void:
-	Debug.log_info("In city: %s" % city_id)
+	Debug.log_info("Building city scene: %s (%d)" % [city.city_id, city.uid])
+	build_scene()
 
-	# activate viewport
-	Service.scene_manager.activate_view(View.ViewType.CITY)
+	Debug.log_info("Configuring view...")
+	configure_view()
 
+
+func build_scene() -> void:
 	# add city scene
-	var scene: CityScene = Service.scene_manager.add_to_view(
-		FileLocation.IN_CITY_SCENE,
-		View.ViewType.CITY,
-		View.ContainerType.SCENE )
-	scene.name = city_id
+	scene = Service.scene_manager.add_to_view(
+		FileLocation.IN_CITY_SCENE, View.ViewType.CITY, View.ContainerType.SCENE )
+	scene.name = city.city_id
 
-	# build logical city model
-	var city: City = Service.city_manager.get_city(city_id)
+	# build city scene
 	var builder: CityBuilder = CityBuilder.new(city, scene)
-	#builder.tile_grid_created.connect(_bind_camera)
 	builder.build()
 
-	# inject city model into city scene
 
-	# test stuff
-	view.get_camera().cam_control = true
-
-#func build_city() -> void:
-	#var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	#rng.seed = scene.city.uid
-#
-	#var builder: CityBuilder = CityBuilder.new(scene, rng)
-	#builder.tile_grid_created.connect(_bind_camera)
+func configure_view() -> void:
+	var view: View = Service.scene_manager.activate_view(View.ViewType.CITY)
+	base_size = ProjectSettings.get_setting("services/config/scene_base_size")
+	camera = view.get_camera()
+	camera.set_limits(scene.area)
+	camera.cam_control = true # TESTING
 
 
-func _start_services() -> void:
-	pass #System.start_service(SessionManager.new(), Service.ServiceType.SESSION_MANAGER)
+func _on_viewport_resized(p_viewport_size: Vector2) -> void:
+	camera.set_min_zoom(p_viewport_size, base_size)
 
 
 #func _exit() -> void:
 	#var ui: UI = Service.scene_manager.get_ui()
 	#ui.clear_container(UI.ContainerType.MENU)
-
-#func _bind_camera(p_grid_size: Vector2i) -> void:
-	#view.get_camera().set_limits(Vector2i(p_grid_size.x, p_grid_size.y))
-	#print("pol?dfgdfg")

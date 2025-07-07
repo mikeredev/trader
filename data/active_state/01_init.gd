@@ -4,13 +4,19 @@ var node_tree: Array[Node] # main/get_children()
 
 
 func _init(p_node_tree: Array[Node]) -> void:
-	state_id = "init"
+	state_id = "Init"
 	node_tree = p_node_tree
+
+
+func _start_services() -> void:
+	System.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
+	System.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
+	System.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
 
 
 func _main() -> void:
 	# establish environment
-	if not directory_access(): return
+	if not check_access(): return
 	if not build_tree(node_tree): return
 
 	# apply runtime settings
@@ -22,7 +28,7 @@ func _main() -> void:
 	System.change_state(SetupState.new(saved_mods))
 
 
-func directory_access() -> bool:
+func check_access() -> bool:
 	Debug.log_info("Checking directories...")
 	var success: bool = true
 
@@ -45,22 +51,16 @@ func directory_access() -> bool:
 
 func build_tree(p_node_tree: Array[Node]) -> bool:
 	Debug.log_info("Building node tree...")
-	var success: bool = true
-
 	for node: Node in p_node_tree:
 		if node is View:
 			var view: View = node
 			if not _build_view(view):
-				success = false
-				break
-
+				Debug.log_error("Error building node tree.")
+				return false
 		if node is UI:
 			var ui: UI = node
 			_build_ui(ui)
-
-	if not success:
-		Debug.log_error("Error building node tree")
-	return success
+	return true
 
 
 func apply_project_settings(p_dict: Dictionary[String, Variant]) -> void:
@@ -165,14 +165,8 @@ func _build_view(p_view: View) -> bool:
 	Debug.log_verbose("  Created camera: %s" % camera.get_path())
 
 	# start as inactive
-	p_view.set_active(false)
+	p_view._set_active(false)
 
 	# register View for lookup
 	Service.scene_manager.register_view(type, p_view)
 	return true
-
-
-func _start_services() -> void:
-	System.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
-	System.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
-	System.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)

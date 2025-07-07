@@ -14,16 +14,6 @@ func _init(p_city: City, p_scene: CityScene, p_tile_map: Dictionary[String, Vect
 	tile_map = p_tile_map
 
 
-func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.HOT_PINK) -> void:
-	var box: ColorRect = ColorRect.new()
-	box.name = "%s" % p_position
-	box.position = p_position * 16#Common.Tileset.DEFAULT_TILE_SIZE
-	box.size = Vector2i(16,16)#Common.Tileset.DEFAULT_TILE_SIZE, Common.Tileset.DEFAULT_TILE_SIZE)
-	box.color = p_color
-	box.color.a = 0.5
-	scene.debug_overlay.add_child(box)
-
-
 func create_buildings(p_rng: RandomNumberGenerator) -> void:
 	for building: Building in city.buildings.values():
 		var rect: Rect2i = _get_building_rect(p_rng, building)
@@ -33,24 +23,32 @@ func create_buildings(p_rng: RandomNumberGenerator) -> void:
 			Debug.log_error("Failed to build %s after %d attempts" % [building.building_id, MAX_BUILD_ATTEMPTS])
 
 
-func _get_building_rect(p_rng: RandomNumberGenerator, p_building: Building) -> Rect2i:
-	var attempt: int = 0
+func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.ORANGE_RED) -> void:
+	var box: ColorRect = ColorRect.new()
+	box.name = "%s" % p_position
+	box.position = p_position * 16
+	box.size = Vector2i(16,16)
+	box.color = p_color
+	box.color.a = 0.5
+	scene.debug_overlay.add_child(box)
 
+
+func _get_building_rect(p_rng: RandomNumberGenerator, p_building: Building) -> Rect2i:
 	var building_size: Vector2i = p_building.exterior_size
 	building_size.x += BUILDING_BUFFER * 2
 	building_size.y += BUILDING_BUFFER * 2
 
-	var rand: int
-	var pos: Vector2i
-	var rect: Rect2i
-
 	var ground_cells: Array[Vector2i] = []
 	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
 	for cell: Vector2i in scene.ground_layer.get_used_cells(): # fewer available cells on each build
-		if cell.x < (ground_rect.position.x + ground_rect.size.x) - p_building.exterior_size.x:
-			if cell.y < (ground_rect.position.y + ground_rect.size.y) - p_building.exterior_size.y:
+		if cell.x < (ground_rect.position.x + ground_rect.size.x) - (p_building.exterior_size.x + BUILDING_BUFFER + 1): # 1 = inner ring
+			if cell.y < (ground_rect.position.y + ground_rect.size.y) - (p_building.exterior_size.y + BUILDING_BUFFER + 1):
 				ground_cells.append(cell)
 
+	var attempt: int = 0
+	var rand: int
+	var pos: Vector2i
+	var rect: Rect2i
 	while attempt < MAX_BUILD_ATTEMPTS:
 		attempt += 1
 		rand = p_rng.randi_range(0, ground_cells.size() - 1)
@@ -58,7 +56,7 @@ func _get_building_rect(p_rng: RandomNumberGenerator, p_building: Building) -> R
 		rect = Rect2i(pos, building_size)
 
 		if _can_create_building(rect):
-			Debug.log_debug("-> Built %s on attempt %d %s" % [p_building.building_id, attempt, rect])
+			Debug.log_debug("Built %s on attempt %d %s" % [p_building.building_id, attempt, rect])
 			return rect
 
 	return Rect2i()
@@ -88,7 +86,7 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 			scene.buffer_layer.erase_cell(coords)
 			scene.building_layer.set_cell(coords, 1, tile_map.get("grass"))
 
-	# place exterior scene instance onto the building rect
+	# place exterior instance onto the building rect
 	var default_tile_size: int = ProjectSettings.get_setting("services/config/default_tile_size")
 	var x: int = (p_rect.position.x + BUILDING_BUFFER) * default_tile_size
 	var y: int = (p_rect.position.y + BUILDING_BUFFER) * default_tile_size
@@ -100,7 +98,7 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 	var access_x: int = p_rect.position.x + floori(p_rect.size.x / 2.0)
 	var access_y: int = p_rect.position.y + p_rect.size.y - BUILDING_BUFFER - 1
 	var access_point: Vector2i = Vector2i(access_x, access_y)
-	scene.building_layer.erase_cell(access_point) # this layer is A* unwalkable
+	scene.building_layer.erase_cell(access_point) # building_layer is A* unwalkable
 	scene.ground_layer.set_cell(access_point, 1, tile_map.get("reserved")) # put it back on the ground
 
 	# add door interaction area

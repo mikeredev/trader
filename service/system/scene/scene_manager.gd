@@ -4,12 +4,13 @@ var _views: Dictionary[View.ViewType, View] = {}
 var _ui: UI
 
 
-func activate_view(p_type: View.ViewType) -> void:
+func activate_view(p_type: View.ViewType) -> View:
 	var target: View = get_view(p_type)
 	for view: View in get_views():
 		var active: bool = view == target
-		view.set_active(active)
-	Debug.log_debug("Set active view: %s" % [View.ViewType.keys()[p_type]])
+		view._set_active(active)
+	Debug.log_debug("Activated view: %s" % [View.ViewType.keys()[p_type]])
+	return target
 
 
 func add_to_ui(p_scene: Variant, p_container: UI.ContainerType) -> Node:
@@ -31,7 +32,7 @@ func center_window(p_resolution: Vector2i) -> void:
 	Debug.log_debug("Centered window: %s" % center)
 
 
-func create_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50) -> void:
+func clamp_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50) -> void:
 	for direction: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 		var border: StaticBody2D = StaticBody2D.new()
 		var collision: CollisionShape2D = CollisionShape2D.new()
@@ -46,24 +47,21 @@ func create_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50
 				border.position.x = p_area.x / 2.0
 				border.position.y = - (p_thickness / 2.0)
 				shape.size = Vector2i(p_area.x + (p_thickness * 2), p_thickness)
-				border.name = str(direction)
 			Vector2i.DOWN:
 				border.position.x = p_area.x / 2.0
 				border.position.y = p_area.y + (p_thickness / 2.0)
 				shape.size = Vector2i(p_area.x + (p_thickness * 2), p_thickness)
-				border.name = str(direction)
 			Vector2i.LEFT:
 				border.position.x = - (p_thickness / 2.0)
 				border.position.y = p_area.y / 2.0
 				shape.size = Vector2i(p_thickness, p_area.y)
-				border.name = str(direction)
 			Vector2i.RIGHT:
 				border.position.x = p_area.x + (p_thickness / 2.0)
 				border.position.y = p_area.y / 2.0
 				shape.size = Vector2i(p_thickness, p_area.y)
-				border.name = str(direction)
+		border.name = str(direction)
 		p_container.add_child(border)
-	Debug.log_verbose("󰗆  Created borders: %s" % p_area)
+	Debug.log_debug("Created borders: %s" % p_area)
 
 
 func create_scene(p_scene: Variant) -> Node:
