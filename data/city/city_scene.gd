@@ -1,6 +1,6 @@
 class_name CityScene extends Node2D
 
-var area: Vector2i # size in pixels, e.g., (640, 368)
+var tile_grid: CityGrid
 var astar_grid: AStarGrid2D
 var access_points: Dictionary[StringName, Vector2i]
 

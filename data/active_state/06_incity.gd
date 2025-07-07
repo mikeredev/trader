@@ -38,7 +38,7 @@ func configure_view() -> void:
 	var view: View = Service.scene_manager.activate_view(View.ViewType.CITY)
 	base_size = ProjectSettings.get_setting("services/config/scene_base_size")
 	camera = view.get_camera()
-	camera.set_limits(scene.area)
+	camera.set_limits(scene.tile_grid.area)
 	camera.cam_control = true # TESTING
 
 

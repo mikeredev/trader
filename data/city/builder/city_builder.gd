@@ -7,38 +7,42 @@ const TILE_MAP: Dictionary[String, Vector2i] = {
 	"road": Vector2i(1, 3), # city tileset
 }
 
-var tile_grid: CityTileGridBuilder
 var terrain_builder: CityTerrainBuilder
 var building_builder: CityBuildingBuilder
 var road_builder: CityRoadBuilder
 
 var city: City
 var scene: CityScene
-var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _init(p_city: City, p_scene: CityScene) -> void:
 	city = p_city
 	scene = p_scene
-	rng.seed = city.uid
-	tile_grid = CityTileGridBuilder.new(scene)
 	terrain_builder = CityTerrainBuilder.new(city, scene, TILE_MAP)
 	building_builder = CityBuildingBuilder.new(city, scene, TILE_MAP)
 	road_builder = CityRoadBuilder.new(scene, TILE_MAP)
 
 
 func build() -> void:
-	tile_grid.generate()
+	# creating seed from city uid
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = city.uid
 
-	# create borders
-	Service.scene_manager.clamp_borders(scene.area, scene.border_group)
+	# create city tile grid
+	scene.tile_grid = CityGrid.new()
+
+	# apply scene borders
+	var borders: Array[StaticBody2D] = Service.scene_manager.create_borders(scene.tile_grid.area)
+	for border: StaticBody2D in borders:
+		scene.border_group.add_child(border)
 
 	# draw terrain
 	Debug.log_info("Drawing terrain...")
-	terrain_builder.draw_terrain(tile_grid.grid_size)
+	terrain_builder.draw_terrain(scene.tile_grid.size)
 
 	# create buildings
 	Debug.log_info("Creating buildings...")
+	building_builder.create_cell_bias()
 	building_builder.create_buildings(rng)
 
 	# create A* grid

@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_axce2")
-exterior_size = Vector2i(3, 4)
+placement_bias = 1
 exterior_scene = ExtResource("1_nrd0o")
+exterior_size = Vector2i(3, 4)
 metadata/_custom_type_script = "uid://p74qlsq0gaj7"

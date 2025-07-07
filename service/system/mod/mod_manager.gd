@@ -85,9 +85,9 @@ func create_manifest(p_directory: String) -> ModManifest:
 	var icon: Texture2D
 	var icon_png: String = "%s/%s" % [p_directory, ICONFILE]
 	if FileAccess.file_exists(icon_png):
-		icon = Common.Util.get_texture(icon_png)
+		icon = Common.Util.image.get_texture(icon_png)
 	else:
-		icon = Common.Util.get_texture(FileLocation.DEFAULT_MOD_ICON)
+		icon = Common.Util.image.get_texture(FileLocation.DEFAULT_MOD_ICON)
 
 	# create manifest
 	var manifest: ModManifest = ModManifest.new()

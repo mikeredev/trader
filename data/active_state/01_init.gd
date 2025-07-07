@@ -38,7 +38,7 @@ func check_access() -> bool:
 		FileLocation.USER_ROOT_SETTINGS_DIR ]
 
 	for path: String in user_directories:
-		if Common.Util.touch_directory(path):
+		if Common.Util.file.touch_directory(path):
 			Debug.log_verbose("  OK: %s" % path)
 		else:
 			Debug.log_warning("Unable to access directory: %s" % path)

@@ -32,12 +32,13 @@ func center_window(p_resolution: Vector2i) -> void:
 	Debug.log_debug("Centered window: %s" % center)
 
 
-func clamp_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50) -> void:
+func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody2D]:
+	var borders: Array[StaticBody2D] = []
 	for direction: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 		var border: StaticBody2D = StaticBody2D.new()
 		var collision: CollisionShape2D = CollisionShape2D.new()
 		var shape: RectangleShape2D = RectangleShape2D.new()
-		collision.name = "Border"
+		collision.name = "CollisionShape2D"
 		collision.shape = shape
 		border.collision_layer = 1# Common.Collision.Bitmask.COLLISION
 		border.collision_mask = 0
@@ -60,8 +61,9 @@ func clamp_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50)
 				border.position.y = p_area.y / 2.0
 				shape.size = Vector2i(p_thickness, p_area.y)
 		border.name = str(direction)
-		p_container.add_child(border)
-	Debug.log_debug("Created borders: %s" % p_area)
+		borders.append(border)
+	Debug.log_debug("Created border: %s" % p_area)
+	return borders
 
 
 func create_scene(p_scene: Variant) -> Node:

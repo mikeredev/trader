@@ -6,12 +6,27 @@ const MAX_BUILD_ATTEMPTS: int = 50
 var city: City
 var scene: CityScene
 var tile_map: Dictionary[String, Vector2i]
+var shore_bias: Array[Vector2i]
 
 
 func _init(p_city: City, p_scene: CityScene, p_tile_map: Dictionary[String, Vector2i]) -> void:
 	city = p_city
 	scene = p_scene
 	tile_map = p_tile_map
+
+
+func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.BLACK) -> void:
+	var box: ColorRect = ColorRect.new()
+	box.name = "%s" % p_position
+	box.position = p_position * 16
+	box.size = Vector2i(16,16)
+	box.color = p_color
+	box.color.a = 0.5
+	scene.debug_overlay.add_child(box)
+
+
+func create_cell_bias() -> void:
+	_create_shore_bias()
 
 
 func create_buildings(p_rng: RandomNumberGenerator) -> void:
@@ -23,43 +38,39 @@ func create_buildings(p_rng: RandomNumberGenerator) -> void:
 			Debug.log_error("Failed to build %s after %d attempts" % [building.building_id, MAX_BUILD_ATTEMPTS])
 
 
-func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.ORANGE_RED) -> void:
-	var box: ColorRect = ColorRect.new()
-	box.name = "%s" % p_position
-	box.position = p_position * 16
-	box.size = Vector2i(16,16)
-	box.color = p_color
-	box.color.a = 0.5
-	scene.debug_overlay.add_child(box)
-
-
 func _get_building_rect(p_rng: RandomNumberGenerator, p_building: Building) -> Rect2i:
 	var building_size: Vector2i = p_building.exterior_size
 	building_size.x += BUILDING_BUFFER * 2
 	building_size.y += BUILDING_BUFFER * 2
-
-	var ground_cells: Array[Vector2i] = []
-	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
-	for cell: Vector2i in scene.ground_layer.get_used_cells(): # fewer available cells on each build
-		if cell.x < (ground_rect.position.x + ground_rect.size.x) - (p_building.exterior_size.x + BUILDING_BUFFER + 1): # 1 = inner ring
-			if cell.y < (ground_rect.position.y + ground_rect.size.y) - (p_building.exterior_size.y + BUILDING_BUFFER + 1):
-				ground_cells.append(cell)
-
+	var available_cells: Array[Vector2i] = _get_available_cells(p_building)
 	var attempt: int = 0
 	var rand: int
 	var pos: Vector2i
 	var rect: Rect2i
 	while attempt < MAX_BUILD_ATTEMPTS:
 		attempt += 1
-		rand = p_rng.randi_range(0, ground_cells.size() - 1)
-		pos = ground_cells[rand]
+		rand = p_rng.randi_range(0, available_cells.size() - 1)
+		pos = available_cells[rand]
 		rect = Rect2i(pos, building_size)
-
 		if _can_create_building(rect):
-			Debug.log_debug("Built %s on attempt %d %s" % [p_building.building_id, attempt, rect])
+			Debug.log_debug("Built %s (bias: %s) on attempt %d %s" % [p_building.building_id, Building.PlacementBias.keys()[p_building.placement_bias], attempt, rect])
 			return rect
-
 	return Rect2i()
+
+
+func _get_available_cells(p_building: Building) -> Array[Vector2i]:
+	var used_cells: Array[Vector2i] = scene.ground_layer.get_used_cells() # fewer available cells on each build
+	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
+	var available_cells: Array[Vector2i] = []
+
+	match p_building.placement_bias:
+		Building.PlacementBias.SHORE: return shore_bias
+		_:
+			for cell: Vector2i in used_cells:
+				if cell.x < (ground_rect.position.x + ground_rect.size.x) - (p_building.exterior_size.x + BUILDING_BUFFER + 1):
+					if cell.y < (ground_rect.position.y + ground_rect.size.y) - (p_building.exterior_size.y + BUILDING_BUFFER + 1):
+						available_cells.append(cell)
+	return available_cells
 
 
 func _can_create_building(p_rect: Rect2i) -> bool:
@@ -72,19 +83,22 @@ func _can_create_building(p_rect: Rect2i) -> bool:
 
 
 func _create_building(p_building: Building, p_rect: Rect2i) -> void:
+	var tile: Vector2i
 	# create buffer
 	for x: int in range(p_rect.position.x, p_rect.position.x + p_rect.size.x):
 		for y: int in range(p_rect.position.y, p_rect.position.y + p_rect.size.y):
 			var coords: Vector2i = Vector2i(x, y)
 			scene.ground_layer.erase_cell(coords)
-			scene.buffer_layer.set_cell(coords, 1, tile_map.get("reserved"))
+			tile = tile_map.get("reserved")
+			scene.buffer_layer.set_cell(coords, 1, tile)
 
 	# draw building rect inside buffer
 	for x: int in range(p_rect.position.x + BUILDING_BUFFER, p_rect.position.x + (p_rect.size.x - BUILDING_BUFFER)):
 		for y: int in range(p_rect.position.y + BUILDING_BUFFER, p_rect.position.y + (p_rect.size.y - BUILDING_BUFFER)):
 			var coords: Vector2i = Vector2i(x, y)
 			scene.buffer_layer.erase_cell(coords)
-			scene.building_layer.set_cell(coords, 1, tile_map.get("grass"))
+			tile = tile_map.get("grass")
+			scene.building_layer.set_cell(coords, 1, tile)
 
 	# place exterior instance onto the building rect
 	var default_tile_size: int = ProjectSettings.get_setting("services/config/default_tile_size")
@@ -99,7 +113,8 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 	var access_y: int = p_rect.position.y + p_rect.size.y - BUILDING_BUFFER - 1
 	var access_point: Vector2i = Vector2i(access_x, access_y)
 	scene.building_layer.erase_cell(access_point) # building_layer is A* unwalkable
-	scene.ground_layer.set_cell(access_point, 1, tile_map.get("reserved")) # put it back on the ground
+	tile = tile_map.get("reserved")
+	scene.ground_layer.set_cell(access_point, 1, tile) # put it back on the ground
 
 	# add door interaction area
 	var interaction_area: Area2D = Area2D.new()
@@ -125,3 +140,30 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 
 	# register AP
 	scene.add_access_point(p_building, access_point)
+
+
+func _create_shore_bias() -> void: # generates an array of cells near the shore
+	var distance: int = 0
+	for building: Building in city.buildings.values():
+		if building.exterior_size.x > distance: distance = building.exterior_size.x
+		if building.exterior_size.y > distance: distance = building.exterior_size.y
+
+	# determine minimum size based on largest building
+	distance += BUILDING_BUFFER * 2
+
+	# mark any cells within [distance] cells of the shore layer
+	var used_cells: Array[Vector2i] = scene.ground_layer.get_used_cells()
+	for cell: Vector2i in used_cells:
+		if _is_near_layer(cell, distance, scene.shore_layer):
+			shore_bias.append(cell)
+	Debug.log_verbose("Set shore bias: %d tiles, %s size" % [distance, shore_bias.size()])
+
+
+func _is_near_layer(p_origin: Vector2i, p_distance: int, p_layer: TileMapLayer) -> bool:
+	for dir: Vector2i in [ Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN ]:
+		var pos: Vector2i = p_origin
+		for dist: int in range(1, p_distance + 1):
+			pos += dir
+			if p_layer.get_cell_source_id(pos) != -1:
+				return true
+	return false

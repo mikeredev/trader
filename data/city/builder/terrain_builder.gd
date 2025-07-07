@@ -31,16 +31,17 @@ const DIRECTION_WEIGHT: Dictionary[Vector2i, Vector2] = {
 
 const SHORELINE_OUTER_MASK: Dictionary = {
 	47: Vector2i(0, 0), # left
-	40: Vector2i(0, 0), # left
+	40: Vector2i(0, 1),
 	41: Vector2i(0, 1),
-	233: Vector2i(0, 2),
 	9: Vector2i(0, 1),
+	233: Vector2i(0, 2), # left
 	7: Vector2i(1, 0), # top
 	3: Vector2i(1, 0),
 	224: Vector2i(1, 2), # bottom
 	192: Vector2i(1, 2),
 	151: Vector2i(2, 0), # right
 	148: Vector2i(2, 1),
+	20: Vector2i(2, 1),
 	244: Vector2i(2, 2),
 	144: Vector2i(2, 1) }
 
@@ -177,7 +178,7 @@ func draw_shore(p_city_orientation: Dictionary[String, float], p_ground_rect: Re
 		else: scene.shore_layer.set_cell(coords, 3, tile)
 
 	# done
-	Debug.log_verbose("  Bitmasked shoreline (is capital: %s)" % city.is_capital)
+	Debug.log_verbose("Bitmasked shoreline (is capital: %s)" % city.is_capital)
 
 
 func draw_inner_ring(p_ground_rect: Rect2i) -> void: # creates a reserved "green area"
@@ -221,7 +222,7 @@ func draw_inner_ring(p_ground_rect: Rect2i) -> void: # creates a reserved "green
 		scene.green_layer.set_cell(coords, 1, tile_map.get("reserved"))
 
 	# done
-	Debug.log_verbose("  Reserved inner ring (is capital: %s)" % city.is_capital)
+	Debug.log_verbose("Reserved inner ring (is capital: %s)" % city.is_capital)
 
 
 func _get_bitmask(p_position: Vector2i, p_layer: TileMapLayer) -> int:
@@ -277,7 +278,7 @@ func _is_adjacent_to_layer(p_cell: Vector2i, p_layer: TileMapLayer) -> bool:
 	neighbors.append(p_layer.get_neighbor_cell(p_cell, TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER))
 
 	for neighbor: Vector2i in neighbors:
-		if p_layer.get_cell_source_id(neighbor) != -1: # is cell valid in neighbor layer
+		if p_layer.get_cell_source_id(neighbor) != -1: # finds any valid cell in p_layer
 			return true
 	return false
 

@@ -1,4 +1,3 @@
-
 class_name Common extends RefCounted
 
 const PROJECT_SETTINGS: Dictionary[String, Variant] = {
@@ -14,22 +13,5 @@ const PROJECT_SETTINGS: Dictionary[String, Variant] = {
 
 class Util:
 	static var json: JSONUtil = JSONUtil.new()
-
-	static func get_texture(p_path: String) -> Texture2D: # move all these to ImgUtil, TweenUtil etc
-		var texture: Texture2D
-
-		if p_path.begins_with("res://") or p_path.begins_with("uid://"):
-			texture = load(p_path) as Texture2D
-
-		if p_path.begins_with("user://"):
-			var image: Image = Image.new()
-			image.load(p_path)
-			texture = ImageTexture.create_from_image(image) as Texture2D
-		return texture
-
-
-	static func touch_directory(p_path: String) -> bool:
-		if not DirAccess.dir_exists_absolute(p_path):
-			var error: Error = DirAccess.make_dir_absolute(p_path)
-			if error: return false
-		return true
+	static var image: ImageUtil = ImageUtil.new()
+	static var file: FileUtil = FileUtil.new()
