@@ -6,36 +6,44 @@
 [node name="CityScene" type="Node2D"]
 script = ExtResource("1_bwx8w")
 
-[node name="Borders" type="Node2D" parent="."]
-unique_name_in_owner = true
+[node name="Layers" type="Node2D" parent="."]
 
-[node name="TilemapLayers" type="Node2D" parent="."]
-
-[node name="Water" type="TileMapLayer" parent="TilemapLayers"]
+[node name="Water" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true
 tile_set = ExtResource("2_jg2x4")
 
-[node name="Ground" type="TileMapLayer" parent="TilemapLayers"]
+[node name="Ground" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true
 tile_set = ExtResource("2_jg2x4")
 
-[node name="Shore" type="TileMapLayer" parent="TilemapLayers"]
+[node name="Shore" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true
 tile_set = ExtResource("2_jg2x4")
 
-[node name="Green" type="TileMapLayer" parent="TilemapLayers"]
+[node name="Green" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true
 tile_set = ExtResource("2_jg2x4")
 
-[node name="Buffer" type="TileMapLayer" parent="TilemapLayers"]
+[node name="Buffer" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true
 tile_set = ExtResource("2_jg2x4")
 
-[node name="Buildings" type="Node2D" parent="."]
+[node name="Building" type="TileMapLayer" parent="Layers"]
+unique_name_in_owner = true
+tile_set = ExtResource("2_jg2x4")
 
-[node name="AccessPoints" type="Node2D" parent="."]
+[node name="Groups" type="Node2D" parent="."]
 
-[node name="Sprites" type="Node2D" parent="."]
+[node name="Borders" type="Node2D" parent="Groups"]
+unique_name_in_owner = true
+
+[node name="Buildings" type="Node2D" parent="Groups"]
+unique_name_in_owner = true
+
+[node name="AccessPoints" type="Node2D" parent="Groups"]
+unique_name_in_owner = true
+
+[node name="Sprites" type="Node2D" parent="Groups"]
 
 [node name="Debug" type="Control" parent="."]
 unique_name_in_owner = true

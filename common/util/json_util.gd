@@ -25,7 +25,7 @@ func convert_to(p_type: Variant.Type, p_string: Variant) -> Variant:
 
 
 func get_dict(p_path: String) -> Dictionary[Variant, Variant]:
-	Debug.log_verbose("󰘦  Loading JSON: %s" % p_path)
+	Debug.log_verbose("  Loading JSON: %s" % p_path)
 	if not FileAccess.file_exists(p_path):
 		Debug.log_warning("File does not exist: %s" % p_path)
 		return {}

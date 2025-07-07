@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Market" load_steps=3 format=3 uid="uid://3rr25xenmydt"]
+
+[ext_resource type="Script" uid="uid://dkv8h5hwl6mue" path="res://data/building/market/market.gd" id="1_1yjss"]
+[ext_resource type="PackedScene" uid="uid://cc3ksnx20uxfe" path="res://data/building/market/market.tscn" id="1_bbky1"]
+
+[resource]
+script = ExtResource("1_1yjss")
+exterior_size = Vector2i(3, 4)
+exterior_scene = ExtResource("1_bbky1")
+metadata/_custom_type_script = "uid://dkv8h5hwl6mue"

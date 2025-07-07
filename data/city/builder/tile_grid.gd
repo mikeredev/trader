@@ -1,4 +1,4 @@
-class_name CityBuildUtilTileGrid extends RefCounted
+class_name CityTileGridBuilder extends RefCounted
 
 var grid_size: Vector2i # size in grid tiles, e.g., (40, 23)
 var grid_area: Vector2i # size in pixels, e.g., (640, 368)

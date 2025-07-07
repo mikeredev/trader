@@ -187,16 +187,18 @@ func _create_body(p_city_id: StringName, p_position: Vector2i, p_color: Color = 
 	return body
 
 
-func _create_building(p_city: City, p_building_id: StringName) -> void: # TBD refactor later
+func _create_building(p_city: City, p_building_id: StringName) -> void:
 	var building: Building
 	match p_building_id:
+		"B_DOCK":
+			var dock: Dock = load("uid://yk14qod6i0yw") as Dock
+			building = dock
 		"B_MARKET":
-			var market: Market = Market.new()
-			market.building_id = p_building_id
+			var market: Market = load("uid://3rr25xenmydt") as Market
 			building = market
 
-	if building:
-		p_city.buildings[p_building_id] = building
+	building.building_id = p_building_id
+	p_city.buildings[p_building_id] = building
 
 
 func _set_astar(p_city: City) -> void:

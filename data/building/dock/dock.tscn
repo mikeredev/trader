@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=4 uid="uid://doingokvbydjx"]
+
+[ext_resource type="TileSet" uid="uid://7yn64dp8ff7u" path="res://assets/tileset/tileset.tres" id="1_14pry"]
+
+[node name="Dock" type="Node2D"]
+
+[node name="Roof" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAAABAAAAAAAAAAAAAEABAAAAAEAAAABAAAABAABAAAAAAABAAEABAABAAEAAAACAAAABAACAAAAAAACAAEABAACAAEAAAA=")
+tile_set = ExtResource("1_14pry")
+
+[node name="Wall" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAIABAAAAAIAAAAAAAMABAAAAAMAAAABAAIABAABAAIAAAABAAMABAABAAMAAAACAAIABAACAAIAAAACAAMABAACAAMAAAA=")
+tile_set = ExtResource("1_14pry")
+
+[node name="Sign" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAAEABAAJAAEAAAA=")
+tile_set = ExtResource("1_14pry")
+
+[node name="Door" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAAMABAAJAAAAAAA=")
+tile_set = ExtResource("1_14pry")

@@ -38,9 +38,7 @@ func directory_access() -> bool:
 			Debug.log_warning("Unable to access directory: %s" % path)
 			success = false
 
-	if success:
-		Debug.log_debug("Success: %s" % str(user_directories))
-	else:
+	if not success:
 		Debug.log_error("Error accessing directory (check write permissions)")
 	return success
 
@@ -54,6 +52,7 @@ func build_tree(p_node_tree: Array[Node]) -> bool:
 			var view: View = node
 			if not _build_view(view):
 				success = false
+				break
 
 		if node is UI:
 			var ui: UI = node
@@ -111,7 +110,7 @@ func _build_ui(p_ui: UI) -> void:
 func _build_view(p_view: View) -> bool:
 	# validate View name
 	if not View.ViewType.keys().has(p_view.name.to_upper()):
-		Debug.log_warning("Invalid view name: %s (%s)" % [p_view.name, p_view.get_path()])
+		Debug.log_warning("Invalid view name: %s, expected: %s" % [p_view.name, View.ViewType.keys()])
 		return false
 
 	# verify subviewport
@@ -134,7 +133,7 @@ func _build_view(p_view: View) -> bool:
 	container_parent.name = "View"
 	container_parent.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	p_view.subviewport.add_child(container_parent)
-	Debug.log_verbose("  Created container parent: %s" % container_parent.get_path())
+	Debug.log_verbose("  Created container parent: %s" % container_parent.get_path())
 
 	# assign containers
 	var default_containers: Array[View.ContainerType] = []
@@ -156,7 +155,7 @@ func _build_view(p_view: View) -> bool:
 
 		# register for lookup
 		p_view.add_container(container_type, container)
-		Debug.log_verbose("  Created container: %s" % container.get_path())
+		Debug.log_verbose("  Created container: %s" % container.get_path())
 
 	# create camera under container_parent
 	var camera: Camera = Camera.new()

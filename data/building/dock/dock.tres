@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Dock" load_steps=3 format=3 uid="uid://yk14qod6i0yw"]
+
+[ext_resource type="Script" uid="uid://p74qlsq0gaj7" path="res://data/building/dock/dock.gd" id="1_axce2"]
+[ext_resource type="PackedScene" uid="uid://doingokvbydjx" path="res://data/building/dock/dock.tscn" id="1_nrd0o"]
+
+[resource]
+script = ExtResource("1_axce2")
+exterior_size = Vector2i(3, 4)
+exterior_scene = ExtResource("1_nrd0o")
+metadata/_custom_type_script = "uid://p74qlsq0gaj7"
