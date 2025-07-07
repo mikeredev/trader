@@ -8,3 +8,4 @@ var buildings: Dictionary[StringName, Building]
 var support: Dictionary[StringName, float] = {}
 var economy: int
 var industry: int
+var is_capital: bool

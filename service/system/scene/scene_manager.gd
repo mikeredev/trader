@@ -13,15 +13,15 @@ func activate_view(p_type: View.ViewType) -> void:
 
 
 func add_to_ui(p_scene: Variant, p_container: UI.ContainerType) -> Node:
+	var scene: Node = create_scene(p_scene)
 	var ui: UI = get_ui()
-	var node: Node = create_scene(p_scene)
-	return ui.add_to_container(node, p_container)
+	return ui.add_to_container(scene, p_container)
 
 
 func add_to_view(p_scene: Variant, p_view: View.ViewType, p_container: View.ContainerType) -> Node:
+	var scene: Node = create_scene(p_scene)
 	var view: View = get_view(p_view)
-	var node: Node = create_scene(p_scene)
-	return view.add_to_container(node, p_container)
+	return view.add_to_container(scene, p_container)
 
 
 func center_window(p_resolution: Vector2i) -> void:
@@ -67,6 +67,41 @@ func get_view(p_type: View.ViewType) -> View:
 
 func get_views() -> Array[View]:
 	return _views.values()
+
+
+func create_borders(p_area: Vector2i, p_container: Node2D, p_thickness: int = 50) -> void:
+	for direction: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		var border: StaticBody2D = StaticBody2D.new()
+		var collision: CollisionShape2D = CollisionShape2D.new()
+		var shape: RectangleShape2D = RectangleShape2D.new()
+		collision.name = "Border"
+		collision.shape = shape
+		border.collision_layer = 1# Common.Collision.Bitmask.COLLISION
+		border.collision_mask = 0
+		border.add_child(collision)
+		match direction:
+			Vector2i.UP:
+				border.position.x = p_area.x / 2.0
+				border.position.y = - (p_thickness / 2.0)
+				shape.size = Vector2i(p_area.x + (p_thickness * 2), p_thickness)
+				border.name = str(direction)
+			Vector2i.DOWN:
+				border.position.x = p_area.x / 2.0
+				border.position.y = p_area.y + (p_thickness / 2.0)
+				shape.size = Vector2i(p_area.x + (p_thickness * 2), p_thickness)
+				border.name = str(direction)
+			Vector2i.LEFT:
+				border.position.x = - (p_thickness / 2.0)
+				border.position.y = p_area.y / 2.0
+				shape.size = Vector2i(p_thickness, p_area.y)
+				border.name = str(direction)
+			Vector2i.RIGHT:
+				border.position.x = p_area.x + (p_thickness / 2.0)
+				border.position.y = p_area.y / 2.0
+				shape.size = Vector2i(p_thickness, p_area.y)
+				border.name = str(direction)
+		p_container.add_child(border)
+	Debug.log_debug("Created borders: %s" % p_area)
 
 
 func register_view(p_type: View.ViewType, p_view: View) -> void:

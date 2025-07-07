@@ -93,6 +93,10 @@ func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	country.color = color
 	country.leader = leader
 
+	# mark city as capital
+	var city: City = Service.city_manager.get_city(country.capital_id)
+	city.is_capital = true
+
 	# register for lookup
 	Service.country_manager.register_country(country)
 
