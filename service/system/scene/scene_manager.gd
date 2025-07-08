@@ -4,11 +4,17 @@ var _views: Dictionary[View.ViewType, View] = {}
 var _ui: UI
 
 
+func get_active_view() -> View:
+	for view: View in _views.values():
+		if view.active: return view
+	return null
+
+
 func activate_view(p_type: View.ViewType) -> View:
 	var target: View = get_view(p_type)
 	for view: View in get_views():
 		var active: bool = view == target
-		view._set_active(active)
+		view.set_active(active)
 	Debug.log_debug("Activated view: %s" % [View.ViewType.keys()[p_type]])
 	return target
 

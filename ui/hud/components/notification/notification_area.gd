@@ -5,7 +5,7 @@ var _box: PackedScene = FileLocation.NOTIFICATION_BOX
 @onready var alert_stack: VBoxContainer = %AlertStack
 
 
-func _ready() -> void:
+func setup() -> void:
 	EventBus.notification_sent.connect(_on_notification_sent)
 
 

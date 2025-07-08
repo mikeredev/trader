@@ -24,10 +24,8 @@ func _main() -> void:
 	apply_project_settings(Common.PROJECT_SETTINGS)
 	apply_user_settings()
 
-	# load UI
-	Debug.log_info("Creating HUD...")
-	var hud_component_display: HUDComponentDisplay = Service.scene_manager.add_to_ui(FileLocation.UI_DASHBOARD, UI.ContainerType.HUD)
-	print(hud_component_display)
+	# create display
+	create_hud()
 
 	# move to second core loop state: inject saved mod IDs
 	var saved_mods: PackedStringArray = Service.config_manager.mod_settings.get_saved_mods()
@@ -78,6 +76,13 @@ func apply_project_settings(p_dict: Dictionary[String, Variant]) -> void:
 func apply_user_settings() -> void:
 	Service.config_manager.load_config()
 	Service.config_manager.apply_config()
+
+
+func create_hud() -> void:
+	Debug.log_info("Creating HUD...")
+	var hud_component_display: HUDComponentDisplay = Service.scene_manager.add_to_ui(
+		FileLocation.UI_HUD_COMPONENT_DISPLAY, UI.ContainerType.HUD )
+	hud_component_display.setup()
 
 
 func _build_ui(p_ui: UI) -> void:
@@ -167,13 +172,13 @@ func _build_view(p_view: View) -> bool:
 
 	# create camera under container_parent
 	var camera: Camera = Camera.new()
-	camera.name = "Camera"
+	camera.name = "%sCamera" % p_view.name
 	container_parent.add_child(camera)
 	p_view.add_camera(camera)
 	Debug.log_verbose("  Created camera: %s" % camera.get_path())
 
-	# start as inactive
-	p_view._set_active(false)
+	# start disabled
+	p_view.set_active(false)
 
 	# register View for lookup
 	Service.scene_manager.register_view(type, p_view)

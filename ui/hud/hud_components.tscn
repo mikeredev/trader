@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3 uid="uid://df2ya0uji0y7j"]
+
+[ext_resource type="Theme" uid="uid://ctglmnnwqwbq4" path="res://assets/theme/hud.tres" id="1_s5h8c"]
+[ext_resource type="Script" uid="uid://b0v3tbwkw2asb" path="res://ui/hud/hud_components.gd" id="2_iysv0"]
+[ext_resource type="Script" uid="uid://n0cmt74v5vsc" path="res://ui/hud/components/info_bar/info_bar.gd" id="3_awuqs"]
+[ext_resource type="Script" uid="uid://xvw5unpybtr6" path="res://ui/hud/components/notification/notification_area.gd" id="4_iqyjp"]
+
+[node name="HUDComponents" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_s5h8c")
+theme_override_constants/separation = 8
+script = ExtResource("2_iysv0")
+
+[node name="InfoBar" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_awuqs")
+metadata/_custom_type_script = "uid://n0cmt74v5vsc"
+
+[node name="MarginInner" type="MarginContainer" parent="InfoBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ComponentStack" type="HBoxContainer" parent="InfoBar/MarginInner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="LabelLocation" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "NO_LOCATION"
+
+[node name="LabelFPS" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "00 fps"
+
+[node name="CheckCamControl" type="CheckButton" parent="InfoBar/MarginInner/ComponentStack"]
+layout_mode = 2
+text = "CAM_CONTROL"
+
+[node name="LabelZoom" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0.000x ZOOM"
+
+[node name="LabelClock" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+text = "1970-01-01T00:00:00"
+
+[node name="NotificationArea" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(416, 192)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 2
+script = ExtResource("4_iqyjp")
+metadata/_custom_type_script = "uid://xvw5unpybtr6"
+
+[node name="MarginInner" type="MarginContainer" parent="NotificationArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="AlertStack" type="VBoxContainer" parent="NotificationArea/MarginInner"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+
+[connection signal="toggled" from="InfoBar/MarginInner/ComponentStack/CheckCamControl" to="InfoBar" method="_on_check_cam_control_toggled"]

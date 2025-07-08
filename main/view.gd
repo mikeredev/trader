@@ -3,13 +3,14 @@ class_name View extends SubViewportContainer
 enum ViewType { OVERWORLD, CITY, INTERIOR }
 enum ContainerType { MAP, VILLAGE, CITY, SUPPLY_PORT, SHIP, SCENE }
 
+var active: bool
 var subviewport: SubViewport
 var _containers: Dictionary[ContainerType, NodeContainer] # everything in a container is freed on soft reset
 var _camera: Camera
 var _active: bool: # debug mode
 	set(p):
 		_active = p
-		_set_active(_active)
+		set_active(_active)
 		return _active
 
 
@@ -36,8 +37,9 @@ func get_container(p_type: ContainerType) -> NodeContainer:
 	return _containers.get(p_type, null)
 
 
-func _set_active(p_active: bool) -> void:
+func set_active(p_toggled_on: bool) -> void:
+	active = p_toggled_on
 	var camera: Camera = get_camera()
-	camera.enabled = p_active
-	visible = p_active
-	#Debug.log_verbose("Set view active: %s, %s" % [self.name, p_active])
+	camera.enabled = p_toggled_on
+	visible = p_toggled_on
+	Debug.log_verbose("Set view active: %s, %s" % [self.name, active])
