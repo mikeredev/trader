@@ -1,6 +1,6 @@
 class_name UI extends CanvasLayer
 
-enum ContainerType { SPLASH, MENU, DIALOG, NOTIFICATION, DEV_UI }
+enum ContainerType { NOTIFICATION, DIALOG, DEV_UI, SPLASH, MENU }
 
 var _containers: Dictionary[ContainerType, UIContainer]
 

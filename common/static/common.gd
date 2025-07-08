@@ -11,6 +11,7 @@ const PROJECT_SETTINGS: Dictionary[String, Variant] = {
 }
 
 
+
 class Util:
 	static var json: JSONUtil = JSONUtil.new()
 	static var image: ImageUtil = ImageUtil.new()

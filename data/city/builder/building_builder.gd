@@ -6,7 +6,7 @@ const MAX_BUILD_ATTEMPTS: int = 50
 var city: City
 var scene: CityScene
 var tile_map: Dictionary[String, Vector2i]
-var shore_bias: Array[Vector2i]
+var shore_area: Array[Vector2i]
 
 
 func _init(p_city: City, p_scene: CityScene, p_tile_map: Dictionary[String, Vector2i]) -> void:
@@ -26,7 +26,7 @@ func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.BLACK) -> void
 
 
 func create_cell_bias() -> void:
-	_create_shore_bias()
+	shore_area = _get_shore_area()
 
 
 func create_buildings(p_rng: RandomNumberGenerator) -> void:
@@ -59,18 +59,9 @@ func _get_building_rect(p_rng: RandomNumberGenerator, p_building: Building) -> R
 
 
 func _get_available_cells(p_building: Building) -> Array[Vector2i]:
-	var used_cells: Array[Vector2i] = scene.ground_layer.get_used_cells() # fewer available cells on each build
-	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
-	var available_cells: Array[Vector2i] = []
-
 	match p_building.placement_bias:
-		Building.PlacementBias.SHORE: return shore_bias
-		_:
-			for cell: Vector2i in used_cells:
-				if cell.x < (ground_rect.position.x + ground_rect.size.x) - (p_building.exterior_size.x + BUILDING_BUFFER + 1):
-					if cell.y < (ground_rect.position.y + ground_rect.size.y) - (p_building.exterior_size.y + BUILDING_BUFFER + 1):
-						available_cells.append(cell)
-	return available_cells
+		Building.PlacementBias.SHORE: return shore_area
+		_: return scene.ground_layer.get_used_cells()
 
 
 func _can_create_building(p_rect: Rect2i) -> bool:
@@ -139,24 +130,27 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 	scene.access_point_group.add_child(interaction_area)
 
 	# register AP
-	scene.add_access_point(p_building, access_point)
+	scene.access_points[p_building] = access_point
 
 
-func _create_shore_bias() -> void: # generates an array of cells near the shore
+func _get_shore_area() -> Array[Vector2i]: # generates an array of cells near the shore
 	var distance: int = 0
 	for building: Building in city.buildings.values():
 		if building.exterior_size.x > distance: distance = building.exterior_size.x
 		if building.exterior_size.y > distance: distance = building.exterior_size.y
 
-	# determine minimum size based on largest building
+	# derive minimum size from largest building
 	distance += BUILDING_BUFFER * 2
 
 	# mark any cells within [distance] cells of the shore layer
 	var used_cells: Array[Vector2i] = scene.ground_layer.get_used_cells()
+	var result: Array[Vector2i] = []
 	for cell: Vector2i in used_cells:
 		if _is_near_layer(cell, distance, scene.shore_layer):
-			shore_bias.append(cell)
-	Debug.log_verbose("Set shore bias: %d tiles, %s size" % [distance, shore_bias.size()])
+			result.append(cell)
+			_add_debug_rect(cell)
+	Debug.log_verbose("Set shore area: %d tiles, %s size" % [distance, result.size()])
+	return result
 
 
 func _is_near_layer(p_origin: Vector2i, p_distance: int, p_layer: TileMapLayer) -> bool:

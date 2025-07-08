@@ -36,8 +36,8 @@ func create_astar(p_ground_rect: Rect2i) -> void:
 
 
 func draw_road(p_start: Building, p_end: Building) -> void:
-	var start: Vector2i = scene.get_access_point(p_start)
-	var end: Vector2i = scene.get_access_point(p_end)
+	var start: Vector2i = scene.access_points.get(p_start)
+	var end: Vector2i = scene.access_points.get(p_end)
 	var path: PackedVector2Array = scene.astar_grid.get_point_path(start, end)
 	var road_tile: Vector2i = tile_map.get("road")
 

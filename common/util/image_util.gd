@@ -1,7 +1,7 @@
 class_name ImageUtil extends RefCounted
 
 
-static func get_texture(p_path: String) -> Texture2D: # move all these to ImgUtil, TweenUtil etc
+func get_texture(p_path: String) -> Texture2D: # test this with valid path but invalid image eg map.txt
 	var texture: Texture2D
 
 	if p_path.begins_with("res://") or p_path.begins_with("uid://"):

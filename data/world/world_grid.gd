@@ -1,6 +1,6 @@
 class_name WorldGrid extends AStarGrid2D
 
-const TILE_DATA: Dictionary[String, Dictionary] = {
+const CELL_DATA: Dictionary[String, Dictionary] = {
 	"land": {
 		"color": "#C0C0C0"
 	},
@@ -23,78 +23,35 @@ const TILE_DATA: Dictionary[String, Dictionary] = {
 	"beacon": {
 		"color": "#0000FF",
 		"weight": 0.1,
-	},
-}
+	} }
 
-var settings: Dictionary[String, Variant]
+const SETTINGS: Dictionary[String, Variant] = {
+	"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+	"estimate": AStarGrid2D.HEURISTIC_EUCLIDEAN,
+	"diagonal": AStarGrid2D.DIAGONAL_MODE_ALWAYS,
+	"jumping": true }
+
 var pixel_data: PixelData = PixelData.new()
 
 
-func _init(p_map_texture: Texture2D, p_settings: Dictionary[String, Variant]) -> void:
-	settings = p_settings
-	_create_grid(p_map_texture.get_size(), settings)
-	_set_weights(self, region.size, p_map_texture.get_image(), TILE_DATA)
+func _init(p_map_texture: Texture2D) -> void:
+	var texture_size: Vector2i = p_map_texture.get_size()
+	var texture_image: Image = p_map_texture.get_image()
 
+	# set basic properties
+	region = Rect2i(Vector2i.ZERO, texture_size)
+	cell_shape = AStarGrid2D.CELL_SHAPE_SQUARE
+	cell_size = Vector2i(1, 1)
 
-func _create_grid(p_size: Vector2i, p_settings: Dictionary) -> void:
-	var compute: int = p_settings["compute"]
-	var estimate: int = p_settings["estimate"]
-	var diagonal: int = p_settings["diagonal"]
-	var jumping: bool = p_settings["jumping"]
+	# apply settings (also calls update)
+	_from_dict(SETTINGS)
 
-	region = Rect2i(Vector2i.ZERO, p_size)
-	default_compute_heuristic = compute as AStarGrid2D.Heuristic
-	default_estimate_heuristic = estimate as AStarGrid2D.Heuristic
-	diagonal_mode = diagonal as AStarGrid2D.DiagonalMode
-	jumping_enabled = jumping as bool
-	update()
+	# derive point weight from pixel color
+	_set_weights(texture_image, region.size)
 
-	Debug.log_debug("Created grid: COMPUTE: %d, ESTIMATE: %d, DIAGONAL: %d, JUMPING: %s, size: %s" %
-		[default_compute_heuristic, default_estimate_heuristic,
-		diagonal_mode, jumping_enabled, p_size])
-
-
-func _set_weights(p_grid: AStarGrid2D, p_size: Vector2i, p_image: Image, p_tile_data: Dictionary[String, Dictionary]) -> void:
-	var start: int = Time.get_ticks_msec()
-	var color_to_weight: Dictionary[Color, float] = {}
-	var color_to_info: Dictionary[Color, Dictionary] = {}
-	var unknown: int = 0
-
-	for tile_type: String in p_tile_data.keys():
-		var color: Color = p_tile_data[tile_type].color
-		var weight: float = p_tile_data[tile_type].get("weight", -1) # set below 0
-		color_to_weight[color] = weight
-		color_to_info[color] = {
-			"tile_type": tile_type as String,
-			"count": 0 as int,
-		}
-
-	for x: int in range(p_size.x):
-		for y: int in range(p_size.y):
-			var color: Color = p_image.get_pixel(x, y)
-			var cell: Vector2i = Vector2i(x, y)
-
-			if color_to_weight.has(color):
-				var weight: float = color_to_weight[color]
-				color_to_info[color]["count"] += 1
-				pixel_data["datastore"][cell] = color # used by chunk grid
-				if weight < 0:
-					p_grid.set_point_solid(cell, true)
-				else:
-					p_grid.set_point_weight_scale(cell, weight)
-			else:
-				unknown += 1
-
-	var end: int = Time.get_ticks_msec()
-	var duration: int = end - start
-
-	var output: Dictionary[String, Dictionary] = {}
-	for color: Color in color_to_info.keys():
-		output[color_to_info[color]["tile_type"]] = {
-			"count": color_to_info[color]["count"],
-			"weight": color_to_weight[color],
-		}
-	Debug.log_debug("Set weights: unknown %d, %s, duration: %dms" % [unknown, output, duration])
+	Debug.log_debug("A* size: %s, COMPUTE: %d, ESTIMATE: %d, DIAGONAL: %d, JUMPING: %s" %
+		[region.size, default_compute_heuristic, default_estimate_heuristic,
+		diagonal_mode, jumping_enabled])
 
 
 func update_grid(p_compute: int, p_estimate: int, p_diagonal: int, p_jumping: bool) -> void:
@@ -103,3 +60,41 @@ func update_grid(p_compute: int, p_estimate: int, p_diagonal: int, p_jumping: bo
 	diagonal_mode = p_diagonal as AStarGrid2D.DiagonalMode
 	jumping_enabled = p_jumping as bool
 	update()
+
+
+func _from_dict(p_settings: Dictionary[String, Variant]) -> void:
+	var compute: int = p_settings.get("compute")#, SETTINGS.compute)
+	var estimate: int = p_settings.get("estimate")#, SETTINGS.estimate)
+	var diagonal: int = p_settings.get("diagonal")#, SETTINGS.diagonal)
+	var jumping: bool = p_settings.get("jumping")#, SETTINGS.jumping)
+	update_grid(compute, estimate, diagonal, jumping)
+
+
+func _set_weights(p_image: Image, p_size: Vector2i) -> void:
+	var start: int = Time.get_ticks_msec()
+	var color_to_weight: Dictionary[Color, float] = {}
+
+	# map each expected color to its weight. entries without a weight property (i.e., land)
+	# will default to -1, representing solid
+	for tile_type: String in CELL_DATA.keys():
+		var color: Color = CELL_DATA[tile_type].color
+		var weight: float = CELL_DATA[tile_type].get("weight", -1)
+		color_to_weight[color] = weight
+
+	# walk every pixel in the map texture
+	for x: int in range(p_size.x):
+		for y: int in range(p_size.y):
+
+			# get the color of the current pixel
+			var cell: Vector2i = Vector2i(x, y)
+			var color: Color = p_image.get_pixelv(cell)
+
+			pixel_data["datastore"][cell] = color # used by ChunkGrid
+
+			var weight: float = color_to_weight[color]
+			if weight < 0: set_point_solid(cell, true)
+			else: set_point_weight_scale(cell, weight)
+
+	# minimal logging for performance / will have crashed by now if any problems
+	var duration: int = Time.get_ticks_msec() - start
+	Debug.log_debug("A* weights: %dms" % duration)

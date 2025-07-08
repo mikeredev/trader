@@ -50,17 +50,17 @@ func build() -> void:
 	var container: NodeContainer = overworld.get_container(View.ContainerType.MAP)
 
 	# create world map
-	var texture: String = map.texture
-	var world_map: WorldMap = WorldMap.new(texture)
-	container.add_child(world_map)
+	var path: String = map.get("texture")
+	var map: WorldMap = WorldMap.new(path)
+	container.add_child(map)
 
 	# register world map
-	Service.world_manager.map = world_map
+	Service.world_manager.map = map
 
-	# bind camera
+	# bind camera / TBD this will bind it to the starting window size, ensure overridden later
 	var camera: Camera = overworld.get_camera()
-	camera.set_limits(world_map.texture.get_size())
-	camera.set_min_zoom(DisplayServer.screen_get_size(), world_map.texture.get_size())
+	camera.set_limits(map.texture.get_size())
+	camera.set_min_zoom(DisplayServer.screen_get_size(), map.texture.get_size())
 
 	# create A* grid
 	var enable_astar: bool = Service.config_manager.developer_settings.enable_astar
@@ -68,13 +68,7 @@ func build() -> void:
 		Debug.log_warning("Overworld A* is disabled")
 		return
 
-	var astar: Dictionary[String, Variant] = {
-		"compute": AStarGrid2D.HEURISTIC_EUCLIDEAN,
-		"estimate": AStarGrid2D.HEURISTIC_EUCLIDEAN,
-		"diagonal": AStarGrid2D.DIAGONAL_MODE_ALWAYS,
-		"jumping": true }
-
-	var grid: WorldGrid = WorldGrid.new(world_map.texture, astar)
+	var grid: WorldGrid = WorldGrid.new(map.texture)
 
 	# register A* grid
 	Service.world_manager.grid = grid

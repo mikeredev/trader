@@ -2,7 +2,7 @@ class_name CityScene extends Node2D
 
 var tile_grid: CityGrid
 var astar_grid: AStarGrid2D
-var access_points: Dictionary[StringName, Vector2i]
+var access_points: Dictionary[Building, Vector2i]
 
 @onready var border_group: Node2D = %Borders
 @onready var building_group: Node2D = %Buildings
@@ -17,11 +17,3 @@ var access_points: Dictionary[StringName, Vector2i]
 @onready var road_layer: TileMapLayer = %Road
 
 @onready var debug_overlay: Control = %Debug
-
-
-func add_access_point(p_building: Building, p_access_point: Vector2i) -> void:
-	access_points[p_building.building_id] = p_access_point
-
-
-func get_access_point(p_building: Building) -> Vector2i:
-	return access_points.get(p_building.building_id)

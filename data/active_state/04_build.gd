@@ -18,7 +18,7 @@ func _start_services() -> void:
 
 func _main() -> void:
 	Debug.log_info("Creating utilities...")
-	create_utils()
+	create_engine_tools()
 
 	Debug.log_info("Creating player...")
 	create_player()
@@ -49,7 +49,7 @@ func create_player() -> void:
 	Service.character_manager.cache_body(player.body) # cache until ready for use
 
 
-func create_utils() -> void:
+func create_engine_tools() -> void:
 	System.create_cache() # body cache
 
 
