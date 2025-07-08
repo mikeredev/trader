@@ -13,15 +13,15 @@
 shader = ExtResource("2_37g20")
 shader_parameter/horizon = 0.85
 shader_parameter/sky_color = Color(0.1, 0.15, 0.4, 1)
-shader_parameter/sea_color = Color(0.0951883, 0.199773, 0.208952, 1)
+shader_parameter/sea_color = Color(0.1, 0.2, 0.3, 1)
 shader_parameter/crest_color = Color(0.15, 0.2, 0.3, 1)
-shader_parameter/wave_amplitude = 0.005
+shader_parameter/wave_amplitude = 0.009
 shader_parameter/wave_frequency = 10.0
 shader_parameter/wave_speed = 0.01
-shader_parameter/band_height = 0.0
-shader_parameter/band_fade_range = 0.75
+shader_parameter/band_height = 0.054
+shader_parameter/band_fade_range = 0.552
 shader_parameter/band_color = Color(0.140704, 0.702977, 1, 0.3)
-shader_parameter/band_steps = 24
+shader_parameter/band_steps = 8
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nnn58"]
 shader = ExtResource("3_rcrc8")

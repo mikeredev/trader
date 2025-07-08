@@ -3,6 +3,8 @@
 ## Usually used from within a [UIControl].
 class_name UISubMenu extends Control
 
+signal submenu_closed
+
 
 func _ready() -> void:
 	_connect_signals()

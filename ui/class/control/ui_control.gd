@@ -3,8 +3,8 @@ class_name UIControl extends Control
 
 func _ready() -> void:
 	_connect_signals()
-	_set_minimum_size()
-	_set_color_scheme()
+	_set_minimum_size() # requires MarginOuter/NavMain structure
+	_set_color_scheme() # sets a %Background color rect to the project primary color
 	_ui_ready()
 
 

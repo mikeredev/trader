@@ -1,6 +1,6 @@
 extends Control
 
-@export var log_level: Debug.Severity: ## Sets runtime logging threshold.
+@export var log_level: Debug.Severity = Debug.Severity.DEBUG: ## Sets runtime logging threshold.
 	set(p):
 		log_level = p
 		Debug.threshold = log_level
@@ -11,11 +11,11 @@ extends Control
 
 
 func _ready() -> void:
-	# apply runtime overrides
-	color_scheme.apply()
-
 	# connect project-wide signals
 	item_rect_changed.connect(_on_item_rect_changed)
+
+	# apply runtime overrides
+	color_scheme.apply()
 
 	# connect statics
 	Debug.connect_signals()

@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0jesupddkx4x"]
+
+[ext_resource type="Script" uid="uid://ccidxdi84unpn" path="res://ui/hud/components/notification/notification_box.gd" id="1_y45g7"]
+[ext_resource type="Texture2D" uid="uid://ciwg13m0r1h3v" path="res://assets/image/icon/arrow_right.png" id="2_2w0qh"]
+
+[node name="NotificationBox" type="PanelContainer"]
+offset_right = 392.0
+offset_bottom = 76.0
+script = ExtResource("1_y45g7")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_2w0qh")
+stretch_mode = 3
+
+[node name="Message" type="Label" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 60)
+layout_mode = 2
+text = "Text goes here. It can be as long as you need, but if it breaks onto a new line then it might need extra padding or a line break or something to wrap it up nicely"
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 4
+
+[connection signal="gui_input" from="MarginContainer/HBoxContainer/Message" to="." method="_on_message_gui_input"]

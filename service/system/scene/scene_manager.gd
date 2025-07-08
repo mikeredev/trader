@@ -66,6 +66,10 @@ func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody
 	return borders
 
 
+func create_notification(p_message: String) -> void:
+	EventBus.notification_sent.emit(p_message)
+
+
 func create_scene(p_scene: Variant) -> Node:
 	var node: Node
 	match typeof(p_scene):
@@ -90,6 +94,14 @@ func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
 		.set_trans(p_trans) \
 		.set_ease(p_ease)
 		return tween
+
+
+func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
+	var box: String = FileLocation.DIALOG_CONFIRM
+	var modal: DialogConfirm = add_to_ui(box, UI.ContainerType.DIALOG)
+	modal.configure(p_text, p_confirm_text, p_cancel_text)
+	var result: bool = await modal.await_input()
+	return result
 
 
 func get_ui() -> UI:

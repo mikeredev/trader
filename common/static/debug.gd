@@ -7,10 +7,9 @@ const COLOR: Dictionary[Severity, Color] = {
 	Severity.DEBUG: Color.WEB_GRAY,
 	Severity.INFO: Color.CORNSILK,
 	Severity.WARNING: Color.ORANGE,
-	Severity.ERROR: Color.RED,
-}
+	Severity.ERROR: Color.RED }
 
-static var threshold: Severity = Severity.VERBOSE
+static var threshold: Severity = Severity.DEBUG
 static var active_state: StringName = "NONE"
 
 
@@ -48,13 +47,15 @@ static func _notify(p_text: Variant, p_severity: Severity) -> void:
 	var timestamp: String = _get_timestamp()
 	var formatted_active_state: String = _get_active_state()
 	var text: String = _get_text(p_text)
-	var result: String = "%s | %s | [color=%s]%s[/color]" % [timestamp, formatted_active_state, color.to_html(), text]
-
+	var result: String = "%s | %s | [color=%s]%s[/color]" % [
+		timestamp, formatted_active_state, color.to_html(), text ]
 	print_rich(result)
 
 	if p_severity == Severity.WARNING:
+		_send_ui_alert(text)
 		push_warning(text)
 	if p_severity == Severity.ERROR:
+		_send_ui_alert(text)
 		push_error(text)
 
 
@@ -68,7 +69,8 @@ static func _get_active_state() -> String:
 		"START": color = Color.PERU
 		"BUILD": color = Color.GREEN_YELLOW
 		"READY": color = Color.SKY_BLUE
-		"CITY": color = Color.BISQUE
+		"INCITY": color = Color.BISQUE
+		"ATSEA": color = Color.MEDIUM_SLATE_BLUE
 	return "[color=%s]%s[/color]" % [color.to_html(), active_state]
 
 
@@ -82,6 +84,11 @@ static func _get_timestamp() -> String:
 
 static func _get_text(p_text: Variant) -> String:
 	return str(p_text)
+
+
+static func _send_ui_alert(p_text: String) -> void:
+	if not Service.config_manager.general_settings.show_ui_alerts: return
+	Service.scene_manager.create_notification(p_text)
 
 
 static func _on_state_entered(p_state: ActiveState) -> void:

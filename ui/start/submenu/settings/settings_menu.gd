@@ -9,6 +9,19 @@ var cache: Dictionary[ConfigManager.Section, GridContainer]
 @onready var return_button: UIButton = %ReturnButton
 
 
+func _connect_signals() -> void:
+	restore_button.pressed_tweened.connect(_on_restore_button_pressed)
+	return_button.pressed_tweened.connect(_on_return_button_pressed)
+
+
+func _set_button_shortcuts() -> void:
+	var shortcut: Shortcut = Shortcut.new()
+	var event: InputEventAction = InputEventAction.new()
+	event.action = "ui_cancel"
+	shortcut.events.append(event)
+	return_button.shortcut = shortcut
+
+
 func _ui_ready() -> void:
 	create_nav()
 
@@ -53,28 +66,15 @@ func restore_grid() -> void:
 	change_grid(active_section, true)
 
 
-func _connect_signals() -> void:
-	restore_button.pressed_tweened.connect(_on_restore_button_pressed)
-	return_button.pressed_tweened.connect(_on_return_button_pressed)
-
-
-func _set_button_shortcuts() -> void:
-	var shortcut: Shortcut = Shortcut.new()
-	var event: InputEventAction = InputEventAction.new()
-	event.action = "ui_cancel"
-	shortcut.events.append(event)
-	return_button.shortcut = shortcut
-
-
 func _on_nav_button_toggled(p_toggled_on: bool, p_section: ConfigManager.Section) -> void:
 	change_grid(p_section, p_toggled_on)
 
 
 func _on_restore_button_pressed() -> void:
-	if await Service.dialog_manager.get_confirmation(DialogManager.Data.RESTORE_SETTINGS_CHECK):
+	if await Service.scene_manager.get_confirmation("RESTORE DEFAULT SETTINGS?"):
 		Service.config_manager.restore_section(active_section, true)
 		restore_grid()
 
 
 func _on_return_button_pressed() -> void:
-	EventBus.menu_closed.emit(self)
+	submenu_closed.emit()

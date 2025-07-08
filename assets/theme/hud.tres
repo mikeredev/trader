@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://ctglmnnwqwbq4"]
+
+[ext_resource type="FontFile" uid="uid://bk10bo5r68o4m" path="res://assets/font/Modeseven-L3n5.ttf" id="1_kp2nd"]
+
+[resource]
+default_font = ExtResource("1_kp2nd")
+default_font_size = 20

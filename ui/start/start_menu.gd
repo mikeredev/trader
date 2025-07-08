@@ -1,6 +1,6 @@
 class_name StartMenu extends UIControl
 
-enum SubMenu { NEW, LOAD, SETTINGS, MODS }
+enum SubMenuType { NEW, LOAD, SETTINGS, MODS }
 
 const FADE_INTRO: float = 9.0
 const PAUSE: float = 0.5
@@ -10,9 +10,9 @@ const BUTTON_SLIDE: float = 0.2
 const MENU_IN: float = 0.6
 const MENU_OUT: float = 0.2
 
-var active: Dictionary[SubMenu, Control]
-var buttons: Array[UIButtonStartMenu]
 var tween: Tween
+var buttons: Array[UIButtonStartMenu]
+var cache: Dictionary[SubMenuType, UISubMenu]
 
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
@@ -41,14 +41,35 @@ var tween: Tween
 @onready var label_title: Label = %LabelTitle
 
 
-func _ui_ready() -> void:
-	_housekeeping()
-	apply_color_scheme()
+func _connect_signals() -> void:
+	EventBus.viewport_resized.connect(_on_viewport_resized)
 
-	if Service.config_manager.general_settings.show_intro: play_animation()
+	continue_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_continue))
+	continue_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_continue))
+	continue_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
+
+	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
+	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
+	new_game_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU))
+
+	load_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_load))
+	load_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_load))
+	load_game_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_LOAD_MENU))
+
+	mods_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_mods))
+	mods_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_mods))
+	mods_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.MODS, FileLocation.UI_MOD_MENU))
+
+	settings_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_settings))
+	settings_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_settings))
+	settings_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.SETTINGS, FileLocation.UI_SETTINGS_MENU))
+
+	quit_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_quit))
+	quit_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_quit))
+	quit_button.pressed_tweened.connect(_on_quit_pressed)
 
 
-func apply_color_scheme() -> void:
+func _set_color_scheme() -> void:
 	var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 	var secondary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/secondary_bg")
 	var ternary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
@@ -57,13 +78,38 @@ func apply_color_scheme() -> void:
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("sea_color", secondary_bg)
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("crest_color", secondary_bg.darkened(0.1))
 	(atmosphere_rect.material as ShaderMaterial).set_shader_parameter("fog_color", ternary_bg)
-	fade_rect.color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
+	fade_rect.color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 
-	for button: UIButtonStartMenu in buttons:
-		button.set_theme_type_variation("StartMenuButton")
+
+func _ui_ready() -> void:
+	_housekeeping()
+	play_animation()
+
+
+func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
+	# fade out label_title and nav_menu
+	tween = Service.scene_manager.create_tween(nav_buttons, "modulate:a", 0.0, MENU_OUT)
+	tween.parallel().tween_property(label_title, "modulate:a", 0.0, MENU_OUT)
+	await tween.finished
+
+	var submenu: UISubMenu
+	if cache.has(p_submenu):
+		submenu = cache.get(p_submenu)
+		submenu.visible = true # already modulated to 0
+	else:
+		submenu = Service.scene_manager.create_scene(p_path)
+		submenu.submenu_closed.connect(_on_menu_closed.bind(submenu))
+		submenu.modulate.a = 0.0
+		nav_content.add_child(submenu)
+		cache[p_submenu] = submenu
+
+	# modulate submenu to transparent and fade in
+	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
 
 
 func play_animation() -> void:
+	if not Service.config_manager.general_settings.show_intro: return
+
 	# prepare tween, title, buttons
 	fade_rect.visible = true
 	label_title.modulate.a = 0.0
@@ -104,66 +150,36 @@ func play_animation() -> void:
 		await tween.finished
 
 
-func transition_to(p_submenu: SubMenu, p_path: String) -> void:
-	tween = Service.scene_manager.create_tween(label_title, "modulate:a", 0.0, MENU_OUT)
-	tween.parallel().tween_property(nav_menu, "modulate:a", 0.0, MENU_OUT)
-	await tween.finished
-
-	var submenu: Control
-	if active.has(p_submenu):
-		submenu = active.get(p_submenu)
-		submenu.modulate.a = 0.0
-		submenu.visible = true
-	else:
-		submenu = Service.scene_manager.create_scene(p_path)
-		submenu.modulate.a = 0.0
-		nav_content.add_child(submenu)
-		active[p_submenu] = submenu
-
-	# modulate submenu to transparent and fade in
-	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
-
-
-func _connect_signals() -> void:
-	EventBus.menu_closed.connect(_on_menu_closed)
-	EventBus.viewport_resized.connect(_on_viewport_resized)
-
-	continue_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_continue))
-	continue_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_continue))
-	continue_button.pressed_tweened.connect(transition_to.bind(SubMenu.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
-
-	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
-	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
-	new_game_button.pressed_tweened.connect(transition_to.bind(SubMenu.NEW, FileLocation.UI_NEW_GAME_MENU))
-
-	load_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_load))
-	load_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_load))
-	load_game_button.pressed_tweened.connect(transition_to.bind(SubMenu.NEW, FileLocation.UI_LOAD_MENU))
-
-	mods_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_mods))
-	mods_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_mods))
-	mods_button.pressed_tweened.connect(transition_to.bind(SubMenu.MODS, FileLocation.UI_MOD_MENU))
-
-	settings_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_settings))
-	settings_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_settings))
-	settings_button.pressed_tweened.connect(transition_to.bind(SubMenu.SETTINGS, FileLocation.UI_SETTINGS_MENU))
-
-	quit_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_quit))
-	quit_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_quit))
-	quit_button.pressed_tweened.connect(_on_quit_pressed)
-
-
 func _housekeeping() -> void:
-	fade_rect.visible = false # TESTING
+	fade_rect.visible = false # remains unused unless playing animation
 
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:
 			var button: UIButtonStartMenu = node
+			button.set_theme_type_variation("StartMenuButton")
 			buttons.append(button)
 
-		if node is TextureRect: # arrow selector
+		if node is TextureRect: # arrow selector is modulated back in on mouseover
 			var texture: TextureRect = node
 			texture.modulate.a = 0.0
+
+
+func _on_menu_closed(p_submenu: Control) -> void:
+	# fade out submenu (reset menu here if needed)
+	tween = Service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	await tween.finished
+	p_submenu.visible = false
+
+	# fade back in button nav/label, modulated out in get_submenu
+	nav_buttons.visible = true
+	label_title.visible = true
+	tween = Service.scene_manager.create_tween(nav_buttons, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	tween.parallel().tween_property(label_title, "modulate:a", 1.0, MENU_IN)
+
+
+func _on_quit_pressed() -> void:
+	if await Service.scene_manager.get_confirmation("QUIT TO DESKTOP?"):
+		System.quit_game()
 
 
 func _on_mouse_entered(p_icon: TextureRect) -> void:
@@ -172,28 +188,6 @@ func _on_mouse_entered(p_icon: TextureRect) -> void:
 
 func _on_mouse_exited(p_icon: TextureRect) -> void:
 	p_icon.modulate.a = 0.0
-
-
-func _on_menu_closed(p_submenu: Control) -> void:
-	# fade out menu (reset menu here if needed)
-	tween = Service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
-	await tween.finished
-	p_submenu.visible = false
-
-	# set title/menu as transparent, and fade back in
-	label_title.modulate.a = 0.0
-	nav_menu.modulate.a = 0.0
-
-	label_title.visible = true
-	nav_menu.visible = true
-
-	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
-	tween.parallel().tween_property(label_title, "modulate:a", 1.0, MENU_IN)
-
-
-func _on_quit_pressed() -> void:
-	if await Service.dialog_manager.get_confirmation("QUIT TO DESKTOP?"):
-		System.quit_game()
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:

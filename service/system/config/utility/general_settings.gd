@@ -3,17 +3,14 @@ class_name GeneralSettings extends ConfigUtility
 var system_max_autosaves: int = ProjectSettings.get_setting("services/config/max_autosaves")
 var max_autosaves: int = 5
 var show_intro: bool = true
+var show_ui_alerts: bool = true
 
 
 func apply_config() -> void:
 	Debug.log_info("Applying general settings...")
 	set_max_autosaves(max_autosaves)
-
-
-func set_show_intro(p_toggled_on: bool, p_save: bool = false) -> void:
-	show_intro = p_toggled_on
-	Debug.log_debug("Set show intro: %s" % p_toggled_on)
-	if p_save: EventBus.config_changed.emit()
+	set_show_intro(show_intro)
+	set_show_ui_alerts(show_ui_alerts)
 
 
 func set_max_autosaves(p_value: int, p_save: bool = false) -> void:
@@ -22,15 +19,28 @@ func set_max_autosaves(p_value: int, p_save: bool = false) -> void:
 	if p_save: EventBus.config_changed.emit()
 
 
+func set_show_intro(p_toggled_on: bool, p_save: bool = false) -> void:
+	show_intro = p_toggled_on
+	Debug.log_debug("Set show intro: %s" % p_toggled_on)
+	if p_save: EventBus.config_changed.emit()
+
+
+func set_show_ui_alerts(p_toggled_on: bool, p_save: bool = false) -> void:
+	show_ui_alerts = p_toggled_on
+	Debug.log_debug("Set show UI alerts: %s" % p_toggled_on)
+	if p_save: EventBus.config_changed.emit()
+
+
 func to_dict() -> Dictionary[String, Variant]:
 	return {
+		"max_autosaves": max_autosaves,
 		"show_intro": show_intro,
-		"max_autosaves": max_autosaves
+		"show_ui_alerts": show_ui_alerts,
 	}
 
 
 func to_grid() -> GridContainer:
-	var settings: Array[Variant] = [ show_intro, max_autosaves ]
+	var settings: Array[Variant] = [ show_intro, show_ui_alerts, max_autosaves ]
 	var grid: GridContainer = GridContainer.new()
 	grid.name = "GeneralSettings"
 	grid.columns = 2
@@ -40,13 +50,6 @@ func to_grid() -> GridContainer:
 		var ui_element: Control # variable
 
 		match setting:
-			show_intro:
-				label_name.text = tr("SHOW_INTRO")
-				var check_button: CheckButton = CheckButton.new()
-				check_button.button_pressed = show_intro
-				check_button.toggled.connect(set_show_intro.bind(true))
-				ui_element = check_button
-
 			max_autosaves:
 				label_name.text = tr("MAX_AUTOSAVES")
 				var spinbox: SpinBox = SpinBox.new()
@@ -55,6 +58,20 @@ func to_grid() -> GridContainer:
 				spinbox.value = max_autosaves
 				spinbox.value_changed.connect(_get_max_autosaves.bind(true))
 				ui_element = spinbox
+
+			show_ui_alerts:
+				label_name.text = tr("SHOW_UI_ALERTS")
+				var check_button: CheckButton = CheckButton.new()
+				check_button.button_pressed = show_ui_alerts
+				check_button.toggled.connect(set_show_ui_alerts.bind(true))
+				ui_element = check_button
+
+			show_intro:
+				label_name.text = tr("SHOW_INTRO")
+				var check_button: CheckButton = CheckButton.new()
+				check_button.button_pressed = show_intro
+				check_button.toggled.connect(set_show_intro.bind(true))
+				ui_element = check_button
 
 		label_name.name = "%s%s" % ["Label", label_name.text.to_pascal_case()]
 		ui_element.name = "%s%s" % ["Option", label_name.text.to_pascal_case()]
@@ -67,8 +84,9 @@ func to_grid() -> GridContainer:
 static func from_dict(p_dict: Dictionary) -> GeneralSettings:
 	var out: GeneralSettings = GeneralSettings.new()
 
-	out.show_intro = p_dict.get("show_intro", out.show_intro)
 	out.max_autosaves = p_dict.get("max_autosaves", out.max_autosaves)
+	out.show_intro = p_dict.get("show_intro", out.show_intro)
+	out.show_ui_alerts = p_dict.get("show_ui_alerts", out.show_ui_alerts)
 
 	return out
 

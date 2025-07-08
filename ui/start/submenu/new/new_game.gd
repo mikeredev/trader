@@ -6,6 +6,19 @@ extends UISubMenu
 @onready var ui_return_button: UIButton = %ReturnButton
 
 
+func _connect_signals() -> void:
+	ui_start_button.pressed_tweened.connect(_on_start_pressed)
+	ui_return_button.pressed_tweened.connect(_on_return_pressed)
+
+
+func _set_button_shortcuts() -> void: # TBD create helper in Common util
+	var shortcut: Shortcut = Shortcut.new()
+	var event: InputEventAction = InputEventAction.new()
+	event.action = "ui_cancel"
+	shortcut.events.append(event)
+	ui_return_button.shortcut = shortcut
+
+
 func _ui_ready() -> void:
 	populate_countries()
 
@@ -24,19 +37,6 @@ func start_session(p_profile_name: StringName, p_country_id: StringName) -> void
 	Service.session_manager.start_session(player, new_game)
 
 
-func _connect_signals() -> void:
-	ui_start_button.pressed_tweened.connect(_on_start_pressed)
-	ui_return_button.pressed_tweened.connect(_on_return_pressed)
-
-
-func _set_button_shortcuts() -> void: # TBD create helper in Common util
-	var shortcut: Shortcut = Shortcut.new()
-	var event: InputEventAction = InputEventAction.new()
-	event.action = "ui_cancel"
-	shortcut.events.append(event)
-	ui_return_button.shortcut = shortcut
-
-
 func _on_start_pressed() -> void:
 	ui_start_button.disabled = true
 	if ui_profile_name.text.is_empty():
@@ -48,4 +48,4 @@ func _on_start_pressed() -> void:
 
 
 func _on_return_pressed() -> void:
-	EventBus.menu_closed.emit(self)
+	submenu_closed.emit()

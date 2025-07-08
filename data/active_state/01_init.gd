@@ -20,8 +20,14 @@ func _main() -> void:
 	if not build_tree(node_tree): return
 
 	# apply runtime settings
+	Debug.log_info("Applying settings...")
 	apply_project_settings(Common.PROJECT_SETTINGS)
 	apply_user_settings()
+
+	# load UI
+	Debug.log_info("Creating HUD...")
+	var hud_component_display: HUDComponentDisplay = Service.scene_manager.add_to_ui(FileLocation.UI_DASHBOARD, UI.ContainerType.HUD)
+	print(hud_component_display)
 
 	# move to second core loop state: inject saved mod IDs
 	var saved_mods: PackedStringArray = Service.config_manager.mod_settings.get_saved_mods()
@@ -64,14 +70,12 @@ func build_tree(p_node_tree: Array[Node]) -> bool:
 
 
 func apply_project_settings(p_dict: Dictionary[String, Variant]) -> void:
-	Debug.log_info("Applying project settings...")
 	for setting: String in p_dict.keys():
 		ProjectSettings.set_setting(setting, p_dict[setting])
 		Debug.log_debug("Set %s: %s" % [setting, p_dict[setting]])
 
 
 func apply_user_settings() -> void:
-	Debug.log_info("Applying user settings...")
 	Service.config_manager.load_config()
 	Service.config_manager.apply_config()
 
@@ -97,8 +101,12 @@ func _build_ui(p_ui: UI) -> void:
 
 		# apply theme
 		match container_type:
-			UI.ContainerType.DIALOG: container.theme = load(FileLocation.THEME_DIALOG)
-			UI.ContainerType.MENU: container.theme = load(FileLocation.THEME_MENU)
+			UI.ContainerType.DIALOG:
+				container.theme = load(FileLocation.THEME_DIALOG)
+			UI.ContainerType.MENU:
+				container.theme = load(FileLocation.THEME_MENU)
+			UI.ContainerType.HUD:
+				container.theme = load(FileLocation.THEME_HUD)
 
 		# done
 		Debug.log_verbose("󱣴  Created UI container: %s" % container.get_path())

@@ -13,9 +13,6 @@ func _start_services() -> void:
 
 
 func _main() -> void:
-	#Debug.log_info("Creating UI...")
-	#Service.scene_manager.add_to_ui(FileLocation.UI_DEV_UI, UI.ContainerType.DEV_UI)
-
 	# start game
 	if is_new_game: start()
 	else: resume()

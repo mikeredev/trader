@@ -26,6 +26,9 @@ func _main() -> void:
 	# tidy-up
 	#Service.mod_manager.clear_staging()
 
+	# notify
+	Service.scene_manager.create_notification("Enabled %d mods" % Service.mod_manager.get_active_mods().size())
+
 	# show start menu
 	System.change_state(StartState.new())
 

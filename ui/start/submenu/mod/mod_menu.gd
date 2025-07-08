@@ -14,6 +14,26 @@ extends UISubMenu # vbox
 @onready var ui_return_button: UIButton = %ReturnButton
 
 
+func _connect_signals() -> void:
+	ui_available_list.item_activated.connect(_on_ui_available_list_item_activated)
+	ui_available_list.item_selected.connect(_on_ui_available_list_item_selected)
+	ui_enabled_list.item_activated.connect(_on_ui_enabled_list_item_activated)
+	ui_enable_button.pressed.connect(_on_ui_enable_button_pressed)
+	ui_disable_button.pressed.connect(_on_ui_disable_button_pressed)
+	ui_increase_prio_button.pressed.connect(_on_ui_increase_prio_button_pressed)
+	ui_decrease_prio_button.pressed.connect(_on_ui_decrease_prio_button_pressed)
+	ui_confirm_button.pressed_tweened.connect(_on_confirm_pressed)
+	ui_return_button.pressed_tweened.connect(_on_ui_return_button_pressed)
+
+
+func _set_button_shortcuts() -> void:
+	var shortcut: Shortcut = Shortcut.new()
+	var event: InputEventAction = InputEventAction.new()
+	event.action = "ui_cancel"
+	shortcut.events.append(event)
+	ui_return_button.shortcut = shortcut
+
+
 func _ui_ready() -> void:
 	populate_enabled()
 	populate_available()
@@ -43,26 +63,6 @@ func add_to_enabled(p_manifest: ModManifest, p_disabled: bool = false) -> void:
 func add_to_available(p_manifest: ModManifest) -> void:
 	var idx: int = ui_available_list.add_item(p_manifest.name, p_manifest.icon)
 	ui_available_list.set_item_metadata(idx, p_manifest)
-
-
-func _connect_signals() -> void:
-	ui_available_list.item_activated.connect(_on_ui_available_list_item_activated)
-	ui_available_list.item_selected.connect(_on_ui_available_list_item_selected)
-	ui_enabled_list.item_activated.connect(_on_ui_enabled_list_item_activated)
-	ui_enable_button.pressed.connect(_on_ui_enable_button_pressed)
-	ui_disable_button.pressed.connect(_on_ui_disable_button_pressed)
-	ui_increase_prio_button.pressed.connect(_on_ui_increase_prio_button_pressed)
-	ui_decrease_prio_button.pressed.connect(_on_ui_decrease_prio_button_pressed)
-	ui_confirm_button.pressed_tweened.connect(_on_confirm_pressed)
-	ui_return_button.pressed_tweened.connect(_on_ui_return_button_pressed)
-
-
-func _set_button_shortcuts() -> void:
-	var shortcut: Shortcut = Shortcut.new()
-	var event: InputEventAction = InputEventAction.new()
-	event.action = "ui_cancel"
-	shortcut.events.append(event)
-	ui_return_button.shortcut = shortcut
 
 
 func _on_ui_available_list_item_activated(index: int) -> void: # moves mod to enabled list
@@ -128,7 +128,7 @@ func _on_confirm_pressed() -> void:
 		Debug.log_debug("No change to mod order")
 		return
 
-	if await Service.dialog_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
+	if await Service.scene_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
 		Debug.log_debug("Reloading new mod order: %s" % mods_to_save)
 		Service.config_manager.mod_settings.set_saved_mods(mods_to_save, true)
 		Debug.log_info("Returning to setup...")
@@ -136,4 +136,4 @@ func _on_confirm_pressed() -> void:
 
 
 func _on_ui_return_button_pressed() -> void:
-	EventBus.menu_closed.emit(self)
+	submenu_closed.emit()

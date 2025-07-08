@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://2xdixff84gnr"]
+[gd_scene load_steps=3 format=3 uid="uid://2xdixff84gnr"]
 
-[ext_resource type="Texture2D" uid="uid://caq8iff4sm8mg" path="res://core/world/map.png" id="1_37kl0"]
-[ext_resource type="Script" uid="uid://c4uuu5jpsusoa" path="res://data/component/camera.gd" id="2_8uh7m"]
+[ext_resource type="PackedScene" uid="uid://d0jesupddkx4x" path="res://ui/hud/components/notification/notification_box.tscn" id="1_37kl0"]
 
 [sub_resource type="GDScript" id="GDScript_8uh7m"]
 resource_name = "builtin"
@@ -13,85 +12,45 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	for dir: Vector2i in get_ring_8(Vector2i.ZERO):
-		_add_debug_rect(dir)
-
-
-func _add_debug_rect(p_position: Vector2i, p_color: Color = Color.BLACK) -> void:
-	var box: ColorRect = ColorRect.new()
-	box.name = \"%s\" % p_position
-	box.position = p_position * 16
-	box.size = Vector2i(16,16)
-	box.color = p_color
-	box.color.a = 0.5
-	self.add_child(box)
-
-func _is_near_layer(p_origin: Vector2i, p_distance: int, p_layer: TileMapLayer) -> bool:
-	for dir: Vector2i in [ Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN ]:
-		var pos: Vector2i = p_origin
-		for dist: int in range(1, p_distance + 1):
-			pos += dir
-			if p_layer.get_cell_source_id(pos) != -1:
-				return true
-	return false
-func get_ring_4(center: Vector2i) -> Array[Vector2i]:
-	return [
-		center + Vector2i.LEFT,
-		center + Vector2i.RIGHT,
-		center + Vector2i.UP,
-		center + Vector2i.DOWN
-	]
-
-func get_ring_8(center: Vector2i) -> Array:
-	var dirs := [
-		Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN,
-		Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)
-	]
-	return dirs.map(func(d): return center + d)
-
-func get_rect_from_center(center: Vector2i, radius: int) -> Rect2i:
-	var size = Vector2i(radius * 2 + 1, radius * 2 + 1)
-	var top_left = center - Vector2i(radius, radius)
-	return Rect2i(top_left, size)
+	pass
 "
 
 [node name="Test" type="Control"]
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_8uh7m")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-visible = false
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(416, 192)
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 1
+anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -448.0
-offset_top = -188.0
-offset_right = 448.0
-offset_bottom = 244.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
+offset_left = -320.0
+offset_bottom = 160.0
+grow_horizontal = 0
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-handle_input_locally = false
-size = Vector2i(896, 432)
-render_target_update_mode = 0
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
-[node name="Container" type="Node2D" parent="SubViewportContainer/SubViewport"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
+layout_mode = 2
 
-[node name="WorldMap" type="Node2D" parent="SubViewportContainer/SubViewport/Container"]
+[node name="NotificationBox4" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
+layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Container/WorldMap"]
-texture = ExtResource("1_37kl0")
+[node name="NotificationBox" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
+layout_mode = 2
 
-[node name="Camera" type="Camera2D" parent="SubViewportContainer/SubViewport/Container"]
-script = ExtResource("2_8uh7m")
-metadata/_custom_type_script = "uid://c4uuu5jpsusoa"
+[node name="NotificationBox2" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
+layout_mode = 2
+
+[node name="NotificationBox3" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
+layout_mode = 2
