@@ -20,11 +20,10 @@ func _main() -> void:
 
 	#Service.scene_manager.add_to_ui(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
 	var ui: UI = Service.scene_manager.get_ui()
-	var scene: Node = Service.scene_manager.create_scene(FileLocation.UI_START_MENU)
-	ui.menu.add_scene(scene)
+	var start_menu: StartMenu = Service.scene_manager.create_scene(FileLocation.UI_START_MENU)
+	ui.menu.add_scene(start_menu)
 
 	Service.scene_manager.create_notification("hello test here")
-
 	#Service.scene_manager.create_notification("hello test here! this is another addition")
 	#Service.scene_manager.create_notification("hello test here! this is another addition again. does it break onto a new line? i hope so. let's find out. anyway so how are you. wow that's amazing. 5 years, huh?")
 

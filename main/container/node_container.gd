@@ -1,14 +1,1 @@
 class_name NodeContainer extends Node2D
-
-
-func add_scene(p_scene: Node2D) -> void:
-	add_child(p_scene)
-	Debug.log_debug("Added scene: %s" % p_scene.get_path())
-
-
-func clear() -> void:
-	for node: Node in get_children():
-		remove_child(node)
-		node.call_deferred("queue_free")
-		Debug.log_verbose("Freed scene: %s" % node)
-	Debug.log_debug("Cleared container: %s" % get_path())

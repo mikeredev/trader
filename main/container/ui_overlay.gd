@@ -11,4 +11,4 @@ func clear() -> void:
 		remove_child(node)
 		node.call_deferred("queue_free")
 		Debug.log_verbose("Freed scene: %s" % node)
-	Debug.log_debug("Cleared container: %s" % get_path())
+	Debug.log_debug("Cleared UI overlay: %s" % get_path())

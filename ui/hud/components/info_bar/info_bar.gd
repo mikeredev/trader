@@ -4,7 +4,7 @@ class_name InfoBar extends PanelContainer
 @onready var ui_location: Label = %LabelLocation
 @onready var ui_fps: Label = %LabelFPS
 @onready var ui_cam_devmode: CheckButton = %CameraDevMode
-@onready var ui_zoom: Label = %LabelZoom
+@onready var ui_cam_zoom: Label = %CameraZoom
 @onready var ui_clock: Label = %LabelClock
 
 
@@ -48,13 +48,12 @@ func _on_cam_devmode_toggled(p_toggled_on: bool) -> void:
 	if not view: return
 
 	Debug.log_info("Camera devmode toggled: %s" % p_toggled_on)
-	var camera: Camera = view.get_camera()
-	camera.enable_devmode(p_toggled_on)
+	view.camera.enable_devmode(p_toggled_on)
 
 
 func _on_camera_zoomed(p_zoom_level: Vector2) -> void:
 	var zoom: float = max(p_zoom_level.x, p_zoom_level.y)
-	ui_zoom.text = "%.03fx zoom" % zoom
+	ui_cam_zoom.text = "%.03fx" % zoom
 
 
 func _on_city_entered(p_city: City) -> void:

@@ -1,4 +1,3 @@
-@icon("uid://cl2cxrvb68mpl")
 class_name Camera extends Camera2D
 
 const DEVMODE_MIN_ZOOM: Vector2 = Vector2(0.9, 0.9)

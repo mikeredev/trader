@@ -5,8 +5,14 @@ var _views: Dictionary[View.ViewType, View] = {}
 var _ui: UI
 
 
-func get_active_view() -> View:
-	return _active_view
+func add_view(p_type: View.ViewType, p_view: View) -> void:
+	_views[p_type] = p_view
+	Debug.log_debug("Registered view: %s" % p_view)
+
+
+func add_ui(p_ui: UI) -> void:
+	_ui = p_ui
+	Debug.log_debug("Registered UI: %s" % p_ui)
 
 
 func activate_view(p_type: View.ViewType) -> View:
@@ -19,38 +25,11 @@ func activate_view(p_type: View.ViewType) -> View:
 	return target
 
 
-#func add_to_hud(p_scene: Variant) -> Node:
-	#var scene: Node = create_scene(p_scene)
-	#return _ui.add_to_hud(scene)
-#
-#
-#func add_to_menu(p_scene: Variant) -> Node:
-	#var scene: Node = create_scene(p_scene)
-	#return _ui.add_to_menu(scene)
-#
-#
-#func add_to_dialog(p_scene: Variant) -> Node:
-	#var scene: Node = create_scene(p_scene)
-	#return _ui.add_to_dialog(scene)
-
-
-#func add_to_view(p_scene: Variant, p_view: View.ViewType, p_container: View.ContainerType) -> Node:
-	#var scene: Node = create_scene(p_scene)
-	#var view: View = get_view(p_view)
-	#return view.add_to_container(scene, p_container)
-
-
 func center_window(p_resolution: Vector2i) -> void:
 	var center: Vector2i = (DisplayServer.screen_get_size() - DisplayServer.window_get_size()) / 2
 	EventBus.get_window().position = center
 	EventBus.get_window().content_scale_size = p_resolution
 	Debug.log_debug("Centered window: %s" % center)
-
-
-#func clear_container(p_view: View.ViewType, p_container: View.ContainerType) -> void:
-	#var view: View = get_view(p_view)
-	#var container: NodeContainer = view.get_container(p_container)
-	#container.clear()
 
 
 func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody2D]:
@@ -117,6 +96,10 @@ func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
 		return tween
 
 
+func get_active_view() -> View:
+	return _active_view
+
+
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
 	var box: String = FileLocation.DIALOG_CONFIRM
 	var ui: UI = get_ui()
@@ -137,16 +120,6 @@ func get_view(p_type: View.ViewType) -> View:
 
 func get_views() -> Array[View]:
 	return _views.values()
-
-
-func register_view(p_type: View.ViewType, p_view: View) -> void:
-	_views[p_type] = p_view
-	Debug.log_debug("Registered view: %s" % p_view)
-
-
-func register_ui(p_ui: UI) -> void:
-	_ui = p_ui
-	Debug.log_debug("Registered UI: %s" % p_ui)
 
 
 func _create_from_packed(p_preload: PackedScene) -> Node:
