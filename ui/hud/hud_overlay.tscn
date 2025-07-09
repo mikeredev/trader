@@ -179,3 +179,9 @@ layout_mode = 2
 text = "QUIT"
 script = ExtResource("8_dvej5")
 metadata/_custom_type_script = "uid://dg8figbfpd7wl"
+
+[node name="TestAlertButton" type="Button" parent="MarginOuter/NavMain"]
+layout_mode = 2
+text = "ALERT"
+
+[connection signal="pressed" from="MarginOuter/NavMain/TestAlertButton" to="." method="_on_test_alert_button_pressed"]

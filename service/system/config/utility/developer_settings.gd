@@ -7,12 +7,6 @@ func apply_config() -> void:
 	set_enable_astar(enable_astar)
 
 
-func set_enable_astar(p_enabled: bool, p_save: bool = false) -> void:
-	enable_astar = p_enabled
-	Debug.log_debug("Set enable A*: %s" % [enable_astar])
-	if p_save: EventBus.config_changed.emit()
-
-
 func to_dict() -> Dictionary[String, Variant]:
 	return {
 		"enable_astar": enable_astar
@@ -55,3 +49,9 @@ static func from_dict(p_dict: Dictionary) -> DeveloperSettings:
 
 #func _get_max_autosaves(p_value: float, p_save: bool) -> void:
 	#set_max_autosaves(int(p_value), p_save)
+
+
+func set_enable_astar(p_enabled: bool, p_save: bool = false) -> void:
+	enable_astar = p_enabled
+	Debug.log_debug("Set enable A*: %s" % [enable_astar])
+	if p_save: EventBus.config_changed.emit()

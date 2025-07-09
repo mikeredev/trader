@@ -1,19 +1,84 @@
-[gd_scene load_steps=3 format=3 uid="uid://2xdixff84gnr"]
-
-[ext_resource type="PackedScene" uid="uid://d0jesupddkx4x" path="res://ui/hud/components/notification/notification_box.tscn" id="1_37kl0"]
+[gd_scene load_steps=4 format=3 uid="uid://2xdixff84gnr"]
 
 [sub_resource type="GDScript" id="GDScript_8uh7m"]
 resource_name = "builtin"
 script/source = "extends Control
 
+var duration: float = 0.5
+var tween: Tween
+@onready var alert_stack: VBoxContainer = %AlertStack
 
-func _init() -> void:
-	pass
+
+func _on_button_pressed() -> void:
+	var rand: int = randi_range(1000, 9999)
+	var button: Button = Button.new()
+	button.text = \"testing %d\" % rand
+	button.modulate.a = 0.0
+	button.pressed.connect(_on_box_remove.bind(button))
+
+	var height: int = 100
+	button.custom_minimum_size.y = height
+
+	# expand to fit first alert
+	if alert_stack.get_child_count() == 0:
+	#if alert_stack.size.y < height:
+		alert_stack.size.y = height
+	else: # or move the existing buttons downward
+		for child: Button in alert_stack.get_children():
+			var offset: int = child.size.y
+			var target: int = child.position.y + height
+			tween = get_tree().create_tween()
+			tween.tween_property(child, \"position:y\", target, duration)
+		await tween.finished
+
+	# with the space cleared, add the invisible object to the stack
+	alert_stack.add_child(button)
+	alert_stack.move_child(button, 0)
+
+	# and reveal it
+	tween = get_tree().create_tween()
+	tween.tween_property(button, \"modulate:a\", 1.0, duration)
 
 
-func _ready() -> void:
-	pass
+func _on_box_remove(p_button: Button) -> void:
+	# prevent further clicks
+	p_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# fade it out while retaining its space
+	tween = get_tree().create_tween()
+	tween.tween_property(p_button, \"modulate:a\", 0.0, duration)
+
+	# reposition every button underneath it
+	var idx: int = _get_index(p_button)
+	var offset: int = p_button.size.y
+	for i: int in range(idx + 1, alert_stack.get_child_count()):
+		var button: Button = alert_stack.get_child(i)
+		var target: int = button.position.y - offset
+		tween = get_tree().create_tween()
+		tween.tween_property(button, \"position:y\", target, duration)
+
+	# and remove it
+	await tween.finished
+	p_button.queue_free()
+
+
+func _get_index(p_button: Button) -> int:
+	for i: int in range(alert_stack.get_child_count()):
+		var button: Button = alert_stack.get_child(i)
+		if button == p_button:
+			return i
+	return -1
 "
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mf4mk"]
+bg_color = Color(0.823697, 0.426452, 0.797124, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color(0.45098, 0.247059, 0.831373, 1)
+
+[sub_resource type="Theme" id="Theme_37kl0"]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_mf4mk")
 
 [node name="Test" type="Control"]
 layout_mode = 3
@@ -24,33 +89,29 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_8uh7m")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-custom_minimum_size = Vector2(416, 192)
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 95.0
+grow_vertical = 0
+text = "test button"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -320.0
-offset_bottom = 160.0
+offset_left = -400.0
+offset_bottom = 40.0
 grow_horizontal = 0
+theme = SubResource("Theme_37kl0")
 
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
-layout_mode = 2
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
+[node name="AlertStack" type="VBoxContainer" parent="PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="NotificationBox4" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
-layout_mode = 2
-
-[node name="NotificationBox" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
-layout_mode = 2
-
-[node name="NotificationBox2" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
-layout_mode = 2
-
-[node name="NotificationBox3" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_37kl0")]
-layout_mode = 2
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

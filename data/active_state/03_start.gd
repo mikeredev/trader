@@ -23,10 +23,6 @@ func _main() -> void:
 	var start_menu: StartMenu = Service.scene_manager.create_scene(FileLocation.UI_START_MENU)
 	ui.menu.add_scene(start_menu)
 
-	Service.scene_manager.create_notification("hello test here")
-	#Service.scene_manager.create_notification("hello test here! this is another addition")
-	#Service.scene_manager.create_notification("hello test here! this is another addition again. does it break onto a new line? i hope so. let's find out. anyway so how are you. wow that's amazing. 5 years, huh?")
-
 
 func _exit() -> void:
 	var ui: UI = Service.scene_manager.get_ui()

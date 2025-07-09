@@ -50,10 +50,11 @@ func change_grid(p_section: ConfigManager.Section, p_toggled_on: bool) -> void:
 		match p_section:
 			ConfigManager.Section.GENERAL: grid = Service.config_manager.general_settings.to_grid()
 			ConfigManager.Section.AUDIO: grid = Service.config_manager.audio_settings.to_grid()
-			ConfigManager.Section.DISPLAY: grid = Service.config_manager.display_settings.to_grid()
-			ConfigManager.Section.MODS: grid = Service.config_manager.mod_settings.to_grid()
-			ConfigManager.Section.LOCALE: grid = Service.config_manager.locale_settings.to_grid()
+			ConfigManager.Section.CONTROL: grid = Service.config_manager.control_settings.to_grid()
 			ConfigManager.Section.DEVELOPER: grid = Service.config_manager.developer_settings.to_grid()
+			ConfigManager.Section.DISPLAY: grid = Service.config_manager.display_settings.to_grid()
+			ConfigManager.Section.LOCALE: grid = Service.config_manager.locale_settings.to_grid()
+			ConfigManager.Section.MODS: grid = Service.config_manager.mod_settings.to_grid()
 		cache[p_section] = grid
 		nav_content.add_child(grid)
 	active = p_section

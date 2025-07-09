@@ -26,3 +26,7 @@ func setup() -> void:
 
 func clear() -> void:
 	pass # clear notifs etc, used on soft reset
+
+
+func _on_test_alert_button_pressed() -> void:
+	EventBus.notification_sent.emit("test message")

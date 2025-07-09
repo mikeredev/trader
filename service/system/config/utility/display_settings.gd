@@ -25,45 +25,6 @@ func apply_config() -> void:
 	set_vsync(vsync)
 
 
-func set_window_mode(p_window_mode: WindowMode, p_save: bool = false) -> void:
-	window_mode = clampi(p_window_mode, 0, WindowMode.size() - 1) as WindowMode
-	match window_mode:
-		WindowMode.WINDOWED_BORDERLESS:
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-
-		WindowMode.FULLSCREEN:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-
-		WindowMode.WINDOWED:
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-
-	Debug.log_debug("Set window mode: %s" % WindowMode.keys()[window_mode])
-	if p_save: EventBus.config_changed.emit()
-
-
-## Applies the given window size and centers the window.
-func set_window_size(p_window_size: Vector2i, p_save: bool = false) -> void:
-	var min_size: Vector2i = ProjectSettings.get_setting("services/config/scene_base_size")
-	var max_size: Vector2i = DisplayServer.screen_get_size()
-	window_size = clamp(p_window_size, min_size, max_size) # clamped to scene base size minimum
-
-	DisplayServer.window_set_size(window_size)
-	Debug.log_debug("Set window size: %s" % window_size)
-
-	await EventBus.get_tree().process_frame
-	Service.scene_manager.center_window(window_size)
-	if p_save: EventBus.config_changed.emit()
-
-
-## Toggles V-Sync.
-func set_vsync(p_vsync: bool, p_save: bool = false) -> void:
-	vsync = p_vsync
-	Debug.log_debug("Set V-Sync: %s" % vsync)
-	if p_save: EventBus.config_changed.emit()
-
-
 #func restore_config() -> void:
 	#var x = DisplaySettings.new()
 	#window_mode = x.window_mode
@@ -138,6 +99,45 @@ static func from_dict(p_dict: Dictionary) -> DisplaySettings:
 	out.vsync = p_dict.get("vsync", out.vsync)
 
 	return out
+
+
+func set_window_mode(p_window_mode: WindowMode, p_save: bool = false) -> void:
+	window_mode = clampi(p_window_mode, 0, WindowMode.size() - 1) as WindowMode
+	match window_mode:
+		WindowMode.WINDOWED_BORDERLESS:
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+		WindowMode.FULLSCREEN:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+
+		WindowMode.WINDOWED:
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+	Debug.log_debug("Set window mode: %s" % WindowMode.keys()[window_mode])
+	if p_save: EventBus.config_changed.emit()
+
+
+## Applies the given window size and centers the window.
+func set_window_size(p_window_size: Vector2i, p_save: bool = false) -> void:
+	var min_size: Vector2i = ProjectSettings.get_setting("services/config/scene_base_size")
+	var max_size: Vector2i = DisplayServer.screen_get_size()
+	window_size = clamp(p_window_size, min_size, max_size) # clamped to scene base size minimum
+
+	DisplayServer.window_set_size(window_size)
+	Debug.log_debug("Set window size: %s" % window_size)
+
+	await EventBus.get_tree().process_frame
+	Service.scene_manager.center_window(window_size)
+	if p_save: EventBus.config_changed.emit()
+
+
+## Toggles V-Sync.
+func set_vsync(p_vsync: bool, p_save: bool = false) -> void:
+	vsync = p_vsync
+	Debug.log_debug("Set V-Sync: %s" % vsync)
+	if p_save: EventBus.config_changed.emit()
 
 
 func _get_window_size(p_index: int, p_ui_element: OptionButton, p_save: bool) -> void:

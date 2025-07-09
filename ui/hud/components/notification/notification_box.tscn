@@ -27,12 +27,10 @@ stretch_mode = 3
 
 [node name="Message" type="Label" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 60)
+custom_minimum_size = Vector2(320, 50)
 layout_mode = 2
 text = "Text goes here. It can be as long as you need, but if it breaks onto a new line then it might need extra padding or a line break or something to wrap it up nicely"
 vertical_alignment = 1
 autowrap_mode = 3
 clip_text = true
 text_overrun_behavior = 4
-
-[connection signal="gui_input" from="MarginContainer/HBoxContainer/Message" to="." method="_on_message_gui_input"]
