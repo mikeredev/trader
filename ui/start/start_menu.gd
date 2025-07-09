@@ -16,9 +16,12 @@ var cache: Dictionary[SubMenuType, UISubMenu]
 
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
-@onready var nav_menu: VBoxContainer = %NavMenu
-@onready var nav_buttons: GridContainer = %NavButtons
+@onready var background: ColorRect = %Background
+
 @onready var nav_content: VBoxContainer = %NavContent
+@onready var nav_menu: VBoxContainer = %NavMenu
+@onready var label_title: Label = %LabelTitle
+@onready var nav_buttons: GridContainer = %NavButtons
 
 @onready var continue_button: UIButtonStartMenu = %ContinueButton
 @onready var new_game_button: UIButtonStartMenu = %NewGameButton
@@ -37,8 +40,6 @@ var cache: Dictionary[SubMenuType, UISubMenu]
 @onready var sky_rect: ColorRect = %SkyRect
 @onready var starfield_texture: TextureRect = %Starfield
 @onready var atmosphere_rect: ColorRect = %Atmosphere
-@onready var fade_rect: ColorRect = %Fade
-@onready var label_title: Label = %LabelTitle
 
 
 func _connect_signals() -> void:
@@ -69,7 +70,7 @@ func _connect_signals() -> void:
 	quit_button.pressed_tweened.connect(_on_quit_pressed)
 
 
-func _set_color_scheme() -> void:
+func _set_color_scheme() -> void: # overrides UIControl default method
 	var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 	var secondary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/secondary_bg")
 	var ternary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
@@ -78,7 +79,7 @@ func _set_color_scheme() -> void:
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("sea_color", secondary_bg)
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("crest_color", secondary_bg.darkened(0.1))
 	(atmosphere_rect.material as ShaderMaterial).set_shader_parameter("fog_color", ternary_bg)
-	fade_rect.color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
+	background.color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
 
 
 func _ui_ready() -> void:
@@ -111,7 +112,7 @@ func play_animation() -> void:
 	if not Service.config_manager.general_settings.show_intro: return
 
 	# prepare tween, title, buttons
-	fade_rect.visible = true
+	background.visible = true
 	label_title.modulate.a = 0.0
 	for button: UIButtonStartMenu in buttons:
 		button.modulate.a = 0.0
@@ -119,7 +120,7 @@ func play_animation() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
-	tween = Service.scene_manager.create_tween(fade_rect, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 
 	# wait a little, and play the rest
 	await get_tree().create_timer(PAUSE).timeout
@@ -151,7 +152,7 @@ func play_animation() -> void:
 
 
 func _housekeeping() -> void:
-	fade_rect.visible = false # remains unused unless playing animation
+	background.visible = false # remains unused unless playing animation
 
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:

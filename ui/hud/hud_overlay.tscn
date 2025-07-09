@@ -1,71 +1,86 @@
-[gd_scene load_steps=7 format=3 uid="uid://df2ya0uji0y7j"]
+[gd_scene load_steps=8 format=3 uid="uid://df2ya0uji0y7j"]
 
-[ext_resource type="Theme" uid="uid://ctglmnnwqwbq4" path="res://assets/theme/hud.tres" id="1_edsi1"]
 [ext_resource type="Script" uid="uid://b0v3tbwkw2asb" path="res://ui/hud/hud_overlay.gd" id="2_7dvlo"]
-[ext_resource type="Script" uid="uid://n0cmt74v5vsc" path="res://ui/hud/components/info_bar/info_bar.gd" id="3_t7oj4"]
+[ext_resource type="Script" uid="uid://n0cmt74v5vsc" path="res://ui/hud/components/info_bar.gd" id="3_t7oj4"]
 [ext_resource type="Script" uid="uid://xvw5unpybtr6" path="res://ui/hud/components/notification/notification_area.gd" id="4_ov4ut"]
 [ext_resource type="Texture2D" uid="uid://cl2cxrvb68mpl" path="res://assets/image/icon/camera.png" id="4_t7oj4"]
-[ext_resource type="Script" uid="uid://cdw6orywl6kp0" path="res://ui/hud/components/city_list/city_list.gd" id="5_7dvlo"]
+[ext_resource type="Script" uid="uid://cdw6orywl6kp0" path="res://ui/hud/components/city_options_panel.gd" id="5_7dvlo"]
+[ext_resource type="Script" uid="uid://gqls0jr4r8su" path="res://ui/hud/components/game_options_panel.gd" id="7_ov4ut"]
+[ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="8_dvej5"]
 
-[node name="HUDOverlay" type="VBoxContainer"]
+[node name="HUD" type="Control"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme = ExtResource("1_edsi1")
-theme_override_constants/separation = 8
 script = ExtResource("2_7dvlo")
+outer_margin = 8
 
-[node name="InfoBar" type="PanelContainer" parent="."]
+[node name="MarginOuter" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NavMain" type="VBoxContainer" parent="MarginOuter"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="InfoBar" type="PanelContainer" parent="MarginOuter/NavMain"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("3_t7oj4")
 metadata/_custom_type_script = "uid://n0cmt74v5vsc"
 
-[node name="MarginInner" type="MarginContainer" parent="InfoBar"]
+[node name="MarginInner" type="MarginContainer" parent="MarginOuter/NavMain/InfoBar"]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="ComponentStack" type="HBoxContainer" parent="InfoBar/MarginInner"]
+[node name="ComponentStack" type="HBoxContainer" parent="MarginOuter/NavMain/InfoBar/MarginInner"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="LabelLocation" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+[node name="LabelLocation" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "NO_LOCATION"
 
-[node name="LabelFPS" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+[node name="LabelFPS" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "00 fps"
 
-[node name="Camera" type="HBoxContainer" parent="InfoBar/MarginInner/ComponentStack"]
+[node name="Camera" type="HBoxContainer" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 layout_mode = 2
 
-[node name="CameraDevMode" type="CheckButton" parent="InfoBar/MarginInner/ComponentStack/Camera"]
+[node name="CameraDevMode" type="CheckButton" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack/Camera"]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("4_t7oj4")
 
-[node name="CameraZoom" type="Label" parent="InfoBar/MarginInner/ComponentStack/Camera"]
+[node name="CameraZoom" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack/Camera"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0.000x"
 
-[node name="LabelClock" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
+[node name="LabelClock" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 text = "1970-01-01T00:00:00"
 
-[node name="NotificationArea" type="ScrollContainer" parent="."]
+[node name="NotificationArea" type="ScrollContainer" parent="MarginOuter/NavMain"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(416, 192)
 layout_mode = 2
@@ -74,7 +89,7 @@ size_flags_vertical = 0
 script = ExtResource("4_ov4ut")
 metadata/_custom_type_script = "uid://xvw5unpybtr6"
 
-[node name="MarginInner" type="MarginContainer" parent="NotificationArea"]
+[node name="MarginInner" type="MarginContainer" parent="MarginOuter/NavMain/NotificationArea"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -83,17 +98,17 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="AlertStack" type="VBoxContainer" parent="NotificationArea/MarginInner"]
+[node name="AlertStack" type="VBoxContainer" parent="MarginOuter/NavMain/NotificationArea/MarginInner"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginOuter/NavMain"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 10
 
-[node name="CityList" type="PanelContainer" parent="HBoxContainer"]
+[node name="CityOptions" type="PanelContainer" parent="MarginOuter/NavMain/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -101,10 +116,10 @@ size_flags_vertical = 2
 script = ExtResource("5_7dvlo")
 metadata/_custom_type_script = "uid://cdw6orywl6kp0"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/CityList"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginOuter/NavMain/HBoxContainer/CityOptions"]
 layout_mode = 2
 
-[node name="SourceCity" type="OptionButton" parent="HBoxContainer/CityList/VBoxContainer"]
+[node name="SourceCity" type="OptionButton" parent="MarginOuter/NavMain/HBoxContainer/CityOptions/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -113,10 +128,10 @@ popup/item_0/text = "SOURCE"
 popup/item_0/id = 0
 popup/item_0/separator = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/CityList/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginOuter/NavMain/HBoxContainer/CityOptions/VBoxContainer"]
 layout_mode = 2
 
-[node name="DestCity" type="OptionButton" parent="HBoxContainer/CityList/VBoxContainer/HBoxContainer"]
+[node name="DestCity" type="OptionButton" parent="MarginOuter/NavMain/HBoxContainer/CityOptions/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -125,28 +140,42 @@ popup/item_0/text = "DESTINATION"
 popup/item_0/id = 0
 popup/item_0/separator = true
 
-[node name="Teleport" type="Button" parent="HBoxContainer/CityList/VBoxContainer/HBoxContainer"]
+[node name="Teleport" type="Button" parent="MarginOuter/NavMain/HBoxContainer/CityOptions/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "TELEPORT"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="GameOptions" type="VBoxContainer" parent="MarginOuter/NavMain/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
+script = ExtResource("7_ov4ut")
+metadata/_custom_type_script = "uid://gqls0jr4r8su"
 
-[node name="ButtonSave" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="ButtonSave" type="Button" parent="MarginOuter/NavMain/HBoxContainer/GameOptions"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "SAVE"
+script = ExtResource("8_dvej5")
+metadata/_custom_type_script = "uid://dg8figbfpd7wl"
 
-[node name="ButtonLoad" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="ButtonLoad" type="Button" parent="MarginOuter/NavMain/HBoxContainer/GameOptions"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "LOAD"
+script = ExtResource("8_dvej5")
+metadata/_custom_type_script = "uid://dg8figbfpd7wl"
 
-[node name="ButtonPause" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="ButtonPause" type="Button" parent="MarginOuter/NavMain/HBoxContainer/GameOptions"]
+unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 text = "PAUSE"
+script = ExtResource("8_dvej5")
+metadata/_custom_type_script = "uid://dg8figbfpd7wl"
 
-[node name="ButtonQuit" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="ButtonQuit" type="Button" parent="MarginOuter/NavMain/HBoxContainer/GameOptions"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "QUIT"
+script = ExtResource("8_dvej5")
+metadata/_custom_type_script = "uid://dg8figbfpd7wl"

@@ -1,4 +1,4 @@
-class_name CityList extends PanelContainer
+class_name CityOptionsPanel extends PanelContainer
 
 @onready var ui_source_city: OptionButton = %SourceCity
 @onready var ui_dest_city: OptionButton = %DestCity

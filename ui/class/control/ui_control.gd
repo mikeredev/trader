@@ -1,5 +1,7 @@
 class_name UIControl extends Control
 
+@export var outer_margin: int = 256
+
 
 func _ready() -> void:
 	_connect_signals()
@@ -14,7 +16,7 @@ func _connect_signals() -> void: pass
 func _set_minimum_size() -> void:
 	if get_node_or_null("%MarginOuter") and get_node_or_null("%NavMain"):
 		var margin_outer: MarginContainer = get_node("%MarginOuter")
-		var margin_value: int = 256 # magic, move to ProjSettings
+		var margin_value: int = outer_margin
 		margin_outer.add_theme_constant_override("margin_top", margin_value)
 		margin_outer.add_theme_constant_override("margin_left", margin_value)
 		margin_outer.add_theme_constant_override("margin_bottom", margin_value)
@@ -24,16 +26,19 @@ func _set_minimum_size() -> void:
 		var scene_base_size: Vector2i = ProjectSettings.get_setting("services/config/scene_base_size")
 		nav_main.custom_minimum_size.x = scene_base_size.x - 16
 		nav_main.custom_minimum_size.y = scene_base_size.y - 16
-
+		Debug.log_verbose("Set outer margin %s: %d" % [name, outer_margin])
 	else:
-		Debug.log_warning("Cannot size all UI elements: %s" % self)
+		Debug.log_warning("Unable to set minimum size: %s" % get_path())
 
 
-func _set_color_scheme() -> void: # unused rn
+func _set_color_scheme() -> void:
 	if get_node_or_null("%Background"):
 		var background: ColorRect = get_node("%Background")
 		var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 		background.color = primary_bg
+		background.color.a = 0.9
+		background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		Debug.log_verbose("Set background %s: %s" % [primary_bg.to_html(), name])
 
 
 func _ui_ready() -> void: pass

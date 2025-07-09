@@ -32,7 +32,7 @@ func _main() -> void:
 	Service.config_manager.apply_config()
 
 	# allow for notifications
-	_setup_ui(ui)
+	ui.setup()
 
 	# process mods
 	saved_mods = Service.config_manager.mod_settings.get_saved_mods()
@@ -55,19 +55,6 @@ func build_viewports(p_views: Array[View]) -> bool:
 func validate_directories(p_paths: Array[String]) -> bool:
 	Debug.log_info("Checking directories...")
 	return Common.Util.file.validate_directories(p_paths)
-
-
-func _setup_ui(p_ui: UI) -> void:
-	Debug.log_info("Creating UI...")
-	for overlay: UIOverlay in p_ui.get_children():
-		overlay.size = overlay.get_parent_area_size()
-		overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-		overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		Debug.log_verbose("󱣴  Configured UI overlay: %s" % overlay.get_path())
-	var hud: HUDOverlay = Service.scene_manager.create_scene(FileLocation.UI_HUD_COMPONENT_DISPLAY)
-	p_ui.hud.add_scene(hud)
-	hud.setup()
-	Service.scene_manager.add_ui(p_ui)
 
 
 func _setup_view(p_view: View) -> bool:

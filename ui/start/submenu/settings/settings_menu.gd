@@ -1,6 +1,6 @@
-extends UISubMenu
+class_name SettingsMenu extends UISubMenu # hbox
 
-var active_section: ConfigManager.Section
+var active: ConfigManager.Section
 var cache: Dictionary[ConfigManager.Section, GridContainer]
 
 @onready var nav_bar: VBoxContainer = %NavBar
@@ -56,14 +56,14 @@ func change_grid(p_section: ConfigManager.Section, p_toggled_on: bool) -> void:
 			ConfigManager.Section.DEVELOPER: grid = Service.config_manager.developer_settings.to_grid()
 		cache[p_section] = grid
 		nav_content.add_child(grid)
-	active_section = p_section
+	active = p_section
 
 
 func restore_grid() -> void:
-	var active_grid: GridContainer = cache.get(active_section)
+	var active_grid: GridContainer = cache.get(active)
 	active_grid.queue_free()
-	cache.erase(active_section)
-	change_grid(active_section, true)
+	cache.erase(active)
+	change_grid(active, true)
 
 
 func _on_nav_button_toggled(p_toggled_on: bool, p_section: ConfigManager.Section) -> void:
@@ -72,7 +72,7 @@ func _on_nav_button_toggled(p_toggled_on: bool, p_section: ConfigManager.Section
 
 func _on_restore_button_pressed() -> void:
 	if await Service.scene_manager.get_confirmation("RESTORE DEFAULT SETTINGS?"):
-		Service.config_manager.restore_section(active_section, true)
+		Service.config_manager.restore_section(active, true)
 		restore_grid()
 
 

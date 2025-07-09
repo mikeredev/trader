@@ -1,13 +1,28 @@
-class_name HUDOverlay extends VBoxContainer
+class_name HUDOverlay extends UIControl
 
-# reminder to unassigned theme from root when done
+# UIControl elements
+@onready var margin_outer: MarginContainer = %MarginOuter
+@onready var nav_main: VBoxContainer = %NavMain
 
+# HUD components
 @onready var info_bar: InfoBar = %InfoBar
 @onready var notification_area: NotificationArea = %NotificationArea
-@onready var city_list: CityList = %CityList
+@onready var city_options: CityOptionsPanel = %CityOptions
+@onready var game_options: GameOptionsPanel = %GameOptions
+
+
+func _ui_ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin_outer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Debug.log_debug("Created HUD Overlay: %s" % get_path())
 
 
 func setup() -> void:
 	info_bar.setup()
 	notification_area.setup()
-	city_list.setup()
+	city_options.setup()
+	game_options.setup()
+
+
+func clear() -> void:
+	pass # clear notifs etc, used on soft reset
