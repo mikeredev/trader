@@ -148,7 +148,7 @@ func _get_shore_area() -> Array[Vector2i]: # generates an array of cells near th
 	for cell: Vector2i in used_cells:
 		if _is_near_layer(cell, distance, scene.shore_layer):
 			result.append(cell)
-			_add_debug_rect(cell)
+			#_add_debug_rect(cell)
 	Debug.log_verbose("Set shore area: %d tiles, %s size" % [distance, result.size()])
 	return result
 

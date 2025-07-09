@@ -17,6 +17,9 @@ func _main() -> void:
 	if is_new_game: start()
 	else: resume()
 
+	# broadcast game start
+	EventBus.game_started.emit()
+
 
 func start() -> void:
 	Debug.log_info("New game: %s" % is_new_game)

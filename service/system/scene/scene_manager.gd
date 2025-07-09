@@ -1,13 +1,12 @@
 class_name SceneManager extends Service
 
+var _active_view: View
 var _views: Dictionary[View.ViewType, View] = {}
 var _ui: UI
 
 
 func get_active_view() -> View:
-	for view: View in _views.values():
-		if view.active: return view
-	return null
+	return _active_view
 
 
 func activate_view(p_type: View.ViewType) -> View:
@@ -15,20 +14,30 @@ func activate_view(p_type: View.ViewType) -> View:
 	for view: View in get_views():
 		var active: bool = view == target
 		view.set_active(active)
-	Debug.log_debug("Activated view: %s" % [View.ViewType.keys()[p_type]])
+	_active_view = target
+	Debug.log_debug("Activated view: %s" % target.get_path())
 	return target
 
 
-func add_to_ui(p_scene: Variant, p_container: UI.ContainerType) -> Node:
-	var scene: Node = create_scene(p_scene)
-	var ui: UI = get_ui()
-	return ui.add_to_container(scene, p_container)
+#func add_to_hud(p_scene: Variant) -> Node:
+	#var scene: Node = create_scene(p_scene)
+	#return _ui.add_to_hud(scene)
+#
+#
+#func add_to_menu(p_scene: Variant) -> Node:
+	#var scene: Node = create_scene(p_scene)
+	#return _ui.add_to_menu(scene)
+#
+#
+#func add_to_dialog(p_scene: Variant) -> Node:
+	#var scene: Node = create_scene(p_scene)
+	#return _ui.add_to_dialog(scene)
 
 
-func add_to_view(p_scene: Variant, p_view: View.ViewType, p_container: View.ContainerType) -> Node:
-	var scene: Node = create_scene(p_scene)
-	var view: View = get_view(p_view)
-	return view.add_to_container(scene, p_container)
+#func add_to_view(p_scene: Variant, p_view: View.ViewType, p_container: View.ContainerType) -> Node:
+	#var scene: Node = create_scene(p_scene)
+	#var view: View = get_view(p_view)
+	#return view.add_to_container(scene, p_container)
 
 
 func center_window(p_resolution: Vector2i) -> void:
@@ -36,6 +45,12 @@ func center_window(p_resolution: Vector2i) -> void:
 	EventBus.get_window().position = center
 	EventBus.get_window().content_scale_size = p_resolution
 	Debug.log_debug("Centered window: %s" % center)
+
+
+#func clear_container(p_view: View.ViewType, p_container: View.ContainerType) -> void:
+	#var view: View = get_view(p_view)
+	#var container: NodeContainer = view.get_container(p_container)
+	#container.clear()
 
 
 func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody2D]:
@@ -104,7 +119,9 @@ func create_tween(p_object: Object, p_property: NodePath, p_final: Variant,
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
 	var box: String = FileLocation.DIALOG_CONFIRM
-	var modal: DialogConfirm = add_to_ui(box, UI.ContainerType.DIALOG)
+	var ui: UI = get_ui()
+	var modal: DialogConfirm = create_scene(box) # add_to_ui(box, UI.ContainerType.DIALOG)
+	ui.dialog2.add_child(modal)
 	modal.configure(p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()
 	return result

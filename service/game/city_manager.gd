@@ -6,6 +6,9 @@ var datastore: Dictionary[StringName, City] = {}
 func get_city(p_city_id: StringName) -> City:
 	return datastore.get(p_city_id, null)
 
+func get_cities() -> Array[City]:
+	return datastore.values()
+
 
 #func get_general_price_index(p_city: City) -> int:
 	#var market: Market = p_city.get_market()

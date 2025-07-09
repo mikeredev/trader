@@ -59,7 +59,7 @@ func build() -> void:
 
 	# bind camera / TBD this will bind it to the starting window size, ensure overridden later
 	var camera: Camera = overworld.get_camera()
-	camera.set_limits(map.texture.get_size())
+	camera.update_limits(map.texture.get_size())
 	camera.set_min_zoom(DisplayServer.screen_get_size(), map.texture.get_size())
 
 	# create A* grid

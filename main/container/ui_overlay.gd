@@ -1,7 +1,7 @@
-class_name NodeContainer extends Node2D
+class_name UIOverlay extends Control
 
 
-func add_scene(p_scene: Node2D) -> void:
+func add_scene(p_scene: Control) -> void:
 	add_child(p_scene)
 	Debug.log_debug("Added scene: %s" % p_scene.get_path())
 

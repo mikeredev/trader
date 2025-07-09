@@ -3,12 +3,15 @@ class_name InfoBar extends PanelContainer
 @onready var component_stack: HBoxContainer = %ComponentStack
 @onready var ui_location: Label = %LabelLocation
 @onready var ui_fps: Label = %LabelFPS
+@onready var ui_cam_devmode: CheckButton = %CameraDevMode
 @onready var ui_zoom: Label = %LabelZoom
 @onready var ui_clock: Label = %LabelClock
 
 
 func setup() -> void:
 	EventBus.camera_zoomed.connect(_on_camera_zoomed)
+	EventBus.city_entered.connect(_on_city_entered)
+	ui_cam_devmode.toggled.connect(_on_cam_devmode_toggled)
 	#add_location()
 	#add_fps()
 	#add_zoom()
@@ -16,28 +19,37 @@ func setup() -> void:
 
 
 func add_location() -> void:
-	var label: Label = Label.new()
-	label.text = "NO_LOCATION"
-	component_stack.add_child(label)
+	ui_location = Label.new()
+	ui_location.text = "NO_LOCATION"
+	component_stack.add_child(ui_location)
 
 
-func add_fps() -> void:
-	var label: Label = Label.new()
-	label.text = "%d FPS" % 0.0
-	component_stack.add_child(label)
+#func add_fps() -> void:
+	#var label: Label = Label.new()
+	#label.text = "%d FPS" % 0.0
+	#component_stack.add_child(label)
+#
+#
+#func add_zoom() -> void:
+	#var label: Label = Label.new()
+	#label.text = "%.03f zoom" % 0.0
+	#component_stack.add_child(label)
+#
+#
+#func add_clock() -> void:
+	#var label: Label = Label.new()
+	#label.text = "1970-01-01T00:00:00"
+	#component_stack.add_child(label)
+	#label.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
 
 
-func add_zoom() -> void:
-	var label: Label = Label.new()
-	label.text = "%.03f zoom" % 0.0
-	component_stack.add_child(label)
+func _on_cam_devmode_toggled(p_toggled_on: bool) -> void:
+	var view: View = Service.scene_manager.get_active_view()
+	if not view: return
 
-
-func add_clock() -> void:
-	var label: Label = Label.new()
-	label.text = "1970-01-01T00:00:00"
-	component_stack.add_child(label)
-	label.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+	Debug.log_info("Camera devmode toggled: %s" % p_toggled_on)
+	var camera: Camera = view.get_camera()
+	camera.enable_devmode(p_toggled_on)
 
 
 func _on_camera_zoomed(p_zoom_level: Vector2) -> void:
@@ -45,9 +57,5 @@ func _on_camera_zoomed(p_zoom_level: Vector2) -> void:
 	ui_zoom.text = "%.03fx zoom" % zoom
 
 
-func _on_check_cam_control_toggled(p_toggled_on: bool) -> void:
-	var view: View = Service.scene_manager.get_active_view()
-	if not view: return
-
-	var camera: Camera = view.get_camera()
-	camera.set_cam_control(p_toggled_on)
+func _on_city_entered(p_city: City) -> void:
+	ui_location.text = p_city.city_id

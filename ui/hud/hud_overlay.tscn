@@ -1,25 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://df2ya0uji0y7j"]
+[gd_scene load_steps=6 format=3 uid="uid://df2ya0uji0y7j"]
 
-[ext_resource type="Theme" uid="uid://ctglmnnwqwbq4" path="res://assets/theme/hud.tres" id="1_s5h8c"]
-[ext_resource type="Script" uid="uid://b0v3tbwkw2asb" path="res://ui/hud/hud_components.gd" id="2_iysv0"]
-[ext_resource type="Script" uid="uid://n0cmt74v5vsc" path="res://ui/hud/components/info_bar/info_bar.gd" id="3_awuqs"]
-[ext_resource type="Script" uid="uid://xvw5unpybtr6" path="res://ui/hud/components/notification/notification_area.gd" id="4_iqyjp"]
+[ext_resource type="Theme" uid="uid://ctglmnnwqwbq4" path="res://assets/theme/hud.tres" id="1_edsi1"]
+[ext_resource type="Script" uid="uid://b0v3tbwkw2asb" path="res://ui/hud/hud_overlay.gd" id="2_7dvlo"]
+[ext_resource type="Script" uid="uid://n0cmt74v5vsc" path="res://ui/hud/components/info_bar/info_bar.gd" id="3_t7oj4"]
+[ext_resource type="Script" uid="uid://xvw5unpybtr6" path="res://ui/hud/components/notification/notification_area.gd" id="4_ov4ut"]
+[ext_resource type="Script" uid="uid://cdw6orywl6kp0" path="res://ui/hud/components/city_list/city_list.gd" id="5_7dvlo"]
 
-[node name="HUDComponents" type="VBoxContainer"]
+[node name="HUDOverlay" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource("1_s5h8c")
+theme = ExtResource("1_edsi1")
 theme_override_constants/separation = 8
-script = ExtResource("2_iysv0")
+script = ExtResource("2_7dvlo")
 
 [node name="InfoBar" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-script = ExtResource("3_awuqs")
+script = ExtResource("3_t7oj4")
 metadata/_custom_type_script = "uid://n0cmt74v5vsc"
 
 [node name="MarginInner" type="MarginContainer" parent="InfoBar"]
@@ -44,9 +45,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "00 fps"
 
-[node name="CheckCamControl" type="CheckButton" parent="InfoBar/MarginInner/ComponentStack"]
+[node name="CameraDevMode" type="CheckButton" parent="InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "CAM_CONTROL"
+text = "CAM_DEV_MODE"
 
 [node name="LabelZoom" type="Label" parent="InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
@@ -65,7 +67,7 @@ custom_minimum_size = Vector2(416, 192)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 2
-script = ExtResource("4_iqyjp")
+script = ExtResource("4_ov4ut")
 metadata/_custom_type_script = "uid://xvw5unpybtr6"
 
 [node name="MarginInner" type="MarginContainer" parent="NotificationArea"]
@@ -82,4 +84,37 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 
-[connection signal="toggled" from="InfoBar/MarginInner/ComponentStack/CheckCamControl" to="InfoBar" method="_on_check_cam_control_toggled"]
+[node name="CityList" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("5_7dvlo")
+metadata/_custom_type_script = "uid://cdw6orywl6kp0"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CityList"]
+layout_mode = 2
+
+[node name="SourceCity" type="OptionButton" parent="CityList/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "SOURCE"
+popup/item_0/id = 0
+popup/item_0/separator = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CityList/VBoxContainer"]
+layout_mode = 2
+
+[node name="DestCity" type="OptionButton" parent="CityList/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "DESTINATION"
+popup/item_0/id = 0
+popup/item_0/separator = true
+
+[node name="Teleport" type="Button" parent="CityList/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "TELEPORT"
