@@ -1,6 +1,6 @@
 class_name NotificationBox extends PanelContainer
 
-signal ready_to_free
+signal remove
 
 #var visible_line_count: int
 #var total_line_count: int
@@ -9,7 +9,7 @@ signal ready_to_free
 @onready var ui_message: Label = %Message
 
 
-func set_text(p_message: String) -> void:
+func configure(p_message: String) -> void:
 	ui_message.text = p_message
 	ui_message.tooltip_text = p_message
 	#total_line_count = ui_message.get_line_count()
@@ -29,4 +29,4 @@ func _gui_input(event: InputEvent) -> void:
 			match mouse_event.button_index:
 				MOUSE_BUTTON_LEFT: print("left")
 				MOUSE_BUTTON_MIDDLE: print("middle")
-				MOUSE_BUTTON_RIGHT: ready_to_free.emit()
+				MOUSE_BUTTON_RIGHT: remove.emit()

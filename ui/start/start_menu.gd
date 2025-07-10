@@ -179,8 +179,7 @@ func _on_menu_closed(p_submenu: Control) -> void:
 
 
 func _on_quit_pressed() -> void:
-	if await Service.scene_manager.get_confirmation("QUIT TO DESKTOP?"):
-		System.quit_game()
+	System.quit_game()
 
 
 func _on_mouse_entered(p_icon: TextureRect) -> void:

@@ -67,7 +67,7 @@ func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody
 
 
 func create_notification(p_message: String) -> void:
-	EventBus.notification_sent.emit(p_message)
+	EventBus.create_notification.emit(p_message)
 
 
 func create_scene(p_scene: Variant) -> Node:
@@ -102,9 +102,9 @@ func get_active_view() -> View:
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
 	var box: String = FileLocation.DIALOG_CONFIRM
-	var ui: UI = get_ui()
 	var modal: DialogConfirm = create_scene(box) # add_to_ui(box, UI.ContainerType.DIALOG)
-	ui.dialog2.add_child(modal)
+	var ui: UI = get_ui()
+	ui.splash.add_scene(modal)
 	modal.configure(p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()
 	return result

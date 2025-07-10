@@ -2,43 +2,44 @@ class_name DialogConfirm extends Control
 
 signal completed(p_result: bool)
 
-var confirm_text: String
-var cancel_text: String
-var text: String
-
-@onready var confirm_button: Button = %ConfirmButton
-@onready var cancel_button: Button = %CancelButton
-@onready var confirmation_label: Label = %ConfirmationLabel
+@onready var ui_confirm: Button = %ConfirmButton
+@onready var ui_cancel: Button = %CancelButton
+@onready var ui_text: Label = %ConfirmationLabel
 
 
 func _ready() -> void:
+	# set properties
 	self.process_mode = Node.PROCESS_MODE_ALWAYS
 
-	confirmation_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	confirmation_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	confirmation_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	confirm_button.pressed.connect(_on_confirm_pressed)
-	cancel_button.pressed.connect(_on_cancel_pressed)
+	# set label properties
+	ui_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	ui_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	ui_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
+	# connect button signals
+	ui_confirm.pressed.connect(_on_confirm_pressed)
+	ui_cancel.pressed.connect(_on_cancel_pressed)
+
+	# create button shortcuts
 	var confirm_shortcut: Shortcut = Shortcut.new()
 	var confirm_event: InputEventAction = InputEventAction.new()
 	confirm_event.action = "ui_accept"
 	confirm_shortcut.events.append(confirm_event)
-	confirm_button.shortcut = confirm_shortcut
+	ui_confirm.shortcut = confirm_shortcut
 
 	var cancel_shortcut: Shortcut = Shortcut.new()
 	var cancel_event: InputEventAction = InputEventAction.new()
 	cancel_event.action = "ui_cancel"
 	cancel_shortcut.events.append(cancel_event)
-	cancel_button.shortcut = cancel_shortcut
+	ui_cancel.shortcut = cancel_shortcut
 
 
 func configure(p_text: String, p_confirm_text: String, p_cancel_text: String) -> void:
-	confirmation_label.text = p_text
-	confirm_button.text = p_confirm_text
-	cancel_button.text = p_cancel_text
-	var height: int = (confirmation_label.get_line_count() * confirmation_label.get_line_height()) + confirmation_label.get_line_height()
-	confirmation_label.custom_minimum_size = Vector2(confirmation_label.size.x, height)
+	ui_text.text = p_text
+	ui_confirm.text = p_confirm_text
+	ui_cancel.text = p_cancel_text
+	var height: int = (ui_text.get_line_count() * ui_text.get_line_height()) + ui_text.get_line_height()
+	ui_text.custom_minimum_size = Vector2(ui_text.size.x, height)
 	Debug.log_debug("Presented confirmation: %s" % p_text)
 
 

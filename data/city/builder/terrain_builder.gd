@@ -96,6 +96,7 @@ func draw_water(p_grid_size: Vector2i, p_city_orientation: Dictionary[String, fl
 
 	var range_x: Vector2i
 	var range_y: Vector2i
+	var water_tile: Vector2i = tile_map.get("water")
 	for direction: String in p_city_orientation.keys():
 		var strength: float = p_city_orientation[direction]
 		var thickness: int = ceili(strength * 6.0)
@@ -116,22 +117,23 @@ func draw_water(p_grid_size: Vector2i, p_city_orientation: Dictionary[String, fl
 		for x: int in range(range_x.x, range_x.y):
 			for y: int in range(range_y.x, range_y.y):
 				var coords: Vector2i = Vector2i(x, y)
-				scene.water_layer.set_cell(coords, 1, tile_map.get("water"))
+				scene.water_layer.set_cell(coords, 1, water_tile)
 
 	# done
 	Debug.log_debug("Water direction: %s" % p_city_orientation)
 
 
 func draw_ground(p_grid_size: Vector2i) -> Rect2i:
+	var grass_tile: Vector2i = tile_map.get("grass")
 	for x: int in range(p_grid_size.x):
 		for y: int in range(p_grid_size.y):
 			var coords: Vector2i = Vector2i(x, y)
 			var id: int = scene.water_layer.get_cell_source_id(coords)
 			if id == -1: # get every "not water" cell in the whole grid
-				scene.ground_layer.set_cell(coords, 1, tile_map.get("grass"))
-	var ground_rect: Rect2i = scene.ground_layer.get_used_rect()
-	Debug.log_debug("Ground rect: %s" % ground_rect)
-	return ground_rect
+				scene.ground_layer.set_cell(coords, 1, grass_tile)
+	var rect: Rect2i = scene.ground_layer.get_used_rect()
+	Debug.log_debug("Ground rect: %s" % rect)
+	return rect
 
 
 func draw_shore(p_city_orientation: Dictionary[String, float], p_ground_rect: Rect2i) -> void:
@@ -159,10 +161,11 @@ func draw_shore(p_city_orientation: Dictionary[String, float], p_ground_rect: Re
 
 	# 1 / bitmask the shoreline outer layer
 	var shore_inner: Array[Vector2i] = []
+	var tile: Vector2i
 	for coords: Vector2i in scene.shore_layer.get_used_cells():
 		# bitmask each cell against the water layer
 		var bitmask: int = _get_bitmask(coords, scene.water_layer)
-		var tile: Vector2i = SHORELINE_OUTER_MASK.get(bitmask, Vector2i(-1, -1))
+		tile = SHORELINE_OUTER_MASK.get(bitmask, Vector2i(-1, -1))
 
 		# if it doesn't have a mapped tile, consider it part of the inner shoreline
 		if tile == Vector2i(-1, -1): shore_inner.append(coords)
@@ -173,7 +176,7 @@ func draw_shore(p_city_orientation: Dictionary[String, float], p_ground_rect: Re
 	# 2 / bitmask shoreline inner layer
 	for coords: Vector2i in shore_inner:
 		var bitmask: int = _get_bitmask(coords, scene.ground_layer)
-		var tile: Vector2i = SHORELINE_INNER_MASK.get(bitmask, Vector2i(-1, -1))
+		tile = SHORELINE_INNER_MASK.get(bitmask, Vector2i(-1, -1))
 		if tile == Vector2i(-1, -1): Debug.log_warning("Tile %s is not bitmasked (%d)" % [coords, bitmask])
 		else: scene.shore_layer.set_cell(coords, 3, tile)
 
@@ -216,10 +219,11 @@ func draw_inner_ring(p_ground_rect: Rect2i) -> void: # creates a reserved "green
 			#scene.buffer_layer.set_cell(coords, 1, Vector2(0,0))
 
 	# reserve any (unreserved) edge tiles in green layer
+	var reserved_tile: Vector2i = tile_map.get("reserved")
 	for coords: Vector2i in edge_cells:
 		#if not reserved_cells.has(coords):
 		scene.ground_layer.erase_cell(coords)
-		scene.green_layer.set_cell(coords, 1, tile_map.get("reserved"))
+		scene.green_layer.set_cell(coords, 1, reserved_tile)
 
 	# done
 	Debug.log_verbose("Reserved inner ring (is capital: %s)" % city.is_capital)

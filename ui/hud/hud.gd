@@ -1,4 +1,4 @@
-class_name HUDOverlay extends UIControl
+class_name HUD extends UIControl
 
 # UIControl elements
 @onready var margin_outer: MarginContainer = %MarginOuter
@@ -29,4 +29,4 @@ func clear() -> void:
 
 
 func _on_test_alert_button_pressed() -> void:
-	EventBus.notification_sent.emit("test message")
+	EventBus.create_notification.emit("test message")
