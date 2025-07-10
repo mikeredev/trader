@@ -1,6 +1,6 @@
 extends Node ## Global access point to system-level utilities, services, and core loop.
 
-var service: ServiceLocator = ServiceLocator.new()
+var manage: SystemServiceLocator = SystemServiceLocator.new()
 var state: StateMachine = StateMachine.new()
 var _cache: Node2D # ensure wiped on reset NOTE
 
@@ -30,6 +30,6 @@ func pause_game(p_paused: bool) -> void:
 
 
 func quit_game() -> void:
-	if await System.service.scene_manager.get_confirmation("QUIT TO DESKTOP?"):
+	if await System.manage.scene.get_confirmation("QUIT TO DESKTOP?"):
 		Debug.log_info("Goodbye.")
 		System.get_tree().quit()

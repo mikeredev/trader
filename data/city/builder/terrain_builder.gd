@@ -86,7 +86,7 @@ func draw_terrain(p_grid_size: Vector2i) -> void:
 
 
 func draw_water(p_grid_size: Vector2i, p_city_orientation: Dictionary[String, float]) -> void:
-	if not System.service.config_manager.developer_settings.enable_astar:
+	if not System.manage.config.developer_settings.enable_astar:
 		Debug.log_warning("A* is disabled (city is considered landlocked)")
 		return
 
@@ -288,8 +288,9 @@ func _is_adjacent_to_layer(p_cell: Vector2i, p_layer: TileMapLayer) -> bool:
 
 
 func _reserve_shore(p_range_x: Vector2i, p_range_y: Vector2i) -> void:
+	var reserved_tile: Vector2i = tile_map.get("reserved")
 	for x: int in range(p_range_x.x, p_range_x.y):
 		for y: int in range(p_range_y.x, p_range_y.y):
 			var coords: Vector2i = Vector2i(x, y)
 			scene.ground_layer.erase_cell(coords) # set reserved tile
-			scene.shore_layer.set_cell(coords, 1, tile_map.get("reserved"))
+			scene.shore_layer.set_cell(coords, 1, reserved_tile)

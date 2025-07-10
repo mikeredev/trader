@@ -10,14 +10,14 @@ class_name HUD extends UIControl
 @onready var notification_area: NotificationArea = %NotificationArea
 @onready var city_options: CityOptionsPanel = %CityOptions
 @onready var game_options: GameOptionsPanel = %GameOptions
-@onready var dialog_confirm: Control = %DialogConfirm
+@onready var modal: Control = %Modal # TBD dedicated type that activates the fade without handling
 
 
 func _ui_ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin_outer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	background.process_mode = Node.PROCESS_MODE_ALWAYS
-	Debug.log_debug("Created HUD Overlay: %s" % get_path())
+	Debug.log_debug("Created HUD: %s" % get_path())
 
 
 func clear() -> void:
@@ -29,6 +29,7 @@ func setup() -> void:
 	notification_area.setup()
 	city_options.setup()
 	game_options.setup()
+	# modal setup, mouse filter ignore etc
 
 
 func _on_test_alert_button_pressed() -> void:
@@ -36,4 +37,4 @@ func _on_test_alert_button_pressed() -> void:
 
 
 func _on_test_alert_button_2_pressed() -> void:
-	System.service.scene_manager.get_confirmation("hello test here")
+	System.manage.scene.get_confirmation("hello test here")

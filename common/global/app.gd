@@ -1,11 +1,3 @@
 extends Node
 
-
-func _init() -> void:
-	pass
-
-
-func _ready() -> void:
-	pass
-
-
+var context: AppServiceLocator = AppServiceLocator.new()

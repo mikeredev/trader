@@ -1,6 +1,6 @@
 class_name BuildState extends ActiveState
 
-var blueprint: Blueprint = System.service.mod_manager.get_blueprint()
+var blueprint: Blueprint = System.manage.content.get_blueprint()
 var is_new_game: bool
 
 
@@ -10,10 +10,10 @@ func _init(p_is_new_game: bool = false) -> void:
 
 
 func _start_services() -> void:
-	System.service.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
-	System.service.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
-	System.service.start_service(CityManager.new(), Service.Type.CITY_MANAGER)
-	System.service.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
+	App.context.start_service(WorldManager.new(), Service.Type.WORLD_MANAGER)
+	App.context.start_service(CountryManager.new(), Service.Type.COUNTRY_MANAGER)
+	App.context.start_service(CityManager.new(), Service.Type.CITY_MANAGER)
+	App.context.start_service(TradeManager.new(), Service.Type.TRADE_MANAGER)
 
 
 func _main() -> void:
@@ -43,10 +43,10 @@ func _main() -> void:
 
 func create_player() -> void:
 	var profile_id: StringName = blueprint.player.profile.profile_id
-	var player: Character = System.service.character_manager.get_character(profile_id)
-	var body: PlayerBody = System.service.character_manager.create_body(player)
+	var player: Character = App.context.character.get_character(profile_id)
+	var body: PlayerBody = App.context.character.create_body(player)
 	player.body = body
-	System.service.character_manager.cache_body(player.body) # cache until ready for use
+	App.context.character.cache_body(player.body) # cache until ready for use
 
 
 func create_engine_tools() -> void:

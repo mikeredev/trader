@@ -48,13 +48,13 @@ func change_grid(p_section: ConfigManager.Section, p_toggled_on: bool) -> void:
 	else:
 		var grid: GridContainer
 		match p_section:
-			ConfigManager.Section.GENERAL: grid = System.service.config_manager.general_settings.to_grid()
-			ConfigManager.Section.AUDIO: grid = System.service.config_manager.audio_settings.to_grid()
-			ConfigManager.Section.CONTROL: grid = System.service.config_manager.control_settings.to_grid()
-			ConfigManager.Section.DEVELOPER: grid = System.service.config_manager.developer_settings.to_grid()
-			ConfigManager.Section.DISPLAY: grid = System.service.config_manager.display_settings.to_grid()
-			ConfigManager.Section.LOCALE: grid = System.service.config_manager.locale_settings.to_grid()
-			ConfigManager.Section.MODS: grid = System.service.config_manager.mod_settings.to_grid()
+			ConfigManager.Section.GENERAL: grid = System.manage.config.general_settings.to_grid()
+			ConfigManager.Section.AUDIO: grid = System.manage.config.audio_settings.to_grid()
+			ConfigManager.Section.CONTROL: grid = System.manage.config.control_settings.to_grid()
+			ConfigManager.Section.DEVELOPER: grid = System.manage.config.developer_settings.to_grid()
+			ConfigManager.Section.DISPLAY: grid = System.manage.config.display_settings.to_grid()
+			ConfigManager.Section.LOCALE: grid = System.manage.config.locale_settings.to_grid()
+			ConfigManager.Section.MODS: grid = System.manage.config.mod_settings.to_grid()
 		cache[p_section] = grid
 		nav_content.add_child(grid)
 	active = p_section
@@ -72,8 +72,8 @@ func _on_nav_button_toggled(p_toggled_on: bool, p_section: ConfigManager.Section
 
 
 func _on_restore_button_pressed() -> void:
-	if await System.service.scene_manager.get_confirmation("RESTORE DEFAULT SETTINGS?"):
-		System.service.config_manager.restore_section(active, true)
+	if await System.manage.scene.get_confirmation("RESTORE DEFAULT SETTINGS?"):
+		System.manage.config.restore_section(active, true)
 		restore_grid()
 
 

@@ -9,7 +9,7 @@ func _init(p_saved_mods: PackedStringArray) -> void:
 
 
 func _start_services() -> void:
-	System.service.start_service(ModManager.new(), Service.Type.MOD_MANAGER)
+	System.manage.start_service(ModManager.new(), Service.Type.MOD_MANAGER)
 
 
 func _main() -> void:
@@ -21,13 +21,13 @@ func _main() -> void:
 	stage_saved_mods(saved_mods)
 
 	# finalise blueprint
-	System.service.mod_manager.generate_blueprint()
+	System.manage.content.generate_blueprint()
 
 	# tidy-up
-	#System.service.mod_manager.clear_staging()
+	#System.manage.content.clear_staging()
 
 	# notify
-	System.service.scene_manager.create_notification("Enabled %d mods" % System.service.mod_manager.get_active_mods().size())
+	System.manage.scene.create_notification("Enabled %d mods" % System.manage.content.get_active_mods().size())
 
 	# show start menu
 	System.state.change(StartState.new())
@@ -38,11 +38,11 @@ func stage_core_mod(p_core_mod_dir: String) -> bool:
 	var success: bool
 
 	# attempt to get manifest
-	var manifest: ModManifest = System.service.mod_manager.create_manifest(p_core_mod_dir)
+	var manifest: ModManifest = System.manage.content.create_manifest(p_core_mod_dir)
 	if not manifest: success = false
 
 	# attempt to stage mod
-	success = System.service.mod_manager.stage_content(manifest)
+	success = System.manage.content.stage_content(manifest)
 
 	# return result
 	if not success: Debug.log_error("Fatal: failed to stage core mod")
@@ -55,7 +55,7 @@ func parse_all_mods(p_user_mod_dir: String) -> void:
 	# attempt to generate manifest for any directory found under p_user_mod_dir
 	for subfolder: String in DirAccess.get_directories_at(p_user_mod_dir):
 		var path: String = "%s/%s" % [p_user_mod_dir, subfolder]
-		var manifest: ModManifest = System.service.mod_manager.create_manifest(path)
+		var manifest: ModManifest = System.manage.content.create_manifest(path)
 		if not manifest: Debug.log_error("Failed to generate manifest: %s" % path)
 
 
@@ -70,12 +70,12 @@ func stage_saved_mods(p_saved_mods: PackedStringArray) -> void:
 	for mod_id: StringName in p_saved_mods:
 
 		# expect to find existing manifest for saved mod
-		var manifest: ModManifest = System.service.mod_manager.get_manifest(mod_id)
+		var manifest: ModManifest = System.manage.content.get_manifest(mod_id)
 		if not manifest:
 			Debug.log_warning("Could not find manifest: %s" % mod_id)
 			continue # non-fatal error
 
 		# enable saved mod via manifest
-		if not System.service.mod_manager.stage_content(manifest):
+		if not System.manage.content.stage_content(manifest):
 			Debug.log_error("Failed to stage mod: %s" % mod_id)
 			continue # non-fatal error

@@ -12,7 +12,7 @@ func setup() -> void:
 
 
 func populate() -> void:
-	for city: City in System.service.city_manager.get_cities():
+	for city: City in App.context.city.get_cities():
 		for button: OptionButton in [ui_source_city, ui_dest_city]:
 			button.add_item(city.city_id)
 

@@ -58,9 +58,9 @@ func build() -> void:
 		_create_resource(resource_id, metadata)
 
 	Debug.log_debug("Created: %d categories, %d markets, %d resources" % [
-		System.service.trade_manager.category_datastore.size(),
-		System.service.trade_manager.market_datastore.size(),
-		System.service.trade_manager.resource_datastore.size() ])
+		App.context.trade.category_datastore.size(),
+		App.context.trade.market_datastore.size(),
+		App.context.trade.resource_datastore.size() ])
 
 
 static func validate(_p_data: Dictionary, _p_cache: Dictionary) -> bool:
@@ -76,7 +76,7 @@ func _create_resource(resource_id: StringName, p_metadata: Dictionary) -> void:
 	_configure_sell_price(resource, p_metadata)
 
 	# register for lookup
-	System.service.trade_manager.resource_datastore[resource_id] = resource
+	App.context.trade.resource_datastore[resource_id] = resource
 	Debug.log_verbose("󰈺  Created resource: %s (%s)" % [resource.resource_id, resource.category_id])
 
 
@@ -131,29 +131,29 @@ func _configure_sell_price(p_resource: TradeResource, p_metadata: Dictionary) ->
 
 func _get_or_create_market(p_market_id: StringName) -> TradeMarket:
 	var market: TradeMarket
-	if System.service.trade_manager.get_market(p_market_id):
-		market = System.service.trade_manager.get_market(p_market_id)
+	if App.context.trade.get_market(p_market_id):
+		market = App.context.trade.get_market(p_market_id)
 	else:
 		# create object
 		market = TradeMarket.new()
 		market.market_id = p_market_id
 
 		# register for lookup
-		System.service.trade_manager.market_datastore[p_market_id] = market
+		App.context.trade.market_datastore[p_market_id] = market
 		Debug.log_verbose("󰓜  Created market: %s" % [market.market_id])
 	return market
 
 
 func _get_or_create_category(p_category_id: StringName) -> TradeCategory: # lazy initialize category if needed
 	var category: TradeCategory
-	if System.service.trade_manager.get_category(p_category_id):
-		category = System.service.trade_manager.get_category(p_category_id)
+	if App.context.trade.get_category(p_category_id):
+		category = App.context.trade.get_category(p_category_id)
 	else:
 		# create object
 		category = TradeCategory.new()
 		category.category_id = p_category_id
 
 		# register for lookup
-		System.service.trade_manager.category_datastore[p_category_id] = category
+		App.context.trade.category_datastore[p_category_id] = category
 		Debug.log_verbose("  Created category: %s" % [category.category_id])
 	return category

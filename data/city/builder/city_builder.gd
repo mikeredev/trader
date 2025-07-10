@@ -32,7 +32,7 @@ func build() -> void:
 	scene.tile_grid = CityGrid.new()
 
 	# apply scene borders
-	var borders: Array[StaticBody2D] = System.service.scene_manager.create_borders(scene.tile_grid.area)
+	var borders: Array[StaticBody2D] = System.manage.scene.create_borders(scene.tile_grid.area)
 	for border: StaticBody2D in borders:
 		scene.border_group.add_child(border)
 

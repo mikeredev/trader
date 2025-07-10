@@ -3,7 +3,7 @@ class_name SceneManager extends Service
 var _active_view: View
 var _views: Dictionary[View.ViewType, View] = {}
 var ui: UI
-
+# TBD add .view namespace like ServiceRegistry
 
 func add_view(p_type: View.ViewType, p_view: View) -> void:
 	_views[p_type] = p_view
@@ -102,7 +102,7 @@ func get_active_view() -> View:
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
 	var modal: DialogConfirm = create_scene(FileLocation.DIALOG_CONFIRM)
-	ui.hud.dialog_confirm.add_child(modal)
+	ui.hud.modal.add_child(modal) # add_scene method that auto fades bg TBD
 	ui.hud.fade_background(true)
 	modal.configure(p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()

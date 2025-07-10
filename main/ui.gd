@@ -15,24 +15,30 @@ func setup() -> void:
 	_setup_menu()
 	_setup_hud()
 
-	# apply common properties to all children
-	for child: Control in get_children(): # themes etc applied in editor to tscn
-		child.set_anchors_preset(Control.PRESET_FULL_RECT)
-		child.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		child.size = child.get_parent_area_size() # needed for splash / remove, click quit on start
+	for child: Control in get_children():
+		child.anchor_left = 0
+		child.anchor_right = 1
+		child.anchor_top = 0
+		child.anchor_bottom = 1
+		child.offset_left = 0
+		child.offset_top = 0
+		child.offset_right = 0
+		child.offset_bottom = 0
 		Debug.log_verbose("󱣴  Configured UI overlay: %s" % child.get_path())
 
 	# register for lookup
-	System.service.scene_manager.register_ui(self)
+	System.manage.scene.register_ui(self)
 
 
 func _setup_menu() -> void:
 	menu = UIOverlay.new()
 	menu.name = "Menu"
+	menu.theme = load(FileLocation.THEME_MENU)
 	add_child(menu)
 
 
 func _setup_hud() -> void:
-	hud = System.service.scene_manager.create_scene(FileLocation.UI_HUD)
+	hud = System.manage.scene.create_scene(FileLocation.UI_HUD)
+	hud.theme = load(FileLocation.THEME_HUD)
 	add_child(hud)
 	hud.setup()
