@@ -2,10 +2,9 @@ class_name StartMenu extends UIControl
 
 enum SubMenuType { NEW, LOAD, SETTINGS, MODS }
 
-const FADE_INTRO: float = 9.0
+@export var FADE_INTRO: float = 9.0
 const PAUSE: float = 0.5
 const TITLE_IN: float = 2.0
-const BUTTON_ALPHA: float = 0.1
 const BUTTON_SLIDE: float = 0.2
 const MENU_IN: float = 0.6
 const MENU_OUT: float = 0.2
@@ -18,7 +17,6 @@ var cache: Dictionary[SubMenuType, UISubMenu]
 @onready var background: ColorRect = %Background
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
-
 
 @onready var nav_content: VBoxContainer = %NavContent
 @onready var nav_menu: VBoxContainer = %NavMenu
@@ -77,11 +75,14 @@ func _set_color_scheme() -> void: # overrides UIControl default method
 	var secondary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/secondary_bg")
 	var ternary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
 
+	# apply color scheme to shaders
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("sky_color", primary_bg)
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("sea_color", secondary_bg)
 	(sky_rect.material as ShaderMaterial).set_shader_parameter("crest_color", secondary_bg.darkened(0.1))
+
+	# set background and atmospheric fog to the same color
 	(atmosphere_rect.material as ShaderMaterial).set_shader_parameter("fog_color", ternary_bg)
-	background.color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
+	background.color = ternary_bg
 
 
 func _ui_ready() -> void:
@@ -104,19 +105,20 @@ func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 		nav_content.add_child(submenu)
 		cache[p_submenu] = submenu
 
-	# modulate submenu to transparent and fade in
+	# wait for nav_menu to fade out, then fade in submenu
 	await tween.finished
 	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
 
 	# activate fade
-	fade_background()
+	fade_background(true)
 
 
 func play_animation() -> void:
-	if not Service.config_manager.general_settings.show_intro: return
+	if not Service.config_manager.general_settings.show_intro: # simple fade-in
+		background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, 1.0)
+		return
 
 	# prepare tween, title, buttons
-	background.visible = true
 	label_title.modulate.a = 0.0
 	for button: UIButtonStartMenu in buttons:
 		button.modulate.a = 0.0
@@ -138,8 +140,8 @@ func play_animation() -> void:
 	for button: Button in buttons:
 		var pos: float = button.position.x
 		button.position.x += 100
-		tween = Service.scene_manager.create_tween(button, "modulate:a", 1.0, BUTTON_ALPHA, Tween.TRANS_BACK, Tween.EASE_OUT)
-		await tween.finished
+		tween = Service.scene_manager.create_tween(button, "modulate:a", 1.0, 0.09, Tween.TRANS_BACK, Tween.EASE_OUT)
+		await tween.finished # speed of modulate:a above is very sensitive
 		tween = Service.scene_manager.create_tween(button, "position:x", pos, BUTTON_SLIDE, Tween.TRANS_QUAD, Tween.EASE_OUT)
 		button.mouse_filter = Control.MOUSE_FILTER_STOP
 		button.focus_mode = Control.FOCUS_ALL
@@ -156,8 +158,6 @@ func play_animation() -> void:
 
 
 func _housekeeping() -> void:
-	background.modulate.a = 0.0 # remains unused unless playing animation
-
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:
 			var button: UIButtonStartMenu = node
@@ -180,8 +180,9 @@ func _on_menu_closed(p_submenu: Control) -> void:
 	label_title.visible = true
 	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
-	# activate fade
-	reset_background()
+	# reset fade
+	fade_background(false)
+
 
 func _on_quit_pressed() -> void:
 	System.quit_game()

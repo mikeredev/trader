@@ -2,7 +2,7 @@ class_name SceneManager extends Service
 
 var _active_view: View
 var _views: Dictionary[View.ViewType, View] = {}
-var _ui: UI
+var ui: UI
 
 
 func add_view(p_type: View.ViewType, p_view: View) -> void:
@@ -10,8 +10,8 @@ func add_view(p_type: View.ViewType, p_view: View) -> void:
 	Debug.log_debug("Registered view: %s" % p_view)
 
 
-func add_ui(p_ui: UI) -> void:
-	_ui = p_ui
+func register_ui(p_ui: UI) -> void:
+	ui = p_ui
 	Debug.log_debug("Registered UI: %s" % p_ui)
 
 
@@ -102,16 +102,12 @@ func get_active_view() -> View:
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
 	var modal: DialogConfirm = create_scene(FileLocation.DIALOG_CONFIRM)
-	_ui.hud.dialog_confirm.add_child(modal)
-	_ui.hud.fade_background(Color.RED)
+	ui.hud.dialog_confirm.add_child(modal)
+	ui.hud.fade_background(true)
 	modal.configure(p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()
-	_ui.hud.reset_background()
+	ui.hud.fade_background(false)
 	return result
-
-
-func get_ui() -> UI:
-	return _ui
 
 
 func get_view(p_type: View.ViewType) -> View:

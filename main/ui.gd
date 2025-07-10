@@ -1,7 +1,5 @@
 class_name UI extends CanvasLayer
 
-#var setup_config: Dictionary[]
-
 @onready var menu: UIOverlay
 @onready var hud: HUD
 
@@ -25,7 +23,7 @@ func setup() -> void:
 		Debug.log_verbose("󱣴  Configured UI overlay: %s" % child.get_path())
 
 	# register for lookup
-	Service.scene_manager.add_ui(self)
+	Service.scene_manager.register_ui(self)
 
 
 func _setup_menu() -> void:

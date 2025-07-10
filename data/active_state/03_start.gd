@@ -19,11 +19,9 @@ func _main() -> void:
 	#Service.scene_manager.add_menu(Filepath.START_MENU)
 
 	#Service.scene_manager.add_to_ui(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
-	var ui: UI = Service.scene_manager.get_ui()
 	var start_menu: StartMenu = Service.scene_manager.create_scene(FileLocation.UI_START_MENU)
-	ui.menu.add_scene(start_menu)
+	Service.scene_manager.ui.menu.add_scene(start_menu)
 
 
 func _exit() -> void:
-	var ui: UI = Service.scene_manager.get_ui()
-	ui.menu.clear()
+	Service.scene_manager.ui.menu.clear()

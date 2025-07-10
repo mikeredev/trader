@@ -1,4 +1,4 @@
-class_name UIControl extends Control
+class_name UIControl extends Control # requires Background, MarginOuter, NavMain
 
 const BG_FADE_DURATION: float = 1.0
 
@@ -40,7 +40,7 @@ func _set_color_scheme() -> void:
 		var background: ColorRect = get_node("%Background")
 		var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 		background.color = primary_bg
-		background.color.a = 1.0
+		background.modulate.a = 0.0
 		background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		Debug.log_verbose("Set background %s: %s" % [primary_bg.to_html(), name])
 
@@ -48,19 +48,13 @@ func _set_color_scheme() -> void:
 func _ui_ready() -> void: pass
 
 
-func fade_background(p_color: Color = Color.BLACK) -> void:
+func fade_background(p_toggled_on: bool) -> void: # avoid changing color or handle tween interruptions better
 	if get_node_or_null("%Background"):
 		var background: ColorRect = get_node("%Background")
 		if background_tween: background_tween.kill()
-		background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.5, BG_FADE_DURATION)
-		#background_tween.parallel().tween_property(background, "color", p_color, BG_FADE_DURATION)
-		background.mouse_filter = Control.MOUSE_FILTER_STOP
-
-
-func reset_background() -> void:
-	if get_node_or_null("%Background"):
-		var background: ColorRect = get_node("%Background")
-		if background_tween: background_tween.kill()
-		background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, BG_FADE_DURATION)
-		#background_tween.parallel().tween_property(background, "color", Color.BLACK, BG_FADE_DURATION)
-		background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if p_toggled_on:
+			background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.5, BG_FADE_DURATION)
+			background.mouse_filter = Control.MOUSE_FILTER_STOP
+		else:
+			background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, BG_FADE_DURATION)
+			background.mouse_filter = Control.MOUSE_FILTER_IGNORE

@@ -1,9 +1,9 @@
 class_name HUD extends UIControl
 
 # UIControl elements
+@onready var background: ColorRect = %Background
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: VBoxContainer = %NavMain
-@onready var background: ColorRect = %Background
 
 # HUD components
 @onready var info_bar: InfoBar = %InfoBar
@@ -14,9 +14,9 @@ class_name HUD extends UIControl
 
 
 func _ui_ready() -> void:
-	background.modulate.a = 0.0
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin_outer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	background.process_mode = Node.PROCESS_MODE_ALWAYS
 	Debug.log_debug("Created HUD Overlay: %s" % get_path())
 
 
