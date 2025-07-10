@@ -4,13 +4,11 @@ class_name UI extends CanvasLayer
 
 @onready var menu: UIOverlay
 @onready var hud: HUD
-@onready var splash: SplashUI
 
 
 func clear_all() -> void:
 	menu.clear()
 	hud.clear()
-	splash.clear()
 	Debug.log_verbose("Cleared all UI overlays")
 
 
@@ -18,7 +16,6 @@ func setup() -> void:
 	Debug.log_info("Creating UI...")
 	_setup_menu()
 	_setup_hud()
-	_setup_splash()
 
 	# apply common properties to all children
 	for child: Control in get_children(): # themes etc applied in editor to tscn
@@ -41,9 +38,3 @@ func _setup_hud() -> void:
 	hud = Service.scene_manager.create_scene(FileLocation.UI_HUD)
 	add_child(hud)
 	hud.setup()
-
-
-func _setup_splash() -> void:
-	splash = SplashUI.new()
-	add_child(splash)
-	splash.setup()

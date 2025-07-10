@@ -14,14 +14,18 @@ func setup() -> void:
 	ui_pause.toggled.connect(_on_game_paused)
 	ui_quit.pressed_tweened.connect(_on_game_quit)
 
+
 func _on_game_saved() -> void:
 	pass
+
 
 func _on_game_load() -> void:
 	pass
 
+
 func _on_game_paused(p_toggled: bool) -> void:
 	System.pause_game(p_toggled)
+
 
 func _on_game_quit() -> void:
 	System.quit_game()

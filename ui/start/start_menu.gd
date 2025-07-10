@@ -14,9 +14,11 @@ var tween: Tween
 var buttons: Array[UIButtonStartMenu]
 var cache: Dictionary[SubMenuType, UISubMenu]
 
+# UIControl elements
+@onready var background: ColorRect = %Background
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
-@onready var background: ColorRect = %Background
+
 
 @onready var nav_content: VBoxContainer = %NavContent
 @onready var nav_menu: VBoxContainer = %NavMenu
@@ -89,9 +91,7 @@ func _ui_ready() -> void:
 
 func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 	# fade out label_title and nav_menu
-	tween = Service.scene_manager.create_tween(nav_buttons, "modulate:a", 0.0, MENU_OUT)
-	tween.parallel().tween_property(label_title, "modulate:a", 0.0, MENU_OUT)
-	await tween.finished
+	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 0.0, MENU_OUT)
 
 	var submenu: UISubMenu
 	if cache.has(p_submenu):
@@ -104,11 +104,12 @@ func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 		nav_content.add_child(submenu)
 		cache[p_submenu] = submenu
 
-	# activate splash fade
-	#Service.scene_manager._ui.splash.set_fade(Color.RED, 0.4, false)
-
 	# modulate submenu to transparent and fade in
+	await tween.finished
 	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
+
+	# activate fade
+	fade_background()
 
 
 func play_animation() -> void:
@@ -123,7 +124,7 @@ func play_animation() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
-	tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 
 	# wait a little, and play the rest
 	await get_tree().create_timer(PAUSE).timeout
@@ -155,7 +156,7 @@ func play_animation() -> void:
 
 
 func _housekeeping() -> void:
-	background.visible = false # remains unused unless playing animation
+	background.modulate.a = 0.0 # remains unused unless playing animation
 
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:
@@ -177,9 +178,10 @@ func _on_menu_closed(p_submenu: Control) -> void:
 	# fade back in button nav/label, modulated out in get_submenu
 	nav_buttons.visible = true
 	label_title.visible = true
-	tween = Service.scene_manager.create_tween(nav_buttons, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
-	tween.parallel().tween_property(label_title, "modulate:a", 1.0, MENU_IN)
+	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
+	# activate fade
+	reset_background()
 
 func _on_quit_pressed() -> void:
 	System.quit_game()
