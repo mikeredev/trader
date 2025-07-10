@@ -5,6 +5,7 @@ var _views: Dictionary[View.ViewType, View] = {}
 var ui: UI
 # TBD add .view namespace like ServiceRegistry
 
+
 func add_view(p_type: View.ViewType, p_view: View) -> void:
 	_views[p_type] = p_view
 	Debug.log_debug("Registered view: %s" % p_view)
@@ -101,12 +102,8 @@ func get_active_view() -> View:
 
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
-	var modal: DialogConfirm = create_scene(FileLocation.DIALOG_CONFIRM)
-	ui.hud.modal.add_child(modal) # add_scene method that auto fades bg TBD
-	ui.hud.fade_background(true)
-	modal.configure(p_text, p_confirm_text, p_cancel_text)
+	var modal: DialogConfirm = ui.hud.modal.add_modal(FileLocation.DIALOG_CONFIRM, p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()
-	ui.hud.fade_background(false)
 	return result
 
 
@@ -120,10 +117,12 @@ func get_views() -> Array[View]:
 
 func _create_from_packed(p_preload: PackedScene) -> Node:
 	var scene: Node = p_preload.instantiate()
+	Debug.log_debug("Created scene from packed: %s" % p_preload.name)
 	return scene
 
 
 func _create_from_path(p_path: String) -> Node:
 	var packed_scene: PackedScene = load(p_path)
 	var scene: Node = packed_scene.instantiate()
+	Debug.log_debug("Created scene from path: %s" % p_path)
 	return scene

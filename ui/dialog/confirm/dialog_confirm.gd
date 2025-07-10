@@ -8,8 +8,7 @@ signal completed(p_result: bool)
 
 
 func _ready() -> void:
-	# set properties
-	self.process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	# set label properties
 	ui_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -35,12 +34,13 @@ func _ready() -> void:
 
 
 func configure(p_text: String, p_confirm_text: String, p_cancel_text: String) -> void:
+	completed.connect(_on_completed)
 	ui_text.text = p_text
 	ui_confirm.text = p_confirm_text
 	ui_cancel.text = p_cancel_text
 	var height: int = (ui_text.get_line_count() * ui_text.get_line_height()) + ui_text.get_line_height()
 	ui_text.custom_minimum_size = Vector2(ui_text.size.x, height)
-	Debug.log_verbose("Presented confirmation: %s" % p_text)
+	Debug.log_debug("Presented for user confirmation: %s" % p_text)
 
 
 func await_input(p_pause: bool = false) -> bool:
@@ -52,10 +52,14 @@ func await_input(p_pause: bool = false) -> bool:
 
 
 func _on_confirm_pressed() -> void:
-	Debug.log_debug("-> Confirmation received")
+	Debug.log_debug("Confirmation received")
 	completed.emit(true)
 
 
 func _on_cancel_pressed() -> void:
-	Debug.log_debug("-> Confirmation cancelled")
+	Debug.log_debug("Confirmation cancelled")
 	completed.emit(false)
+
+
+func _on_completed(_p_ignore: bool) -> void:
+	EventBus.modal_closed.emit() # notify UI of modal closure

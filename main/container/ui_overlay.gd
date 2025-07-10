@@ -1,9 +1,9 @@
 class_name UIOverlay extends Control
 
 
-func add_scene(p_scene: Control) -> void:
+func add_scene(p_scene: Control) -> Control:
 	add_child(p_scene)
-	Debug.log_debug("Added scene: %s" % p_scene.get_path())
+	return p_scene
 
 
 func clear() -> void:

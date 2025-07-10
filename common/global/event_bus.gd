@@ -8,6 +8,7 @@ signal entered_building(p: Building)
 signal exited_building(p: Building)
 signal game_reset
 signal game_started
+signal modal_closed
 signal state_entered(p: ActiveState)
 signal state_exited(p: ActiveState)
 signal viewport_resized(p: Vector2)

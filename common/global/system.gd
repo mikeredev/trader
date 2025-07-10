@@ -25,11 +25,12 @@ func get_cache() -> Node2D:
 
 
 func pause_game(p_paused: bool) -> void:
-	Debug.log_debug("Paused: %s" % p_paused)
+	Debug.log_info("Game paused: %s" % p_paused)
 	System.get_tree().paused = p_paused
 
 
 func quit_game() -> void:
+	Debug.log_info("Quitting game...")
 	if await System.manage.scene.get_confirmation("QUIT TO DESKTOP?"):
 		Debug.log_info("Goodbye.")
 		System.get_tree().quit()

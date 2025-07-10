@@ -48,76 +48,12 @@ func apply_settings(p_dict: Dictionary[String, Variant]) -> void:
 
 
 func build_viewports(p_views: Array[View]) -> bool:
-	Debug.log_info("Building primary viewports...")
+	Debug.log_info("Building views...")
 	for view: View in p_views:
-		if not _setup_view(view): return false
+		if not view.setup(): return false
 	return true
 
 
 func validate_directories(p_paths: Array[String]) -> bool:
 	Debug.log_info("Checking directories...")
 	return Common.Util.file.validate_directories(p_paths)
-
-
-func _setup_view(p_view: View) -> bool:
-	# match name to enum
-	if not View.ViewType.keys().has(p_view.name.to_upper()):
-		Debug.log_error("Invalid view name: %s, expected: %s" % [p_view.name, View.ViewType.keys()])
-		return false
-
-	# verify subviewport
-	if not (p_view.get_child_count() > 0 and p_view.get_child(0) is SubViewport):
-		Debug.log_error("%s requires subviewport" % self)
-		return false
-
-	# get View type
-	var type: View.ViewType
-	for i: int in range(View.ViewType.size()):
-		if View.ViewType.keys()[i] == p_view.name.to_upper():
-			type = View.ViewType.values()[i]
-
-	# set properties common across all Views
-	p_view.subviewport = p_view.get_child(0)
-	p_view.stretch = true
-
-	# create parent Node2D for containers
-	var container_parent: Node2D = Node2D.new()
-	container_parent.name = "View"
-	container_parent.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	p_view.subviewport.add_child(container_parent)
-	Debug.log_verbose("  Created container parent: %s" % container_parent.get_path())
-
-	# assign containers
-	var default_containers: Array[View.ContainerType] = []
-	match type:
-		View.ViewType.OVERWORLD:
-			default_containers = [
-				View.ContainerType.MAP, View.ContainerType.VILLAGE, View.ContainerType.SUPPLY_PORT,
-				View.ContainerType.CITY, View.ContainerType.SHIP ]
-		View.ViewType.CITY:
-			default_containers = [ View.ContainerType.SCENE ]
-		View.ViewType.INTERIOR:
-			default_containers = [ View.ContainerType.SCENE ]
-
-	# add containers to container parent
-	for container_type: View.ContainerType in default_containers:
-		var container: NodeContainer = NodeContainer.new()
-		container.name = str(View.ContainerType.keys()[container_type]).to_pascal_case()
-		container_parent.add_child(container)
-
-		# register container for lookup
-		p_view.add_container(container_type, container)
-		Debug.log_verbose("  Created container: %s" % container.get_path())
-
-	# create camera under container_parent
-	p_view.camera = Camera.new()
-	p_view.camera.name = "%sCamera" % p_view.name
-	container_parent.add_child(p_view.camera)
-	Debug.log_verbose("  Created camera: %s" % p_view.camera.get_path())
-
-	# start disabled
-	p_view.set_active(false)
-
-	# register view for lookup
-	System.manage.scene.add_view(type, p_view)
-	return true

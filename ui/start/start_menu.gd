@@ -2,7 +2,6 @@ class_name StartMenu extends UIControl
 
 enum SubMenuType { NEW, LOAD, SETTINGS, MODS }
 
-@export var FADE_INTRO: float = 9.0
 const PAUSE: float = 0.5
 const TITLE_IN: float = 2.0
 const BUTTON_SLIDE: float = 0.2
@@ -13,11 +12,13 @@ var tween: Tween
 var buttons: Array[UIButtonStartMenu]
 var cache: Dictionary[SubMenuType, UISubMenu]
 
+@export var FADE_INTRO: float = 9.0
+
 # UIControl elements
-@onready var background: ColorRect = %Background
 @onready var margin_outer: MarginContainer = %MarginOuter
 @onready var nav_main: Control = %NavMain
 
+@onready var background: FadeRect = %Background
 @onready var nav_content: VBoxContainer = %NavContent
 @onready var nav_menu: VBoxContainer = %NavMenu
 @onready var label_title: Label = %LabelTitle
@@ -47,30 +48,30 @@ func _connect_signals() -> void:
 
 	continue_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_continue))
 	continue_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_continue))
-	continue_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
+	continue_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
 
 	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
 	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
-	new_game_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU))
+	new_game_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU))
 
 	load_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_load))
 	load_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_load))
-	load_game_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.NEW, FileLocation.UI_LOAD_MENU))
+	load_game_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_LOAD_MENU))
 
 	mods_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_mods))
 	mods_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_mods))
-	mods_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.MODS, FileLocation.UI_MOD_MENU))
+	mods_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.MODS, FileLocation.UI_MOD_MENU))
 
 	settings_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_settings))
 	settings_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_settings))
-	settings_button.pressed_tweened.connect(get_submenu.bind(SubMenuType.SETTINGS, FileLocation.UI_SETTINGS_MENU))
+	settings_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.SETTINGS, FileLocation.UI_SETTINGS_MENU))
 
 	quit_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_quit))
 	quit_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_quit))
 	quit_button.pressed_tweened.connect(_on_quit_pressed)
 
 
-func _set_color_scheme() -> void: # overrides UIControl default method
+func _set_color_scheme() -> void: # runs after background.ready()
 	var primary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/primary_bg")
 	var secondary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/secondary_bg")
 	var ternary_bg: Color = ProjectSettings.get_setting("gui/theme/scheme/ternary_bg")
@@ -83,41 +84,37 @@ func _set_color_scheme() -> void: # overrides UIControl default method
 	# set background and atmospheric fog to the same color
 	(atmosphere_rect.material as ShaderMaterial).set_shader_parameter("fog_color", ternary_bg)
 	background.color = ternary_bg
+	Debug.log_verbose("%s background override: #%s" % [name, background.color.to_html()])
+
+
+func _do_housekeeping() -> void:
+	for node: Control in nav_buttons.get_children():
+		if node is UIButtonStartMenu:
+			var button: UIButtonStartMenu = node
+			button.set_theme_type_variation("StartMenuButton")
+			buttons.append(button)
+
+		if node is TextureRect: # arrow selector is modulated back in on mouseover
+			var texture: TextureRect = node
+			texture.modulate.a = 0.0
 
 
 func _ui_ready() -> void:
-	_housekeeping()
+	_set_color_scheme()
+	_do_housekeeping()
 	play_animation()
-
-
-func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
-	# fade out label_title and nav_menu
-	tween = System.manage.scene.create_tween(nav_menu, "modulate:a", 0.0, MENU_OUT)
-
-	var submenu: UISubMenu
-	if cache.has(p_submenu):
-		submenu = cache.get(p_submenu)
-		submenu.visible = true # already modulated to 0
-	else:
-		submenu = System.manage.scene.create_scene(p_path)
-		submenu.submenu_closed.connect(_on_menu_closed.bind(submenu))
-		submenu.modulate.a = 0.0
-		nav_content.add_child(submenu)
-		cache[p_submenu] = submenu
-
-	# wait for nav_menu to fade out, then fade in submenu
-	await tween.finished
-	tween = System.manage.scene.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
-
-	# activate fade
-	fade_background(true)
+	Debug.log_debug("%s ready: %s" % [name, get_path()])
 
 
 func play_animation() -> void:
+	background.modulate.a = 1.0 # starts modulated to 0
+
 	if not System.manage.config.general_settings.show_intro: # simple fade-in
-		background_tween = System.manage.scene.create_tween(background, "modulate:a", 0.0, 1.0)
+		background.tween = System.manage.scene.create_tween(background, "modulate:a", 0.0, 1.0)
+		Debug.log_info("Skipping animation: %s" % name)
 		return
 
+	Debug.log_info("Playing animation: %s" % name)
 	# prepare tween, title, buttons
 	label_title.modulate.a = 0.0
 	for button: UIButtonStartMenu in buttons:
@@ -126,7 +123,7 @@ func play_animation() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
-	background_tween = System.manage.scene.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	background.tween = System.manage.scene.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 
 	# wait a little, and play the rest
 	await get_tree().create_timer(PAUSE).timeout
@@ -157,16 +154,28 @@ func play_animation() -> void:
 		await tween.finished
 
 
-func _housekeeping() -> void:
-	for node: Control in nav_buttons.get_children():
-		if node is UIButtonStartMenu:
-			var button: UIButtonStartMenu = node
-			button.set_theme_type_variation("StartMenuButton")
-			buttons.append(button)
+func show_submenu(p_submenu: SubMenuType, p_path: String) -> void:
+	Debug.log_info("Opening menu: %s" % SubMenuType.keys()[p_submenu])
+	# fade out label_title and nav_menu
+	tween = System.manage.scene.create_tween(nav_menu, "modulate:a", 0.0, MENU_OUT)
 
-		if node is TextureRect: # arrow selector is modulated back in on mouseover
-			var texture: TextureRect = node
-			texture.modulate.a = 0.0
+	var submenu: UISubMenu
+	if cache.has(p_submenu):
+		submenu = cache.get(p_submenu)
+		submenu.visible = true # already modulated to 0
+	else:
+		submenu = System.manage.scene.create_scene(p_path)
+		submenu.submenu_closed.connect(_on_menu_closed.bind(submenu))
+		submenu.modulate.a = 0.0
+		nav_content.add_child(submenu)
+		cache[p_submenu] = submenu
+
+	# wait for nav_menu to fade out, then fade in submenu
+	await tween.finished
+	tween = System.manage.scene.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
+
+	# activate fade bg for submenus
+	background.fade(true)
 
 
 func _on_menu_closed(p_submenu: Control) -> void:
@@ -175,17 +184,13 @@ func _on_menu_closed(p_submenu: Control) -> void:
 	await tween.finished
 	p_submenu.visible = false
 
-	# fade back in button nav/label, modulated out in get_submenu
+	# fade back in button nav/label, modulated out in show_submenu
 	nav_buttons.visible = true
 	label_title.visible = true
 	tween = System.manage.scene.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 	# reset fade
-	fade_background(false)
-
-
-func _on_quit_pressed() -> void:
-	System.quit_game()
+	background.fade(false)
 
 
 func _on_mouse_entered(p_icon: TextureRect) -> void:
@@ -198,3 +203,7 @@ func _on_mouse_exited(p_icon: TextureRect) -> void:
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:
 	(starfield_texture.material as ShaderMaterial).set_shader_parameter("viewport_size", p_viewport_size)
+
+
+func _on_quit_pressed() -> void:
+	System.quit_game()

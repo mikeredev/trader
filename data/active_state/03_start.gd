@@ -19,6 +19,7 @@ func _main() -> void:
 	#System.manage.scene.add_menu(Filepath.START_MENU)
 
 	#System.manage.scene.add_to_ui(FileLocation.UI_NEW_GAME_MENU, UI.ContainerType.MENU)
+	Debug.log_info("Ready to load Start Menu")
 	var start_menu: StartMenu = System.manage.scene.create_scene(FileLocation.UI_START_MENU)
 	System.manage.scene.ui.menu.add_scene(start_menu)
 

@@ -87,8 +87,7 @@ static func _get_text(p_text: Variant) -> String:
 
 
 static func _send_ui_alert(p_text: String) -> void:
-	if not System.manage.config.general_settings.show_ui_alerts: return
-	System.manage.scene.create_notification(p_text)
+	EventBus.create_notification.emit(p_text) # bypass scene manager for early alerts
 
 
 static func _on_state_entered(p_state: ActiveState) -> void:

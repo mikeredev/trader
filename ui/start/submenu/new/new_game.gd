@@ -28,6 +28,7 @@ func populate_countries() -> void: # pull directly from blueprint as nothing is 
 	var countries: PackedStringArray = blueprint.country.datastore.keys()
 	for country_id: StringName in countries:
 		ui_country_list.add_item(country_id)
+	Debug.log_verbose("Populated %d countries from blueprint" % countries.size())
 
 
 func start_session(p_profile_name: StringName, p_country_id: StringName) -> void:
@@ -38,12 +39,15 @@ func start_session(p_profile_name: StringName, p_country_id: StringName) -> void
 
 
 func _on_start_pressed() -> void:
+	Debug.log_info("New game selected")
 	ui_start_button.disabled = true
 	if ui_profile_name.text.is_empty():
+		Debug.log_warning("A name is required.")
 		ui_start_button.disabled = false
 		return
 	var profile_name: String = str(ui_profile_name.text)
 	var country_id: StringName = ui_country_list.get_item_text(ui_country_list.selected)
+	Debug.log_debug("User entered: %s, %s" % [profile_name, country_id])
 	start_session(profile_name, country_id)
 
 

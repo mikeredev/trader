@@ -24,7 +24,7 @@ func setup() -> void:
 		child.offset_top = 0
 		child.offset_right = 0
 		child.offset_bottom = 0
-		Debug.log_verbose("󱣴  Configured UI overlay: %s" % child.get_path())
+		Debug.log_verbose("Configured UI component: %s" % child.get_path())
 
 	# register for lookup
 	System.manage.scene.register_ui(self)

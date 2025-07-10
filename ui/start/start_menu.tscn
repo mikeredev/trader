@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cc0wsa572eev2"]
+[gd_scene load_steps=15 format=3 uid="uid://cc0wsa572eev2"]
 
 [ext_resource type="Script" uid="uid://dho0gnv125ohv" path="res://ui/start/start_menu.gd" id="1_vq1hr"]
 [ext_resource type="Shader" uid="uid://cscchv2qusg1n" path="res://ui/start/shader/sky_rect.gdshader" id="2_37g20"]
@@ -7,6 +7,7 @@
 [ext_resource type="Shader" uid="uid://cowtwhtc7b223" path="res://ui/start/shader/birds.gdshader" id="5_sfxhq"]
 [ext_resource type="Shader" uid="uid://dhtwegab4bsl3" path="res://ui/start/shader/atmosphere_rect.gdshader" id="6_oi30m"]
 [ext_resource type="Texture2D" uid="uid://ciwg13m0r1h3v" path="res://assets/image/icon/arrow_right.png" id="7_1l0aj"]
+[ext_resource type="Script" uid="uid://cwv5lcutbts75" path="res://fade_rect.gd" id="7_83hhh"]
 [ext_resource type="Script" uid="uid://cv7kgrkgcqrgt" path="res://ui/class/button/ui_button_start_menu.gd" id="7_oi30m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rcrc8"]
@@ -128,6 +129,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
+script = ExtResource("7_83hhh")
+metadata/_custom_type_script = "uid://cwv5lcutbts75"
 
 [node name="MarginOuter" type="MarginContainer" parent="."]
 unique_name_in_owner = true
