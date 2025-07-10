@@ -46,7 +46,7 @@ static func validate(p_data: Dictionary, p_cache: Dictionary) -> bool:
 
 
 func build() -> void:
-	var view: View = Service.scene_manager.get_view(View.ViewType.OVERWORLD)
+	var view: View = System.service.scene_manager.get_view(View.ViewType.OVERWORLD)
 
 	# create world map
 	var path: String = map.get("texture")
@@ -54,14 +54,14 @@ func build() -> void:
 	view.add_scene(world_map, View.ContainerType.MAP)
 
 	# register world map
-	Service.world_manager.map = world_map
+	System.service.world_manager.map = world_map
 
 	# bind camera / TBD this will bind it to the starting window size, ensure overridden later
 	view.camera.update_limits(world_map.texture.get_size())
 	view.camera.set_min_zoom(DisplayServer.screen_get_size(), world_map.texture.get_size())
 
 	# create A* grid
-	var enable_astar: bool = Service.config_manager.developer_settings.enable_astar
+	var enable_astar: bool = System.service.config_manager.developer_settings.enable_astar
 	if not enable_astar:
 		Debug.log_warning("Overworld A* is disabled")
 		return
@@ -69,4 +69,4 @@ func build() -> void:
 	var world_grid: WorldGrid = WorldGrid.new(world_map.texture)
 
 	# register A* grid
-	Service.world_manager.grid = world_grid
+	System.service.world_manager.grid = world_grid

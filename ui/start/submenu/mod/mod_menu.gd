@@ -1,7 +1,7 @@
 extends UISubMenu # vbox
 
-@onready var manifests: Dictionary[StringName, ModManifest] = Service.mod_manager.get_manifests()
-@onready var active_mods: Dictionary[StringName, ModManifest] = Service.mod_manager.get_active_mods()
+@onready var manifests: Dictionary[StringName, ModManifest] = System.service.mod_manager.get_manifests()
+@onready var active_mods: Dictionary[StringName, ModManifest] = System.service.mod_manager.get_active_mods()
 
 @onready var ui_available_list: ItemList = %AvailableList
 @onready var ui_enabled_list: ItemList = %EnabledList
@@ -124,15 +124,15 @@ func _on_confirm_pressed() -> void:
 			mods_to_save.append(manifest.mod_id)
 
 	# compare list to currently active mods
-	if mods_to_save == Service.config_manager.mod_settings.get_saved_mods():
+	if mods_to_save == System.service.config_manager.mod_settings.get_saved_mods():
 		Debug.log_debug("No change to mod order")
 		return
 
-	if await Service.scene_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
+	if await System.service.scene_manager.get_confirmation("RELOAD WITH NEW MOD ORDER?"):
 		Debug.log_debug("Reloading new mod order: %s" % mods_to_save)
-		Service.config_manager.mod_settings.set_saved_mods(mods_to_save, true)
+		System.service.config_manager.mod_settings.set_saved_mods(mods_to_save, true)
 		Debug.log_info("Returning to setup...")
-		System.change_state(SetupState.new(mods_to_save))
+		System.state.change(SetupState.new(mods_to_save))
 
 
 func _on_ui_return_button_pressed() -> void:

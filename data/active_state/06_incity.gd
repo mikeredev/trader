@@ -8,8 +8,8 @@ var _base_size: Vector2i
 
 func _init(p_city_id: StringName) -> void:
 	state_id = "InCity"
-	city = Service.city_manager.get_city(p_city_id)
-	view = Service.scene_manager.get_view(View.ViewType.CITY)
+	city = System.service.city_manager.get_city(p_city_id)
+	view = System.service.scene_manager.get_view(View.ViewType.CITY)
 	_base_size = ProjectSettings.get_setting("services/config/scene_base_size")
 
 
@@ -33,7 +33,7 @@ func _exit() -> void:
 
 func build_scene() -> void:
 	# create InCity scene
-	scene = Service.scene_manager.create_scene(FileLocation.IN_CITY_SCENE)
+	scene = System.service.scene_manager.create_scene(FileLocation.IN_CITY_SCENE)
 	scene.name = city.city_id
 	view.add_scene(scene, View.ContainerType.SCENE)
 
@@ -43,7 +43,7 @@ func build_scene() -> void:
 
 
 func configure_view() -> void:
-	view = Service.scene_manager.activate_view(View.ViewType.CITY)
+	view = System.service.scene_manager.activate_view(View.ViewType.CITY)
 	view.camera.update_limits(scene.tile_grid.area)
 
 

@@ -70,7 +70,7 @@ func create_manifest(p_directory: String) -> ModManifest:
 		categories.append(category)
 	categories.sort()
 
-	# prepare cache
+	# add to cache / TBD used to calc hash for comparing save files, unnecessary overhead?
 	staging.cache["datastore"][p_directory] = {}
 	for category: Category in categories:
 		var tag: String = str(Category.keys()[category]).to_lower()
@@ -140,7 +140,7 @@ func get_manifests() -> Dictionary[StringName, ModManifest]:
 	return _manifests
 
 
-func stage_mod(p_manifest: ModManifest) -> bool:
+func stage_content(p_manifest: ModManifest) -> bool:
 	Debug.log_verbose("Staging mod: %s" % p_manifest.mod_id)
 	var raw: Dictionary = staging.get_cached("datastore", p_manifest.local_path)
 
@@ -161,7 +161,7 @@ func stage_mod(p_manifest: ModManifest) -> bool:
 				for city_id: String in metadata[category]:
 					var _dict: Dictionary = metadata[category][city_id]
 					if _dict.get("remove", false):
-						Debug.log_warning("City marked for removal: %s (%s)" % [
+						Debug.log_verbose("City marked for removal: %s (%s)" % [
 							city_id, p_manifest.mod_id])
 					else: # bool flag toggled true by country validation if capital
 						staging.cache["city"]["city_id"][city_id] = false
@@ -170,7 +170,7 @@ func stage_mod(p_manifest: ModManifest) -> bool:
 				for country_id: String in metadata[category]:
 					var _dict: Dictionary = metadata[category][country_id]
 					if _dict.get("remove", false):
-						Debug.log_warning("Country marked for removal: %s (%s)" % [
+						Debug.log_verbose("Country marked for removal: %s (%s)" % [
 							country_id, p_manifest.mod_id])
 					else: # used for key lookup only
 						staging.cache["country"]["country_id"][country_id] = true
@@ -179,7 +179,7 @@ func stage_mod(p_manifest: ModManifest) -> bool:
 				for resource_id: String in metadata[category]: # check city specialities exist
 					var _dict: Dictionary = metadata[category][resource_id]
 					if _dict.get("remove", false):
-						Debug.log_warning("Trade resource marked for removal: %s (%s)" % [
+						Debug.log_verbose("Trade resource marked for removal: %s (%s)" % [
 							resource_id, p_manifest.mod_id])
 					else:
 						# cache resource_id

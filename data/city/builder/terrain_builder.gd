@@ -86,7 +86,7 @@ func draw_terrain(p_grid_size: Vector2i) -> void:
 
 
 func draw_water(p_grid_size: Vector2i, p_city_orientation: Dictionary[String, float]) -> void:
-	if not Service.config_manager.developer_settings.enable_astar:
+	if not System.service.config_manager.developer_settings.enable_astar:
 		Debug.log_warning("A* is disabled (city is considered landlocked)")
 		return
 

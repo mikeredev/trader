@@ -23,7 +23,7 @@ func setup() -> void:
 		Debug.log_verbose("󱣴  Configured UI overlay: %s" % child.get_path())
 
 	# register for lookup
-	Service.scene_manager.register_ui(self)
+	System.service.scene_manager.register_ui(self)
 
 
 func _setup_menu() -> void:
@@ -33,6 +33,6 @@ func _setup_menu() -> void:
 
 
 func _setup_hud() -> void:
-	hud = Service.scene_manager.create_scene(FileLocation.UI_HUD)
+	hud = System.service.scene_manager.create_scene(FileLocation.UI_HUD)
 	add_child(hud)
 	hud.setup()

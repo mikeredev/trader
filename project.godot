@@ -18,6 +18,7 @@ config/icon="res://assets/image/icon/icon.svg"
 [autoload]
 
 System="*res://common/global/system.gd"
+App="*res://common/global/app.gd"
 EventBus="*res://common/global/event_bus.gd"
 
 [debug]
@@ -35,10 +36,10 @@ gdscript/warnings/unsafe_call_argument=1
 folder_colors={
 "res://assets/": "gray",
 "res://common/": "green",
+"res://common/service/": "green",
 "res://core/": "orange",
 "res://data/": "purple",
 "res://main/": "green",
-"res://service/": "green",
 "res://temp/": "blue",
 "res://ui/": "yellow"
 }

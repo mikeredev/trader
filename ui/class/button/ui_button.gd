@@ -18,5 +18,5 @@ func _on_pressed() -> void:
 func _play_press_tween() -> void: # overwrite this in any subclasses to modify tween animation
 	var return_to: Vector2 = scale
 	scale = Vector2(0.95, 0.95)
-	var tween: Tween = Service.scene_manager.create_tween(self, "scale", return_to, 0.1)
+	var tween: Tween = System.service.scene_manager.create_tween(self, "scale", return_to, 0.1)
 	await tween.finished

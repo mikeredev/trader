@@ -92,14 +92,14 @@ func _ui_ready() -> void:
 
 func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 	# fade out label_title and nav_menu
-	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 0.0, MENU_OUT)
+	tween = System.service.scene_manager.create_tween(nav_menu, "modulate:a", 0.0, MENU_OUT)
 
 	var submenu: UISubMenu
 	if cache.has(p_submenu):
 		submenu = cache.get(p_submenu)
 		submenu.visible = true # already modulated to 0
 	else:
-		submenu = Service.scene_manager.create_scene(p_path)
+		submenu = System.service.scene_manager.create_scene(p_path)
 		submenu.submenu_closed.connect(_on_menu_closed.bind(submenu))
 		submenu.modulate.a = 0.0
 		nav_content.add_child(submenu)
@@ -107,15 +107,15 @@ func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 
 	# wait for nav_menu to fade out, then fade in submenu
 	await tween.finished
-	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
+	tween = System.service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
 
 	# activate fade
 	fade_background(true)
 
 
 func play_animation() -> void:
-	if not Service.config_manager.general_settings.show_intro: # simple fade-in
-		background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, 1.0)
+	if not System.service.config_manager.general_settings.show_intro: # simple fade-in
+		background_tween = System.service.scene_manager.create_tween(background, "modulate:a", 0.0, 1.0)
 		return
 
 	# prepare tween, title, buttons
@@ -126,13 +126,13 @@ func play_animation() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 
 	# fade out: TRANS_CUBIC/EASE_OUT unfolds starfield over fade_duration
-	background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	background_tween = System.service.scene_manager.create_tween(background, "modulate:a", 0.0, FADE_INTRO, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 
 	# wait a little, and play the rest
 	await get_tree().create_timer(PAUSE).timeout
 
 	# fade in title: TRANS_BACK/EASE_OUT creates a pop effect
-	tween = Service.scene_manager.create_tween(label_title, "modulate:a", 1.0, TITLE_IN, Tween.TRANS_BACK, Tween.EASE_OUT)
+	tween = System.service.scene_manager.create_tween(label_title, "modulate:a", 1.0, TITLE_IN, Tween.TRANS_BACK, Tween.EASE_OUT)
 	await get_tree().create_timer(PAUSE).timeout
 
 	# fade in menu buttons: reposition x with TRANS_QUAD/EASE_OUT creates a snap-back effect
@@ -140,9 +140,9 @@ func play_animation() -> void:
 	for button: Button in buttons:
 		var pos: float = button.position.x
 		button.position.x += 100
-		tween = Service.scene_manager.create_tween(button, "modulate:a", 1.0, 0.09, Tween.TRANS_BACK, Tween.EASE_OUT)
+		tween = System.service.scene_manager.create_tween(button, "modulate:a", 1.0, 0.09, Tween.TRANS_BACK, Tween.EASE_OUT)
 		await tween.finished # speed of modulate:a above is very sensitive
-		tween = Service.scene_manager.create_tween(button, "position:x", pos, BUTTON_SLIDE, Tween.TRANS_QUAD, Tween.EASE_OUT)
+		tween = System.service.scene_manager.create_tween(button, "position:x", pos, BUTTON_SLIDE, Tween.TRANS_QUAD, Tween.EASE_OUT)
 		button.mouse_filter = Control.MOUSE_FILTER_STOP
 		button.focus_mode = Control.FOCUS_ALL
 
@@ -152,7 +152,7 @@ func play_animation() -> void:
 		var return_to: Color = continue_button.modulate
 		continue_button.scale = Vector2(1.2, 1.2)
 		continue_button.modulate = highlight
-		tween = Service.scene_manager.create_tween(continue_button, "scale", Vector2(1.0, 1.0), 1.5, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+		tween = System.service.scene_manager.create_tween(continue_button, "scale", Vector2(1.0, 1.0), 1.5, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
 		tween.parallel().tween_property(continue_button, "modulate", return_to, 1.5).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 		await tween.finished
 
@@ -171,14 +171,14 @@ func _housekeeping() -> void:
 
 func _on_menu_closed(p_submenu: Control) -> void:
 	# fade out submenu (reset menu here if needed)
-	tween = Service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween = System.service.scene_manager.create_tween(p_submenu, "modulate:a", 0.0, MENU_OUT, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	await tween.finished
 	p_submenu.visible = false
 
 	# fade back in button nav/label, modulated out in get_submenu
 	nav_buttons.visible = true
 	label_title.visible = true
-	tween = Service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	tween = System.service.scene_manager.create_tween(nav_menu, "modulate:a", 1.0, MENU_IN, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 	# reset fade
 	fade_background(false)

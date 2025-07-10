@@ -129,7 +129,7 @@ func set_window_size(p_window_size: Vector2i, p_save: bool = false) -> void:
 	Debug.log_debug("Set window size: %s" % window_size)
 
 	await EventBus.get_tree().process_frame
-	Service.scene_manager.center_window(window_size)
+	System.service.scene_manager.center_window(window_size)
 	if p_save: EventBus.config_changed.emit()
 
 

@@ -9,7 +9,7 @@ func _init(p_is_new_game: bool = false) -> void:
 
 
 func _start_services() -> void:
-	pass#System.service.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
+	pass#System.service.start_service(DialogManager.new(), Service.Type.DIALOG_MANAGER)
 
 
 func _main() -> void:
@@ -23,10 +23,10 @@ func _main() -> void:
 
 func start() -> void:
 	Debug.log_info("New game: %s" % is_new_game)
-	var player: Character = Service.character_manager.get_player()
-	var capital: City = Service.country_manager.get_capital(player.profile.country_id)
+	var player: Character = System.service.character_manager.get_player()
+	var capital: City = System.service.country_manager.get_capital(player.profile.country_id)
 	Debug.log_debug("Starting in: %s, %s" % [capital.city_id, player.profile.profile_name])
-	System.change_state(InCityState.new(capital.city_id))
+	System.state.change(InCityState.new(capital.city_id))
 
 
 func resume() -> void:

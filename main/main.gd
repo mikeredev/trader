@@ -1,13 +1,13 @@
 extends Control
 
-@export var log_level: Debug.Severity = Debug.Severity.DEBUG: ## Sets runtime logging threshold.
+@export var log_level: Debug.Severity = Debug.Severity.DEBUG:
 	set(p):
 		log_level = p
 		Debug.threshold = log_level
 		Debug.log_info("Set log threshold %d: %s" % [log_level, Debug.Severity.keys()[log_level]])
 		return log_level
 
-@export var color_scheme: ColorScheme ## Override shader color uniforms/menu backgrounds, etc.
+@export var color_scheme: ColorScheme
 
 
 func _ready() -> void:
@@ -19,11 +19,10 @@ func _ready() -> void:
 
 	# connect statics
 	Debug.connect_signals()
-	Service.connect_signals()
 
 	# move to first core loop state: initialize environment
 	var node_tree: Array[Node] = self.get_children()
-	System.change_state(InitState.new(node_tree))
+	System.state.change(InitState.new(node_tree))
 
 
 func _on_item_rect_changed() -> void:

@@ -53,8 +53,8 @@ func fade_background(p_toggled_on: bool) -> void: # avoid changing color or hand
 		var background: ColorRect = get_node("%Background")
 		if background_tween: background_tween.kill()
 		if p_toggled_on:
-			background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.5, BG_FADE_DURATION)
+			background_tween = System.service.scene_manager.create_tween(background, "modulate:a", 0.5, BG_FADE_DURATION)
 			background.mouse_filter = Control.MOUSE_FILTER_STOP
 		else:
-			background_tween = Service.scene_manager.create_tween(background, "modulate:a", 0.0, BG_FADE_DURATION)
+			background_tween = System.service.scene_manager.create_tween(background, "modulate:a", 0.0, BG_FADE_DURATION)
 			background.mouse_filter = Control.MOUSE_FILTER_IGNORE

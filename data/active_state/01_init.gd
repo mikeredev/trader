@@ -17,8 +17,8 @@ func _init(p_node_tree: Array[Node]) -> void:
 
 
 func _start_services() -> void:
-	System.service.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
-	System.service.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
+	System.service.start_service(ConfigManager.new(), Service.Type.CONFIG_MANAGER)
+	System.service.start_service(SceneManager.new(), Service.Type.SCENE_MANAGER)
 
 
 func _main() -> void:
@@ -27,22 +27,24 @@ func _main() -> void:
 	if not build_viewports(views): return
 
 	# apply project and user settings
-	Service.config_manager.apply_project_settings(Common.PROJECT_SETTINGS)
-	Service.config_manager.load_config()
-	Service.config_manager.apply_config()
+	System.service.config_manager.apply_project_settings(Common.PROJECT_SETTINGS)
+	System.service.config_manager.load_config()
+	System.service.config_manager.apply_config()
+	#System.manage.mod.apply_config()
+	#System.data.trade.get_character()
 
 	# allow for notifications
 	ui.setup()
 
 	# process mods
-	saved_mods = Service.config_manager.mod_settings.get_saved_mods()
-	System.change_state(SetupState.new(saved_mods))
+	saved_mods = System.service.config_manager.mod_settings.get_saved_mods()
+	System.state.change(SetupState.new(saved_mods))
 
 
 func apply_settings(p_dict: Dictionary[String, Variant]) -> void:
-	Service.config_manager.apply_project_settings(p_dict) # project
-	Service.config_manager.load_config() # user
-	Service.config_manager.apply_config()
+	System.service.config_manager.apply_project_settings(p_dict) # project
+	System.service.config_manager.load_config() # user
+	System.service.config_manager.apply_config()
 
 
 func build_viewports(p_views: Array[View]) -> bool:
@@ -117,5 +119,5 @@ func _setup_view(p_view: View) -> bool:
 	p_view.set_active(false)
 
 	# register view for lookup
-	Service.scene_manager.add_view(type, p_view)
+	System.service.scene_manager.add_view(type, p_view)
 	return true

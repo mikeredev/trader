@@ -141,16 +141,16 @@ func _create_city(p_city_id: StringName, p_metadata: Dictionary) -> void:
 	_set_body(city, body)
 
 	# astar
-	if Service.config_manager.developer_settings.enable_astar:
+	if System.service.config_manager.developer_settings.enable_astar:
 		_set_astar(city)
 
 	# register for lookup
-	Service.city_manager.register_city(city)
+	System.service.city_manager.register_city(city)
 
 	# done
 	Debug.log_verbose("  Created city: %s |  %s |   %s |   %s |   %s" % [
 		city.city_id, city.position, Vector2i(city.economy, city.industry),
-		Service.city_manager.get_support_normalized(city), market.specialty.get("resource_id")])
+		System.service.city_manager.get_support_normalized(city), market.specialty.get("resource_id")])
 
 
 func _create_body(p_city_id: StringName, p_position: Vector2i, p_color: Color = Color.AQUA) -> CityBody:
@@ -201,7 +201,7 @@ func _create_building(p_city: City, p_building_id: StringName) -> void:
 
 
 func _set_astar(p_city: City) -> void:
-	var grid: WorldGrid = Service.world_manager.get_grid()
+	var grid: WorldGrid = System.service.world_manager.get_grid()
 
 	# get neighbour cells
 	var scale: int = 1
@@ -225,13 +225,13 @@ func _set_astar(p_city: City) -> void:
 
 
 func _set_body(p_city: City, p_body: CityBody) -> void:
-	var view: View = Service.scene_manager.get_view(View.ViewType.OVERWORLD)
+	var view: View = System.service.scene_manager.get_view(View.ViewType.OVERWORLD)
 	view.add_scene(p_body, View.ContainerType.CITY)
 	p_city.body = p_body
 
 
 func _set_position(p_city: City, p_pos: Vector2i) -> void:
-	var map_size: Vector2i = Service.world_manager.get_map_size()
+	var map_size: Vector2i = System.service.world_manager.get_map_size()
 	var pos_x: int = clampi(p_pos.x, 0, map_size.x)
 	var pos_y: int = clampi(p_pos.y, 0, map_size.y)
 	p_city.position = Vector2i(pos_x, pos_y)
@@ -258,7 +258,7 @@ func _set_trade(p_city: City, p_market: Market, p_specialty: Dictionary) -> void
 	# update specialty if not removed by mods
 	var resource_id: StringName = p_specialty["specialty"]["resource"]
 
-	if Service.trade_manager.get_resource(resource_id): # creates dependency on TradeManager
+	if System.service.trade_manager.get_resource(resource_id): # creates dependency on TradeManager
 		var price: int = p_specialty["specialty"]["price"]
 		var required: int = p_specialty["specialty"]["required"]
 		p_market.specialty["resource_id"] = resource_id

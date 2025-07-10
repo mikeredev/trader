@@ -84,7 +84,7 @@ func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 
 	# create leader
 	var profile: Dictionary = p_metadata["leader"]
-	var leader: Character = Service.character_manager.create_character(Character.Role.LEADER,
+	var leader: Character = System.service.character_manager.create_character(Character.Role.LEADER,
 	str(profile.name), p_country_id, Rank.Level.KING, str(profile.title))
 
 	# assign basic properties
@@ -94,11 +94,11 @@ func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	country.leader = leader
 
 	# mark city as capital
-	var city: City = Service.city_manager.get_city(country.capital_id)
+	var city: City = System.service.city_manager.get_city(country.capital_id)
 	city.is_capital = true
 
 	# register for lookup
-	Service.country_manager.register_country(country)
+	System.service.country_manager.register_country(country)
 
 	# done
 	Debug.log_verbose("  Created country: %s (%s, %s, %s)" % [ country.country_id,

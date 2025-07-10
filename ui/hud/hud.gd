@@ -36,4 +36,4 @@ func _on_test_alert_button_pressed() -> void:
 
 
 func _on_test_alert_button_2_pressed() -> void:
-	Service.scene_manager.get_confirmation("hello test here")
+	System.service.scene_manager.get_confirmation("hello test here")

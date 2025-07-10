@@ -44,7 +44,7 @@ func add_location() -> void:
 
 
 func _on_cam_devmode_toggled(p_toggled_on: bool) -> void:
-	var view: View = Service.scene_manager.get_active_view()
+	var view: View = System.service.scene_manager.get_active_view()
 	if not view: return
 
 	Debug.log_info("Camera devmode toggled: %s" % p_toggled_on)
