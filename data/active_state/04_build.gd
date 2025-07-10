@@ -10,10 +10,10 @@ func _init(p_is_new_game: bool = false) -> void:
 
 
 func _start_services() -> void:
-	System.start_service(WorldManager.new(), Service.ServiceType.WORLD_MANAGER)
-	System.start_service(CountryManager.new(), Service.ServiceType.COUNTRY_MANAGER)
-	System.start_service(CityManager.new(), Service.ServiceType.CITY_MANAGER)
-	System.start_service(TradeManager.new(), Service.ServiceType.TRADE_MANAGER)
+	System.service.start_service(WorldManager.new(), Service.ServiceType.WORLD_MANAGER)
+	System.service.start_service(CountryManager.new(), Service.ServiceType.COUNTRY_MANAGER)
+	System.service.start_service(CityManager.new(), Service.ServiceType.CITY_MANAGER)
+	System.service.start_service(TradeManager.new(), Service.ServiceType.TRADE_MANAGER)
 
 
 func _main() -> void:

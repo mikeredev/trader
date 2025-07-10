@@ -6,7 +6,7 @@ var datastore: Dictionary[StringName, Country] = {}
 func get_capital(p_country_id: StringName) -> City:
 	var country: Country = get_country(p_country_id)
 	var city_id: StringName = country.capital_id
-	return city_manager.get_city(city_id)
+	return Service.city_manager.get_city(city_id)
 
 
 func get_country(p_country_id: StringName) -> Country:

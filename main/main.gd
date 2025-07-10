@@ -14,7 +14,7 @@ func _ready() -> void:
 	# connect project-wide signals
 	item_rect_changed.connect(_on_item_rect_changed)
 
-	# apply runtime overrides
+	# apply runtime overrides / pass this to init state TBD
 	color_scheme.apply()
 
 	# connect statics

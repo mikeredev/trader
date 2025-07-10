@@ -17,8 +17,8 @@ func _init(p_node_tree: Array[Node]) -> void:
 
 
 func _start_services() -> void:
-	System.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
-	System.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
+	System.service.start_service(ConfigManager.new(), Service.ServiceType.CONFIG_MANAGER)
+	System.service.start_service(SceneManager.new(), Service.ServiceType.SCENE_MANAGER)
 
 
 func _main() -> void:

@@ -9,7 +9,7 @@ func _init(p_is_new_game: bool = false) -> void:
 
 
 func _start_services() -> void:
-	pass#System.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
+	pass#System.service.start_service(DialogManager.new(), Service.ServiceType.DIALOG_MANAGER)
 
 
 func _main() -> void:

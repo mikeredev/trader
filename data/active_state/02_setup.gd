@@ -9,7 +9,7 @@ func _init(p_saved_mods: PackedStringArray) -> void:
 
 
 func _start_services() -> void:
-	System.start_service(ModManager.new(), Service.ServiceType.MOD_MANAGER)
+	System.service.start_service(ModManager.new(), Service.ServiceType.MOD_MANAGER)
 
 
 func _main() -> void:

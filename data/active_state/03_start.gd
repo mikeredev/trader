@@ -7,8 +7,8 @@ func _init() -> void:
 
 func _start_services() -> void:
 	# pass the is_dirty flag when restoring from save
-	System.start_service(SessionManager.new(), Service.ServiceType.SESSION_MANAGER)
-	System.start_service(CharacterManager.new(), Service.ServiceType.CHARACTER_MANAGER)
+	System.service.start_service(SessionManager.new(), Service.ServiceType.SESSION_MANAGER)
+	System.service.start_service(CharacterManager.new(), Service.ServiceType.CHARACTER_MANAGER)
 
 
 func _main() -> void:
