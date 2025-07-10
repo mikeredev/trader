@@ -24,4 +24,4 @@ func _on_game_paused(p_toggled: bool) -> void:
 	System.pause_game(p_toggled)
 
 func _on_game_quit() -> void:
-	print("ok")
+	System.quit_game()

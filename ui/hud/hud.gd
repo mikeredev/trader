@@ -17,15 +17,15 @@ func _ui_ready() -> void:
 	Debug.log_debug("Created HUD Overlay: %s" % get_path())
 
 
+func clear() -> void:
+	pass # clear notifs etc, used on soft reset
+
+
 func setup() -> void:
 	info_bar.setup()
 	notification_area.setup()
 	city_options.setup()
 	game_options.setup()
-
-
-func clear() -> void:
-	pass # clear notifs etc, used on soft reset
 
 
 func _on_test_alert_button_pressed() -> void:

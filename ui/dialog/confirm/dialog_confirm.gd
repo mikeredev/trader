@@ -1,8 +1,8 @@
-class_name DialogConfirm extends Control
+class_name DialogConfirm extends PanelContainer
 
 signal completed(p_result: bool)
 
-@onready var ui_confirm: Button = %ConfirmButton
+@onready var ui_confirm: Button = %ConfirmButton # use custom UIButton
 @onready var ui_cancel: Button = %CancelButton
 @onready var ui_text: Label = %ConfirmationLabel
 
@@ -40,14 +40,14 @@ func configure(p_text: String, p_confirm_text: String, p_cancel_text: String) ->
 	ui_cancel.text = p_cancel_text
 	var height: int = (ui_text.get_line_count() * ui_text.get_line_height()) + ui_text.get_line_height()
 	ui_text.custom_minimum_size = Vector2(ui_text.size.x, height)
-	Debug.log_debug("Presented confirmation: %s" % p_text)
+	Debug.log_verbose("Presented confirmation: %s" % p_text)
 
 
-func await_input() -> bool:
-	System.pause_game(true)
+func await_input(p_pause: bool = false) -> bool:
+	if p_pause: System.pause_game(true)
 	var result: bool = await completed
-	System.pause_game(false)
-	self.queue_free()
+	if p_pause: System.pause_game(false)
+	call_deferred("queue_free")
 	return result
 
 

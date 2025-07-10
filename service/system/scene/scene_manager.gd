@@ -101,12 +101,10 @@ func get_active_view() -> View:
 
 
 func get_confirmation(p_text: String, p_confirm_text: String = "YES", p_cancel_text: String = "NO") -> bool:
-	var box: String = FileLocation.DIALOG_CONFIRM
-	var modal: DialogConfirm = create_scene(box) # add_to_ui(box, UI.ContainerType.DIALOG)
-	var ui: UI = get_ui()
-	ui.splash.add_scene(modal)
+	var modal: DialogConfirm = _ui.splash.add_modal(FileLocation.DIALOG_CONFIRM, Color.RED, 0.5)
 	modal.configure(p_text, p_confirm_text, p_cancel_text)
 	var result: bool = await modal.await_input()
+	_ui.splash.reset_fade()
 	return result
 
 

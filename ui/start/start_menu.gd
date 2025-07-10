@@ -104,6 +104,9 @@ func get_submenu(p_submenu: SubMenuType, p_path: String) -> void:
 		nav_content.add_child(submenu)
 		cache[p_submenu] = submenu
 
+	# activate splash fade
+	#Service.scene_manager._ui.splash.set_fade(Color.RED, 0.4, false)
+
 	# modulate submenu to transparent and fade in
 	tween = Service.scene_manager.create_tween(submenu, "modulate:a", 1.0, MENU_IN)
 

@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://d0nnf6m4pq68q"]
+[gd_scene load_steps=5 format=3 uid="uid://d0nnf6m4pq68q"]
 
-[ext_resource type="Theme" uid="uid://b1ls81hnrxdmt" path="res://assets/theme/dialog.tres" id="1_uongy"]
 [ext_resource type="Script" uid="uid://73nt43y1k8qb" path="res://ui/dialog/confirm/dialog_confirm.gd" id="2_ngmx8"]
 [ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="3_0jnfy"]
 
@@ -11,28 +10,7 @@ keycode = 4194305
 [sub_resource type="Shortcut" id="Shortcut_04lmv"]
 events = [SubResource("InputEventKey_yobuf")]
 
-[node name="DialogConfirm" type="Control"]
-process_mode = 3
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("1_uongy")
-script = ExtResource("2_ngmx8")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.0705882, 0.0705882, 0.0705882, 0.4)
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 1
+[node name="DialogConfirm" type="PanelContainer"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -44,31 +22,32 @@ offset_right = 49.0
 offset_bottom = 29.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_ngmx8")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="ConfirmationLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ConfirmationLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 
-[node name="ConfirmButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ConfirmButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "YES"
 script = ExtResource("3_0jnfy")
 metadata/_custom_type_script = "uid://dg8figbfpd7wl"
 
-[node name="CancelButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 shortcut = SubResource("Shortcut_04lmv")

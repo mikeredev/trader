@@ -1,17 +1,16 @@
 extends Node ## Global access point to system-level utilities, services, and core loop.
 
 var _active_state: ActiveState
-var service: Dictionary[StringName, Service]
+var _services: Dictionary[StringName, Service]
 var _cache: Node2D # ensure wiped on reset
 
 
 func _ready() -> void:
-	 # pre-populate service alphabetically for convenience
+	 # pre-populate _services alphabetically for convenience
 	for type: Service.ServiceType in Service.ServiceType.values():
 		var service_id: StringName = _get_service_id(type)
-		service[service_id] = null
-	service.sort()
-	print(System.service.get("city_manager"))
+		_services[service_id] = null
+	_services.sort()
 
 
 func change_state(p_new: ActiveState) -> void:
@@ -44,7 +43,7 @@ func get_cache() -> Node2D:
 
 func get_service(p_type: Service.ServiceType) -> Service:
 	var display_name: StringName = _get_service_id(p_type)
-	return service.get(display_name, null)
+	return _services.get(display_name, null)
 
 
 func pause_game(p_paused: bool) -> void:
@@ -62,11 +61,11 @@ func start_service(p_service: Service, p_type: Service.ServiceType) -> void:
 	var display_name: StringName = _get_service_id(p_type)
 
 	# log if service is already running / TBD quickload considerations
-	if service.get(display_name):
+	if _services.get(display_name):
 		Debug.log_warning("Restarting service: %s" % display_name)
 
 	# add to existing slot (created in _ready())
-	service[display_name] = p_service
+	_services[display_name] = p_service
 	Debug.log_debug("Started service: %s" % display_name)
 
 
