@@ -1,38 +1,24 @@
 class_name GeneralSettings extends ConfigUtility
 
 var system_max_autosaves: int = ProjectSettings.get_setting("services/config/max_autosaves")
+var last_save: String
 var max_autosaves: int = 5
 var show_intro: bool = true
 var show_ui_alerts: bool = true
 
 
-func apply_config() -> void:
-	Debug.log_info("Applying general settings...")
-	set_max_autosaves(max_autosaves)
-	set_show_intro(show_intro)
-	set_show_ui_alerts(show_ui_alerts)
-
-
-func set_max_autosaves(p_value: int, p_save: bool = false) -> void:
-	max_autosaves = clampi(p_value, 0, system_max_autosaves)
-	Debug.log_debug("Set max autosaves: %d/%d" % [max_autosaves, system_max_autosaves])
-	if p_save: EventBus.config_changed.emit()
-
-
-func set_show_intro(p_toggled_on: bool, p_save: bool = false) -> void:
-	show_intro = p_toggled_on
-	Debug.log_debug("Set show intro: %s" % p_toggled_on)
-	if p_save: EventBus.config_changed.emit()
-
-
-func set_show_ui_alerts(p_toggled_on: bool, p_save: bool = false) -> void:
-	show_ui_alerts = p_toggled_on
-	Debug.log_debug("Set show UI alerts: %s" % p_toggled_on)
-	if p_save: EventBus.config_changed.emit()
+static func from_dict(p_dict: Dictionary) -> GeneralSettings:
+	var out: GeneralSettings = GeneralSettings.new()
+	out.last_save = p_dict.get("last_save", out.last_save)
+	out.max_autosaves = p_dict.get("max_autosaves", out.max_autosaves)
+	out.show_intro = p_dict.get("show_intro", out.show_intro)
+	out.show_ui_alerts = p_dict.get("show_ui_alerts", out.show_ui_alerts)
+	return out
 
 
 func to_dict() -> Dictionary[String, Variant]:
 	return {
+		"last_save": last_save,
 		"max_autosaves": max_autosaves,
 		"show_intro": show_intro,
 		"show_ui_alerts": show_ui_alerts,
@@ -56,7 +42,7 @@ func to_grid() -> GridContainer:
 				spinbox.min_value = 0
 				spinbox.max_value = system_max_autosaves
 				spinbox.value = max_autosaves
-				spinbox.value_changed.connect(_get_max_autosaves.bind(true))
+				spinbox.value_changed.connect(_set_max_autosaves.bind(true))
 				ui_element = spinbox
 
 			show_ui_alerts:
@@ -81,15 +67,37 @@ func to_grid() -> GridContainer:
 	return grid
 
 
-static func from_dict(p_dict: Dictionary) -> GeneralSettings:
-	var out: GeneralSettings = GeneralSettings.new()
-
-	out.max_autosaves = p_dict.get("max_autosaves", out.max_autosaves)
-	out.show_intro = p_dict.get("show_intro", out.show_intro)
-	out.show_ui_alerts = p_dict.get("show_ui_alerts", out.show_ui_alerts)
-
-	return out
+func apply_config() -> void:
+	Debug.log_info("Applying general settings...")
+	set_max_autosaves(max_autosaves)
+	set_show_intro(show_intro)
+	set_show_ui_alerts(show_ui_alerts)
+	set_last_save(last_save)
 
 
-func _get_max_autosaves(p_value: float, p_save: bool) -> void:
+func set_last_save(p_path: String, p_save: bool = false) -> void:
+	last_save = p_path
+	Debug.log_debug("Set last save: %s" % p_path)
+	if p_save: EventBus.config_changed.emit()
+
+
+func set_max_autosaves(p_value: int, p_save: bool = false) -> void:
+	max_autosaves = clampi(p_value, 0, system_max_autosaves)
+	Debug.log_debug("Set max autosaves: %d/%d" % [max_autosaves, system_max_autosaves])
+	if p_save: EventBus.config_changed.emit()
+
+
+func set_show_intro(p_toggled_on: bool, p_save: bool = false) -> void:
+	show_intro = p_toggled_on
+	Debug.log_debug("Set show intro: %s" % p_toggled_on)
+	if p_save: EventBus.config_changed.emit()
+
+
+func set_show_ui_alerts(p_toggled_on: bool, p_save: bool = false) -> void:
+	show_ui_alerts = p_toggled_on
+	Debug.log_debug("Set show UI alerts: %s" % p_toggled_on)
+	if p_save: EventBus.config_changed.emit()
+
+
+func _set_max_autosaves(p_value: float, p_save: bool) -> void:
 	set_max_autosaves(int(p_value), p_save)

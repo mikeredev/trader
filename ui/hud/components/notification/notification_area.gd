@@ -14,6 +14,7 @@ var tween: Tween
 
 func setup() -> void:
 	EventBus.create_notification.connect(create_notification)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func create_notification(p_text: String) -> void:

@@ -63,6 +63,28 @@ func get_player() -> Character:
 	return player
 
 
+func to_dict() -> Dictionary[String, Variant]:
+	var dict: Dictionary[String, Variant] = {}
+	for profile_id: StringName in datastore.keys():
+		var data: Dictionary[String, Variant] = get_savedata(profile_id)
+		dict[profile_id] = data
+	return dict
+
+
+func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
+	return {
+		"profile": {
+			"profile_name": datastore[p_profile_id].profile.profile_name as String,
+			"profile_id": datastore[p_profile_id].profile.profile_id as String,
+			"country_id": datastore[p_profile_id].profile.country_id as String,
+			"rank": datastore[p_profile_id].profile.rank.level as int,
+		},
+
+		#"inventory": {
+			#"balance": p_character.inventory.balance,
+		#},
+	}
+
 func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "") -> Profile:
 	var profile: Profile = Profile.new()
 	profile.profile_name = p_name

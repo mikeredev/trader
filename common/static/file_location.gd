@@ -18,8 +18,8 @@ const UI_NEW_GAME_MENU: String = "uid://b661o0vqtly2s"
 const UI_LOAD_MENU: String = "uid://b6ksv61spl61s"
 const UI_MOD_MENU: String = "uid://cbrqqypop7aww"
 const UI_SETTINGS_MENU: String = "uid://7gfio240f6ao"
-
 const UI_HUD: String = "uid://df2ya0uji0y7j"
+const UI_SAVE_SLOT: PackedScene = preload("uid://cm4axhu3mwkrl")
 
 const USER_CONFIG_FILE: String = "user://settings/config.json"
 const USER_ROOT_SAVE_DIR: String = "user://saves"

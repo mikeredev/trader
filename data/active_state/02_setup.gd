@@ -1,11 +1,15 @@
 class_name SetupState extends ActiveState
 
+var core_mod_dir: String
+var user_mod_dir: String
 var saved_mods: PackedStringArray # Array[ModManifest.mod_id]
 
 
 func _init(p_saved_mods: PackedStringArray) -> void:
 	state_id = "Setup"
 	saved_mods = p_saved_mods
+	core_mod_dir = FileLocation.CORE_MOD_DIR
+	user_mod_dir = FileLocation.USER_ROOT_MOD_DIR
 
 
 func _start_services() -> void:
@@ -14,10 +18,10 @@ func _start_services() -> void:
 
 func _main() -> void:
 	# core mod is required
-	if not stage_core_mod(FileLocation.CORE_MOD_DIR): return
+	if not stage_core_mod(core_mod_dir): return
 
 	# process user content
-	parse_all_mods(FileLocation.USER_ROOT_MOD_DIR)
+	parse_all_mods(user_mod_dir)
 	stage_saved_mods(saved_mods)
 
 	# finalise blueprint
@@ -27,7 +31,7 @@ func _main() -> void:
 	#System.manage.content.clear_staging()
 
 	# notify
-	System.manage.scene.create_notification("Enabled %d mods" % System.manage.content.get_active_mods().size())
+	EventBus.create_notification.emit("Enabled %d mods" % System.manage.content.get_active_mods().size())
 
 	# show start menu
 	System.state.change(StartState.new())

@@ -49,6 +49,8 @@ func _connect_signals() -> void:
 	continue_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_continue))
 	continue_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_continue))
 	continue_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
+	#continue_button.pressed_tweened.connect(System.manage.session.load_save.bind(continue_button.get_meta("path"), continue_button.get_meta("data"))) # tbd
+	# TBD bind to separate method, meta is not yet present when connecting signals
 
 	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
 	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
@@ -56,7 +58,7 @@ func _connect_signals() -> void:
 
 	load_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_load))
 	load_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_load))
-	load_game_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_LOAD_MENU))
+	load_game_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.LOAD, FileLocation.UI_LOAD_MENU))
 
 	mods_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_mods))
 	mods_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_mods))
@@ -99,9 +101,30 @@ func _do_housekeeping() -> void:
 			texture.modulate.a = 0.0
 
 
+func _get_last_save() -> void:
+	Debug.log_info("Checking for last save...")
+	var last_save: String = System.manage.config.general_settings.last_save
+	var user_mods: PackedStringArray = []
+	if not last_save:
+		Debug.log_debug("No previous save found")
+		arrow_icon_continue.visible = false
+		continue_button.visible = false
+		return
+
+	if not FileAccess.file_exists(last_save):
+		Debug.log_debug("Recent save is inaccessible: %s" % last_save)
+		return
+
+	# if not save.has(some thing) return
+	continue_button.set_meta("path", last_save)
+	continue_button.set_meta("data", user_mods)
+	Debug.log_debug("Found recent save: %s" % last_save)
+
+
 func _ui_ready() -> void:
 	_set_color_scheme()
 	_do_housekeeping()
+	_get_last_save()
 	play_animation()
 	Debug.log_debug("%s ready: %s" % [name, get_path()])
 

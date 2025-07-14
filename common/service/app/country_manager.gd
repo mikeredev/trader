@@ -23,3 +23,16 @@ func register_country(p_country: Country) -> void:
 	if datastore.has(p_country.country_id):
 		Debug.log_warning("Overwriting existing country: %s" % p_country.country_id)
 	datastore[p_country.country_id] = p_country
+
+
+func to_dict() -> Dictionary[String, Variant]:
+	var dict: Dictionary[String, Variant] = {}
+	for country_id: StringName in datastore.keys():
+		var leader: Character = get_leader(country_id)
+		dict[country_id] = {
+			"leader": {
+				"profile_id": leader.profile.profile_id,
+				#"position": leader.body.position if leader.body else Vector2i.ZERO,
+			}
+		}
+	return dict

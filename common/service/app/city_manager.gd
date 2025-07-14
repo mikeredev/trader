@@ -42,3 +42,16 @@ func register_city(p_city: City) -> void:
 	if datastore.has(p_city.city_id):
 		Debug.log_warning("Overwriting existing city: %s" % p_city.city_id)
 	datastore[p_city.city_id] = p_city
+
+
+func to_dict() -> Dictionary[String, Variant]:
+	var dict: Dictionary[String, Variant] = {}
+	for city_id: StringName in datastore.keys():
+		dict[city_id] = {
+			"production": {
+				"economy": datastore[city_id]["economy"],
+				"industry": datastore[city_id]["industry"]
+			},
+			"support": {},
+		}
+	return dict

@@ -2,8 +2,7 @@ class_name ConfigManager extends Service
 
 enum Section { GENERAL, AUDIO, DISPLAY, CONTROL, LOCALE, MODS, DEVELOPER } # defines processing order
 
-var path: String
-var utilities: Array[ConfigUtility]
+var config_file: String
 var audio_settings: AudioSettings
 var control_settings: ControlSettings
 var developer_settings: DeveloperSettings
@@ -11,10 +10,11 @@ var display_settings: DisplaySettings
 var general_settings: GeneralSettings
 var locale_settings: LocaleSettings
 var mod_settings: ModSettings
+var utilities: Array[ConfigUtility]
 
 
 func _init() -> void:
-	path = FileLocation.USER_CONFIG_FILE
+	config_file = FileLocation.USER_CONFIG_FILE
 	EventBus.config_changed.connect(save_config)
 
 
@@ -30,13 +30,13 @@ func apply_project_settings(p_dict: Dictionary[String, Variant]) -> void:
 		Debug.log_debug("Set %s: %s" % [setting, p_dict[setting]])
 
 
-## Attempts to load user settings from [path], using default settings if not found or unreadable.
+## Attempts to load user settings from [config_file], using default settings if not found or unreadable.
 func load_config() -> void:
 	var create_default: bool
-	if not FileAccess.file_exists(path):
+	if not FileAccess.file_exists(config_file):
 		Debug.log_warning("User config not found, using default")
 		create_default = true
-	var raw: Dictionary = Common.Util.json.get_dict(path)
+	var raw: Dictionary = Common.Util.json.get_dict(config_file)
 	for section: Section in Section.values():
 		var _name: String = _get_section_name(section)
 		var _dict: Dictionary = raw.get(_name, {})
@@ -92,7 +92,7 @@ func restore_section(p_section: Section, p_save: bool = false) -> void:
 	if p_save: EventBus.config_changed.emit()
 
 
-## Writes user settings to disk at [path].
+## Writes user settings to disk at [config_file].
 func save_config() -> void:
 	Debug.log_verbose("Saving user config")
 	var data: Dictionary[String, Variant] = {}
@@ -106,7 +106,7 @@ func save_config() -> void:
 			Section.DISPLAY: data[_name] = display_settings.to_dict()
 			Section.LOCALE: data[_name] = locale_settings.to_dict()
 			Section.MODS: data[_name] = mod_settings.to_dict()
-	Common.Util.json.save_dict(path, data)
+	Common.Util.json.save_dict(config_file, data)
 
 
 func _get_section_name(p_section: Section) -> String:

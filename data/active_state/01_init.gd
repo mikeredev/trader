@@ -56,4 +56,4 @@ func build_viewports(p_views: Array[View]) -> bool:
 
 func validate_directories(p_paths: Array[String]) -> bool:
 	Debug.log_info("Checking directories...")
-	return Common.Util.file.validate_directories(p_paths)
+	return Common.Util.file.validate_directories(user_directories)

@@ -124,8 +124,14 @@ func generate_blueprint() -> void:
 	Debug.log_verbose("  Generated blueprint")
 
 
-func get_active_mods() -> Dictionary[StringName, ModManifest]:
-	return _active_mods
+func get_active_mods(p_include_core: bool = true) -> Dictionary[StringName, ModManifest]:
+	if p_include_core: return _active_mods
+	else:
+		var user_mods: Dictionary[StringName, ModManifest] = {}
+		for manifest: ModManifest in _active_mods.values():
+			if not manifest.core_mod:
+				user_mods[manifest.mod_id] = manifest
+		return user_mods
 
 
 func get_blueprint() -> Blueprint:
@@ -227,3 +233,28 @@ func stage_content(p_manifest: ModManifest) -> bool:
 	# done
 	Debug.log_debug("Staged mod: %s (%s)" % [p_manifest.mod_id, p_manifest.local_path])
 	return true
+
+
+func to_dict(p_include_core: bool = true) -> Dictionary[String, Variant]:
+	var order: PackedStringArray = []
+	var data: Dictionary[String, Variant] = {}
+
+	if p_include_core:
+		for mod_id: StringName in _active_mods.keys():
+			order.append(mod_id)
+	else:
+		for manifest: ModManifest in _active_mods.values():
+			if not manifest.core_mod:
+				order.append(manifest.mod_id)
+
+	for manifest: ModManifest in _active_mods.values():
+		data[manifest.mod_id] =  {
+			"version": manifest.version,
+			#"checksum": manifest.checksum,
+		}
+
+	var result: Dictionary[String, Variant] = {}
+	result["order"] = order
+	result["data"] = data
+
+	return result

@@ -40,7 +40,6 @@ folder_colors={
 "res://core/": "orange",
 "res://data/": "purple",
 "res://main/": "green",
-"res://temp/": "blue",
 "res://ui/": "yellow"
 }
 

@@ -16,7 +16,7 @@ func setup() -> void:
 
 
 func _on_game_saved() -> void:
-	pass
+	System.manage.session.save_session(true)
 
 
 func _on_game_load() -> void:

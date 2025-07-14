@@ -16,3 +16,18 @@ func change(p_new: ActiveState) -> void:
 	_active_state._connect_signals()
 	_active_state._start_services()
 	_active_state._main()
+
+
+func to_dict() -> Dictionary[String, Variant]:
+	var dict: Dictionary[String, Variant] = {
+		"name": _active_state.state_id,
+		"metadata": {},
+	}
+
+	if _active_state is InCityState:
+		dict["metadata"]["city_id"] = _active_state.city.city_id
+
+		#if active_state.active_building:
+			#dict["metadata"]["interior"] = active_state.active_building.building_id
+
+	return dict
