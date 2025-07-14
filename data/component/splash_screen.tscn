@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bn4cfawypmcmb"]
 
-[ext_resource type="Script" uid="uid://bh6bd1t11v0dh" path="res://splash_screen.gd" id="1_ty3ja"]
+[ext_resource type="Script" uid="uid://bh6bd1t11v0dh" path="res://data/component/splash_screen.gd" id="1_ty3ja"]
 [ext_resource type="Script" uid="uid://du2p8vo4se3aj" path="res://ui/class/label/typewriter_label.gd" id="2_el3v4"]
 
 [node name="SplashScreen" type="Control"]

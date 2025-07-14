@@ -7,7 +7,7 @@
 [ext_resource type="Shader" uid="uid://cowtwhtc7b223" path="res://ui/start/shader/birds.gdshader" id="5_sfxhq"]
 [ext_resource type="Shader" uid="uid://dhtwegab4bsl3" path="res://ui/start/shader/atmosphere_rect.gdshader" id="6_oi30m"]
 [ext_resource type="Texture2D" uid="uid://ciwg13m0r1h3v" path="res://assets/image/icon/arrow_right.png" id="7_1l0aj"]
-[ext_resource type="Script" uid="uid://cwv5lcutbts75" path="res://fade_rect.gd" id="7_83hhh"]
+[ext_resource type="Script" uid="uid://cwv5lcutbts75" path="res://data/component/fade_rect.gd" id="7_83hhh"]
 [ext_resource type="Script" uid="uid://cv7kgrkgcqrgt" path="res://ui/class/button/ui_button_start_menu.gd" id="7_oi30m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rcrc8"]

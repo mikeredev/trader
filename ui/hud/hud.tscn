@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://gqls0jr4r8su" path="res://ui/hud/components/game_options_panel.gd" id="6_p3vm3"]
 [ext_resource type="Script" uid="uid://dg8figbfpd7wl" path="res://ui/class/button/ui_button.gd" id="7_gv4gi"]
 [ext_resource type="Script" uid="uid://dmrfpngr24a4h" path="res://ui/hud/components/modal_overlay.gd" id="8_aixkq"]
-[ext_resource type="Script" uid="uid://cwv5lcutbts75" path="res://fade_rect.gd" id="8_gfles"]
+[ext_resource type="Script" uid="uid://cwv5lcutbts75" path="res://data/component/fade_rect.gd" id="8_gfles"]
 [ext_resource type="Script" uid="uid://bpocd385sre5h" path="res://main/container/ui_overlay.gd" id="10_cxhb7"]
 
 [node name="HUD" type="Control"]
