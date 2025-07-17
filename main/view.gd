@@ -34,7 +34,7 @@ func get_container(p_type: ContainerType) -> NodeContainer:
 	return _containers.get(p_type, null)
 
 
-func set_active(p_toggled_on: bool) -> void:
+func _set_active(p_toggled_on: bool) -> void:
 	camera.enabled = p_toggled_on
 	visible = p_toggled_on
 	#Debug.log_verbose("Set view active: %s, %s" % [self.name, p_toggled_on])
@@ -104,7 +104,7 @@ func setup() -> bool:
 	Debug.log_verbose("  Created camera: %s/%s" % [camera.get_parent().name, camera.name])
 
 	# start disabled
-	set_active(false)
+	_set_active(false)
 
 	# register view for lookup
 	System.manage.scene.add_view(type, self)

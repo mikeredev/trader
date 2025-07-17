@@ -32,3 +32,11 @@ func merge_savedata(p_save_data: Variant) -> void:
 				return # force handling
 
 	Debug.log_debug("-> Merged player")
+
+
+func get_profile_name() -> String:
+	return profile.profile_name
+
+
+func get_profile_id() -> StringName:
+	return profile.profile_id

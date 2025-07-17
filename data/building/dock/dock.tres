@@ -1,11 +1,13 @@
-[gd_resource type="Resource" script_class="Dock" load_steps=3 format=3 uid="uid://yk14qod6i0yw"]
+[gd_resource type="Resource" script_class="Dock" load_steps=4 format=3 uid="uid://yk14qod6i0yw"]
 
 [ext_resource type="Script" uid="uid://p74qlsq0gaj7" path="res://data/building/dock/dock.gd" id="1_axce2"]
 [ext_resource type="PackedScene" uid="uid://doingokvbydjx" path="res://data/building/dock/dock.tscn" id="1_nrd0o"]
+[ext_resource type="PackedScene" uid="uid://bjfpaf5ayb4l4" path="res://data/building/_int_template.tscn" id="2_ubp6a"]
 
 [resource]
 script = ExtResource("1_axce2")
 placement_bias = 1
 exterior_scene = ExtResource("1_nrd0o")
 exterior_size = Vector2i(3, 4)
+interior_scene = ExtResource("2_ubp6a")
 metadata/_custom_type_script = "uid://p74qlsq0gaj7"

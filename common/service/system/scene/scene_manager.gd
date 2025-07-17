@@ -20,7 +20,7 @@ func activate_view(p_type: View.ViewType) -> View:
 	var target: View = get_view(p_type)
 	for view: View in get_views():
 		var active: bool = view == target
-		view.set_active(active)
+		view._set_active(active)
 	_active_view = target
 	Debug.log_debug("Activated view: %s" % target.get_path())
 	return target
@@ -117,7 +117,7 @@ func get_views() -> Array[View]:
 
 func _create_from_packed(p_preload: PackedScene) -> Node:
 	var scene: Node = p_preload.instantiate()
-	Debug.log_debug("Created scene from packed: %s" % p_preload.name)
+	Debug.log_debug("Created scene from packed: %s" % p_preload)
 	return scene
 
 

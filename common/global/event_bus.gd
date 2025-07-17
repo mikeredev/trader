@@ -1,5 +1,6 @@
 extends Node
 
+signal building_entered(p: Building)
 signal camera_zoomed(p: Vector2)
 signal config_changed
 signal city_entered(p: City)

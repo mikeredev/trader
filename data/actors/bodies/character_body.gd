@@ -1,5 +1,6 @@
 class_name CharacterBody extends CharacterBody2D
 
+var profile_id: StringName
 var sprite: Sprite2D
 var collide: CollisionShape2D = CollisionShape2D.new()
 var interact: Area2D = Area2D.new()

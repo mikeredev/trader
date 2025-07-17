@@ -2,45 +2,27 @@ class_name InfoBar extends PanelContainer
 
 @onready var component_stack: HBoxContainer = %ComponentStack
 @onready var ui_location: Label = %LabelLocation
+@onready var ui_sublocation: Label = %LabelSublocation
 @onready var ui_fps: Label = %LabelFPS
 @onready var ui_cam_devmode: CheckButton = %CameraDevMode
 @onready var ui_cam_zoom: Label = %CameraZoom
 @onready var ui_clock: Label = %LabelClock
 
 
+func _ready() -> void:
+	ui_sublocation.visible = false
+
+
 func setup() -> void:
 	EventBus.camera_zoomed.connect(_on_camera_zoomed)
 	EventBus.city_entered.connect(_on_city_entered)
+	EventBus.building_entered.connect(_on_building_entered)
 	ui_cam_devmode.toggled.connect(_on_cam_devmode_toggled)
-	#add_location()
-	#add_fps()
-	#add_zoom()
-	#add_clock()
 
 
-func add_location() -> void:
-	ui_location = Label.new()
-	ui_location.text = "NO_LOCATION"
-	component_stack.add_child(ui_location)
-
-
-#func add_fps() -> void:
-	#var label: Label = Label.new()
-	#label.text = "%d FPS" % 0.0
-	#component_stack.add_child(label)
-#
-#
-#func add_zoom() -> void:
-	#var label: Label = Label.new()
-	#label.text = "%.03f zoom" % 0.0
-	#component_stack.add_child(label)
-#
-#
-#func add_clock() -> void:
-	#var label: Label = Label.new()
-	#label.text = "1970-01-01T00:00:00"
-	#component_stack.add_child(label)
-	#label.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+func _on_building_entered(p_building: Building) -> void:
+	ui_sublocation.visible = true
+	ui_sublocation.text = p_building.building_id
 
 
 func _on_cam_devmode_toggled(p_toggled_on: bool) -> void:

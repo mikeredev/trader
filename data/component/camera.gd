@@ -58,6 +58,7 @@ func enable_devmode(p_toggled_on: bool) -> void:
 
 
 func set_min_zoom(p_viewport: Vector2i, p_reference: Vector2i) -> void:
+	if not enabled: return
 	var x: float = float(p_viewport.x) / p_reference.x
 	var y: float = float(p_viewport.y) / p_reference.y
 	var minimum: float = max(x, y)
@@ -65,7 +66,7 @@ func set_min_zoom(p_viewport: Vector2i, p_reference: Vector2i) -> void:
 	min_zoom = Vector2(minimum, minimum)
 	zoom = min_zoom
 	if enabled: EventBus.camera_zoomed.emit(zoom) # logged but not broadcast
-	Debug.log_debug("%s minimum zoom: %s" % [name, min_zoom])
+	Debug.log_debug("%s minimum zoom: %s" % [get_path(), min_zoom])
 
 
 func update_limits(p_limits: Vector2i) -> void:

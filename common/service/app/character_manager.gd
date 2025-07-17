@@ -17,6 +17,7 @@ func cache_body(p_body: CharacterBody) -> void:
 
 func create_body(p_character: Character) -> CharacterBody:
 	var body: CharacterBody
+
 	match p_character.role:
 		Character.Role.PLAYER:
 			var player_body: PlayerBody = PlayerBody.new()
@@ -27,6 +28,7 @@ func create_body(p_character: Character) -> CharacterBody:
 
 	var name: String = p_character.profile.profile_name
 	body.name = name
+	body.profile_id = p_character.profile.profile_id
 
 	var sprite: Sprite2D = Sprite2D.new()
 	sprite.name = name
@@ -39,12 +41,12 @@ func create_body(p_character: Character) -> CharacterBody:
 
 
 func create_character(p_role: Character.Role, p_name: String, p_country_id: StringName,
-	p_rank: Rank.Level, p_title: String = "", p_restore_id: StringName = "") -> Character:
+	p_rank: Rank.Level, p_title: String = "") -> Character:
 
 	# assign role / profile / inventory / fleet as needed
 	var character: Character = Character.new()
 	character.role = p_role
-	character.profile = _create_profile(p_name, p_country_id, p_rank, p_title, p_restore_id)
+	character.profile = _create_profile(p_name, p_country_id, p_rank, p_title)
 
 	# register for lookup
 	datastore[character.profile.profile_id] = character
@@ -87,10 +89,10 @@ func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
 	}
 
 
-func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "", p_restore_id: StringName = "") -> Profile:
+func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "") -> Profile:
 	var profile: Profile = Profile.new()
 	profile.profile_name = p_name
-	profile.profile_id = p_restore_id if p_restore_id else _get_uid(p_name)
+	profile.profile_id = _get_uid(p_name)
 	profile.country_id = p_country_id
 	profile.rank = _create_rank(p_rank, p_title)
 	return profile

@@ -59,6 +59,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "NO_LOCATION"
 
+[node name="LabelSublocation" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "NO_SUBLOCATION"
+
 [node name="LabelFPS" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
 layout_mode = 2
