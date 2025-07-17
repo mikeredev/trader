@@ -110,11 +110,11 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 	# add door interaction area
 	var interaction_area: Area2D = Area2D.new()
 	interaction_area.name = p_building.building_id
-	interaction_area.set_meta("building", p_building)
+	#interaction_area.set_meta("building", p_building)
 	interaction_area.set_meta("interact", p_building)
 	interaction_area.position = scene.building_layer.map_to_local(access_point)
 
-	interaction_area.collision_layer = 1#Common.Collision.Bitmask.INTERACTION
+	interaction_area.collision_layer = Common.Collision.INTERACT
 	interaction_area.collision_mask = 0
 	interaction_area.monitoring = false
 	interaction_area.monitorable = true

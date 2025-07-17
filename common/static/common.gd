@@ -1,5 +1,10 @@
 class_name Common extends RefCounted
 
+enum Collision {
+		PHYSICS = 1 << 0,
+		INTERACT = 1 << 4,
+	}
+
 const PROJECT_SETTINGS: Dictionary[String, Variant] = {
 	"services/config/scene_base_size": Vector2i(640, 360), # tilemaps are designed around this base size
 	"services/config/max_autosaves": 10, # user-configured autosaves cannot exceed this value
@@ -9,8 +14,6 @@ const PROJECT_SETTINGS: Dictionary[String, Variant] = {
 	"services/trade/max_price": 65536, # an individual trade resource's maximum buy or sell price
 	"services/trade/max_monthly_investment": 50000, # a city cannot received more than this per month in investments
 }
-
-
 
 class Util:
 	static var json: JSONUtil = JSONUtil.new()

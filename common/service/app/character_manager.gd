@@ -86,6 +86,7 @@ func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
 		#},
 	}
 
+
 func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "", p_restore_id: StringName = "") -> Profile:
 	var profile: Profile = Profile.new()
 	profile.profile_name = p_name

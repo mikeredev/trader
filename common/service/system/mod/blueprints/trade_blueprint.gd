@@ -81,7 +81,7 @@ func _create_resource(resource_id: StringName, p_metadata: Dictionary) -> void:
 
 
 func _configure_category(p_resource: TradeResource, p_metadata: Dictionary) -> void:
-	var category_id: StringName = p_metadata.get("category")
+	var category_id: StringName = p_metadata["category"]
 
 	# lazy initialise category
 	var category: TradeCategory = _get_or_create_category(category_id)
@@ -95,7 +95,7 @@ func _configure_category(p_resource: TradeResource, p_metadata: Dictionary) -> v
 
 
 func _configure_buy_price(p_resource: TradeResource, p_metadata: Dictionary) -> void:
-	var buy_price: Dictionary = p_metadata.get("buy_price")
+	var buy_price: Dictionary = p_metadata["buy_price"]
 	for market_id: StringName in buy_price.keys():
 
 		# lazy initialise market
@@ -108,7 +108,7 @@ func _configure_buy_price(p_resource: TradeResource, p_metadata: Dictionary) -> 
 
 
 func _configure_sell_price(p_resource: TradeResource, p_metadata: Dictionary) -> void:
-	var sell_price: Dictionary = p_metadata.get("sell_price")
+	var sell_price: Dictionary = p_metadata["sell_price"]
 	for market_id: StringName in sell_price.keys():
 		var market: TradeMarket = _get_or_create_market(market_id)
 

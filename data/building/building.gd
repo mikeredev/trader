@@ -1,4 +1,4 @@
-class_name Building extends Resource
+class_name Building extends Interactable
 
 enum PlacementBias { NONE, SHORE }
 

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://2xdixff84gnr"]
+[gd_scene load_steps=4 format=3 uid="uid://2xdixff84gnr"]
+
+[ext_resource type="Texture2D" uid="uid://crmdb02jrkw8o" path="res://assets/image/sprite/base_sprite_flat.png" id="1_dqcjp"]
 
 [sub_resource type="GDScript" id="GDScript_8uh7m"]
 resource_name = "builtin"
@@ -22,6 +24,8 @@ func _on_file_dialog_dir_selected(dir: String) -> void:
 	print(dir)
 "
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5n8kd"]
+
 [node name="Test" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -32,6 +36,7 @@ grow_vertical = 2
 script = SubResource("GDScript_8uh7m")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -57,6 +62,18 @@ size = Vector2i(722, 360)
 ok_button_text = "Select Current Folder"
 file_mode = 2
 access = 2
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+position = Vector2(208, 156)
+texture = ExtResource("1_dqcjp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(208, 156)
+shape = SubResource("CapsuleShape2D_5n8kd")
+
+[node name="Area2D" type="Area2D" parent="CharacterBody2D"]
 
 [connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="dir_selected" from="HBoxContainer/FileDialog" to="." method="_on_file_dialog_dir_selected"]

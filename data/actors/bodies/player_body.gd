@@ -3,12 +3,12 @@ class_name PlayerBody extends CharacterBody
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("interact"):
-		var interactions: Array[Area2D] = interaction_area.get_overlapping_areas()
+		var interactions: Array[Area2D] = interact.get_overlapping_areas()
 		if interactions.is_empty(): return
 		var area: Area2D = interactions[0]
 		if area.has_meta("interact"):
-			var object: Variant = area.get_meta("interact")
-			App.context.character_manager.interact_with(object)
+			var object: Interactable = area.get_meta("interact")
+			object.interact_with(self)
 		else:
 			Debug.log_warning("Interaction undefined: %s" % area.name)
 

@@ -41,7 +41,7 @@ func create_borders(p_area: Vector2i, p_thickness: int = 50) -> Array[StaticBody
 		var shape: RectangleShape2D = RectangleShape2D.new()
 		collision.name = "CollisionShape2D"
 		collision.shape = shape
-		border.collision_layer = 1# Common.Collision.Bitmask.COLLISION
+		border.collision_layer = Common.Collision.PHYSICS
 		border.collision_mask = 0
 		border.add_child(collision)
 		match direction:
