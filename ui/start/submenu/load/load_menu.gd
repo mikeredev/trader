@@ -45,7 +45,7 @@ func get_profiles() -> void:
 			SessionManager.STORAGE.get("SESSION_FILENAME"),
 			SessionManager.STORAGE.get("SAVE_FORMAT") ]
 
-		# add it to list
+		# add it to profile dropdown list
 		Debug.log_debug("Found profile: %s" % profile_list[i])
 		var session_data: Dictionary = Common.Util.json.get_dict(path)
 		var profile_name: String = session_data.get("profile_name", profile_list[i]) # failback to profile_id
@@ -79,13 +79,13 @@ func get_save_list(p_profile_directory: String) -> void:
 		var strip_ext: String = save_file.get_basename()
 		var split: PackedStringArray = strip_ext.split("/")
 		var timestamp: int = split[split.size() - 1].to_int()
-		var metadata_file: String = "%s/%s/%d.%s" % [
+		var metadata_path: String = "%s/%s/%d.%s" % [
 			p_profile_directory,
 			SessionManager.STORAGE.get("METADATA_DIRECTORY"),
 			timestamp,
 			SessionManager.STORAGE.get("SAVE_FORMAT"),
 		]
-		var metadata: Dictionary = Common.Util.json.get_dict(metadata_file)
+		var metadata: Dictionary = Common.Util.json.get_dict(metadata_path)
 		create_slot(save_file, metadata)
 
 
@@ -119,8 +119,8 @@ func _on_slot_selected(p_event: InputEvent, p_path: String, p_metadata: Dictiona
 	if p_event is InputEventMouseButton:
 		var event: InputEventMouseButton = p_event
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			Debug.log_debug("Selected slot: %s" % p_path)
-			System.manage.session.load_save(p_path, p_metadata["mods"])
+			Debug.log_info("Selected slot: %s" % p_path)
+			System.manage.session.restore_session(p_path, p_metadata)
 
 
 func _on_show_autosaves_toggled(p_toggled_on: bool) -> void:

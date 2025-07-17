@@ -16,7 +16,7 @@ func setup() -> void:
 
 
 func _on_game_saved() -> void:
-	System.manage.session.save_session(true)
+	System.manage.session.save_session()
 
 
 func _on_game_load() -> void:
@@ -28,4 +28,4 @@ func _on_game_paused(p_toggled: bool) -> void:
 
 
 func _on_game_quit() -> void:
-	System.quit_game()
+	System.soft_reset()

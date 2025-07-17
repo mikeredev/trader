@@ -7,6 +7,7 @@ var access_points: Dictionary[Building, Vector2i]
 @onready var border_group: Node2D = %Borders
 @onready var building_group: Node2D = %Buildings
 @onready var access_point_group: Node2D = %AccessPoints
+@onready var sprite_group: Node2D = %Sprites
 
 @onready var water_layer: TileMapLayer = %Water
 @onready var ground_layer: TileMapLayer = %Ground

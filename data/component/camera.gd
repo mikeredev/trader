@@ -41,11 +41,10 @@ func _process_zoom() -> void:
 	elif Input.is_action_pressed("ui_page_down"): _zoom_out()
 
 
-#func follow(p_body: CharacterBody) -> void:
-	#target = p_body
-	#var remote_transform: RemoteTransform2D = target.remote_transform
-	#remote_transform.remote_path = get_path()
-	#Debug.log_debug("-> %s camera following: %s" % [name.to_upper(), target.name])
+func follow(p_body: CharacterBody) -> void:
+	var remote_transform: RemoteTransform2D = p_body.remote_transform
+	remote_transform.remote_path = get_path()
+	Debug.log_debug("-> %s camera following: %s" % [name.to_upper(), p_body.name])
 
 
 func enable_devmode(p_toggled_on: bool) -> void:

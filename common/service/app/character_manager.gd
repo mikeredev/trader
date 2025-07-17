@@ -5,7 +5,7 @@ var player: Character # quick lookup for player access
 
 
 func cache_body(p_body: CharacterBody) -> void:
-	var node_cache: Node2D = System.get_cache()
+	var node_cache: Node2D = App.get_cache()
 	p_body.velocity = Vector2.ZERO
 
 	if p_body.get_parent(): p_body.reparent(node_cache)
@@ -37,13 +37,14 @@ func create_body(p_character: Character) -> CharacterBody:
 	Debug.log_debug("Created body: %s" % p_character.profile.profile_name)
 	return body
 
+
 func create_character(p_role: Character.Role, p_name: String, p_country_id: StringName,
-	p_rank: Rank.Level, p_title: String = "") -> Character:
+	p_rank: Rank.Level, p_title: String = "", p_restore_id: StringName = "") -> Character:
 
 	# assign role / profile / inventory / fleet as needed
 	var character: Character = Character.new()
 	character.role = p_role
-	character.profile = _create_profile(p_name, p_country_id, p_rank, p_title)
+	character.profile = _create_profile(p_name, p_country_id, p_rank, p_title, p_restore_id)
 
 	# register for lookup
 	datastore[character.profile.profile_id] = character
@@ -85,10 +86,10 @@ func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
 		#},
 	}
 
-func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "") -> Profile:
+func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "", p_restore_id: StringName = "") -> Profile:
 	var profile: Profile = Profile.new()
 	profile.profile_name = p_name
-	profile.profile_id = _get_uid(p_name)
+	profile.profile_id = p_restore_id if p_restore_id else _get_uid(p_name)
 	profile.country_id = p_country_id
 	profile.rank = _create_rank(p_rank, p_title)
 	return profile

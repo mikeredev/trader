@@ -2,7 +2,6 @@ extends Node ## Global access point to system-level utilities, services, and cor
 
 var manage: SystemServiceLocator = SystemServiceLocator.new()
 var state: StateMachine = StateMachine.new()
-var _cache: Node2D # ensure wiped on reset NOTE
 
 
 func _ready() -> void:
@@ -11,22 +10,14 @@ func _ready() -> void:
 		Debug.log_warning("Slow startup time: %d" % tick)
 
 
-func create_cache() -> void:
-	_cache = Node2D.new()
-	_cache.name = "Cache"
-	_cache.visible = false
-	_cache.process_mode = Node.PROCESS_MODE_DISABLED
-	self.add_child(_cache)
-	Debug.log_debug("Created node cache: %s" % _cache.get_path())
-
-
-func get_cache() -> Node2D:
-	return _cache
-
-
 func pause_game(p_paused: bool) -> void:
 	Debug.log_info("Game paused: %s" % p_paused)
 	System.get_tree().paused = p_paused
+
+
+func soft_reset() -> void:
+	Debug.log_info("Returning to Start...")
+	System.state.change(StartState.new())
 
 
 func quit_game() -> void:

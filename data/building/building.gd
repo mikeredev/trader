@@ -2,8 +2,9 @@ class_name Building extends Resource
 
 enum PlacementBias { NONE, SHORE }
 
-var building_id: StringName # for lookup
-#var city_id: StringName # which city it is in
+var building_id: StringName
+var city_id: StringName
+
 
 @export_category("Exterior")
 @export var placement_bias: PlacementBias

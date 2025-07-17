@@ -29,6 +29,13 @@ func touch_directory(p_path: String) -> bool:
 	return true
 
 
+func remove_file(p_absolute_path: String, p_extension: String) -> bool:
+	if p_absolute_path.ends_with(p_extension):
+		var error: Error = DirAccess.remove_absolute(p_absolute_path)
+		if error != OK: return false
+	return true
+
+
 func validate_directories(p_paths: Array[String]) -> bool:
 	var success: bool = true
 	for path: String in p_paths:

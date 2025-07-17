@@ -197,6 +197,7 @@ func _create_building(p_city: City, p_building_id: StringName) -> void:
 			building = market
 
 	building.building_id = p_building_id
+	building.city_id = p_city.city_id
 	p_city.buildings[p_building_id] = building
 
 

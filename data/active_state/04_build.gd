@@ -50,7 +50,7 @@ func create_player() -> void:
 
 
 func create_engine_tools() -> void:
-	System.create_cache() # body cache
+	App.create_cache() # body cache
 
 
 func create_ships() -> void:

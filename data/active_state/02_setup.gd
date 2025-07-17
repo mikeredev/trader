@@ -3,11 +3,13 @@ class_name SetupState extends ActiveState
 var core_mod_dir: String
 var user_mod_dir: String
 var saved_mods: PackedStringArray # Array[ModManifest.mod_id]
+var save_data: Dictionary # optional path to save file being loaded
 
 
-func _init(p_saved_mods: PackedStringArray) -> void:
+func _init(p_saved_mods: PackedStringArray, p_save_data: Dictionary = {}) -> void:
 	state_id = "Setup"
 	saved_mods = p_saved_mods
+	save_data = p_save_data
 	core_mod_dir = FileLocation.CORE_MOD_DIR
 	user_mod_dir = FileLocation.USER_ROOT_MOD_DIR
 
@@ -26,6 +28,23 @@ func _main() -> void:
 
 	# finalise blueprint
 	System.manage.content.generate_blueprint()
+
+	# merge save, if present
+	if save_data:
+		Debug.log_info("Merging save data with blueprint...")
+		print(save_data)
+		print("========")
+
+		# merge player
+		print(save_data["data"]["player"])
+		var profile_name: StringName = save_data["data"]["player"]["profile"]["profile_name"]
+		var profile_id: StringName = save_data["data"]["player"]["profile"]["profile_id"]
+		var country_id: StringName = save_data["data"]["player"]["profile"]["country_id"]
+		var rank: int = save_data["data"]["player"]["profile"]["rank"]
+
+		var player: Character = App.context.character.create_character(Character.Role.PLAYER, profile_name, country_id, rank, profile_id)
+		var new_game: bool = false
+		System.manage.session.start_session(player, new_game)
 
 	# tidy-up
 	#System.manage.content.clear_staging()
@@ -83,3 +102,8 @@ func stage_saved_mods(p_saved_mods: PackedStringArray) -> void:
 		if not System.manage.content.stage_content(manifest):
 			Debug.log_error("Failed to stage mod: %s" % mod_id)
 			continue # non-fatal error
+
+
+func merge_save_data(p_path: String) -> void:
+	var x = Common.Util.json.get_dict(p_path)
+	print(x)

@@ -111,21 +111,17 @@ func merge_savedata(p_save_data: Variant) -> void:
 		Debug.log_warning("Invalid save data")
 		return
 
-	var save_data: Dictionary[StringName, Dictionary] = {}
-	var _raw: Dictionary = p_save_data
-	for country_id: StringName in _raw.keys():
-		save_data[country_id] = _raw[country_id]
-
+	var save_data: Dictionary = p_save_data
 	for country_id: StringName in save_data.keys():
 		#Debug.log_debug("Merging %s" % country_id)
 
 		var blueprint_data: Dictionary[String, Variant] = {}
-		var savedata: Dictionary = {}
+		var to_merge: Dictionary = {}
 
 		for property: String in save_data[country_id]:
 			#Debug.log_debug("-> Merging %s" % property)
 			blueprint_data = datastore[country_id][property]
-			savedata = save_data[country_id][property]
-			blueprint_data.merge(savedata, true)
+			to_merge = save_data[country_id][property]
+			blueprint_data.merge(to_merge, true)
 
-	Debug.log_debug("-> Merged %d countries" % save_data.size())
+	Debug.log_debug("-> Merged %d countries" % [save_data.size()])

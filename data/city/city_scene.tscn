@@ -48,6 +48,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Sprites" type="Node2D" parent="Groups"]
+unique_name_in_owner = true
 
 [node name="Debug" type="Control" parent="."]
 unique_name_in_owner = true

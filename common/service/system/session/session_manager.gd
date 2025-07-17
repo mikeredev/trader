@@ -74,20 +74,25 @@ func save_session(p_autosave: bool = false) -> void:
 	if p_autosave: _prune_autosaves()
 
 	# update user settings for quick continue
-	System.manage.config.general_settings.set_last_save(save_path, true)
+	System.manage.config.general_settings.set_last_save(save_path, metadata, true)
 	Debug.log_debug("Snapshot complete")
 
 
-func load_save(p_path: String, p_metadata: Dictionary) -> void:
-	Debug.log_info("Attempting to load save...")
-	var saved_mods: PackedStringArray = p_metadata["order"]
+func restore_session(p_path: String, p_metadata: Dictionary) -> void:
+	Debug.log_info("Restoring session: %s" % p_path)
 	var active_mods: Dictionary[StringName, ModManifest] = System.manage.content.get_active_mods(false)
-	#var available_mods: Dictionary[StringName, ModManifest] = System.manage.content.get_manifests()
-	if _check_mods(saved_mods, active_mods.keys()):
-		_proceed_to_load(p_path, saved_mods)
+	var saved_mods: PackedStringArray = p_metadata["mods"]["order"]
+	var save_data: Dictionary = Common.Util.json.get_dict(p_path)
+	if _validate(saved_mods, active_mods.keys()):
+		Debug.log_info("Loading save '%s'..." % p_path)
+		System.state.change(SetupState.new(saved_mods, save_data))
+	else:
+		if await System.manage.scene.get_confirmation("RELOAD_MODS?"):
+			System.state.change(SetupState.new(saved_mods, save_data))
 
 
-func _check_mods(p_saved_mods: PackedStringArray, p_active_mods: PackedStringArray) -> bool:
+func _validate(p_saved_mods: PackedStringArray, p_active_mods: PackedStringArray) -> bool:
+	# verify mod order
 	Debug.log_debug("Saved mods: %s" % p_saved_mods)
 	Debug.log_debug("Active mods: %s" % p_active_mods)
 	if p_saved_mods == p_active_mods:
@@ -128,7 +133,7 @@ func _prune_autosaves() -> void:
 
 	while total > max_autosaves:
 		var path: String = files[total - 1] # take oldest from end
-		if _remove_file(path):
+		if Common.Util.file.remove_file(path, STORAGE["SAVE_FORMAT"]):
 			Debug.log_debug("Deleted snapshot: %s" % path)
 
 			# check for metadata
@@ -136,26 +141,13 @@ func _prune_autosaves() -> void:
 			var filename: String = split[split.size() - 1]
 			var metadata: String = "%s/%s" % [metadata_directory, filename]
 			if FileAccess.file_exists(metadata):
-				if _remove_file(metadata):
+				if Common.Util.file.remove_file(metadata, STORAGE["SAVE_FORMAT"]):
 					Debug.log_debug("Deleted metadata: %s" % metadata)
 				else:
 					Debug.log_warning("Unable to remove metadata")
 		else:
 			Debug.log_warning("Unable to remove snapshot")
 		total -= 1
-
-
-func _proceed_to_load(p_path: String, p_order: PackedStringArray, _p_is_dirty: bool = false) -> void:
-	Debug.log_info("Loading save '%s'..." % p_path)
-	var save_data: Dictionary = Common.Util.json.get_dict(p_path)
-	System.state.change(SetupState.new(p_order))
-
-
-func _remove_file(p_absolute_path: String) -> bool:
-	if p_absolute_path.ends_with(str(STORAGE["SAVE_FORMAT"])):
-		var error: Error = DirAccess.remove_absolute(p_absolute_path)
-		if error != OK: return false
-	return true
 
 
 func _validate_user_dirs() -> bool:

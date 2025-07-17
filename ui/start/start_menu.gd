@@ -48,9 +48,7 @@ func _connect_signals() -> void:
 
 	continue_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_continue))
 	continue_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_continue))
-	continue_button.pressed_tweened.connect(show_submenu.bind(SubMenuType.NEW, FileLocation.UI_NEW_GAME_MENU)) # tbd
-	#continue_button.pressed_tweened.connect(System.manage.session.load_save.bind(continue_button.get_meta("path"), continue_button.get_meta("data"))) # tbd
-	# TBD bind to separate method, meta is not yet present when connecting signals
+	# action signal connected in _get_last_save
 
 	new_game_button.mouse_entered.connect(_on_mouse_entered.bind(arrow_icon_new))
 	new_game_button.mouse_exited.connect(_on_mouse_exited.bind(arrow_icon_new))
@@ -90,35 +88,51 @@ func _set_color_scheme() -> void: # runs after background.ready()
 
 
 func _do_housekeeping() -> void:
+	# create button group
 	for node: Control in nav_buttons.get_children():
 		if node is UIButtonStartMenu:
 			var button: UIButtonStartMenu = node
 			button.set_theme_type_variation("StartMenuButton")
 			buttons.append(button)
 
-		if node is TextureRect: # arrow selector is modulated back in on mouseover
+	 # arrow selector is modulated back in on mouseover
+		if node is TextureRect:
 			var texture: TextureRect = node
 			texture.modulate.a = 0.0
+
+	# default continue button to hidden unless recent save
+	arrow_icon_continue.visible = false
+	continue_button.visible = false
 
 
 func _get_last_save() -> void:
 	Debug.log_info("Checking for last save...")
 	var last_save: String = System.manage.config.general_settings.last_save
-	var user_mods: PackedStringArray = []
+	var last_save_metadata: Dictionary = System.manage.config.general_settings.last_save_metadata
+
 	if not last_save:
 		Debug.log_debug("No previous save found")
-		arrow_icon_continue.visible = false
-		continue_button.visible = false
 		return
 
 	if not FileAccess.file_exists(last_save):
-		Debug.log_debug("Recent save is inaccessible: %s" % last_save)
+		Debug.log_warning("Recent save is inaccessible: %s" % last_save)
+		# remove from config here
 		return
 
-	# if not save.has(some thing) return
+	# if not save.has(some validation thing) return
 	continue_button.set_meta("path", last_save)
-	continue_button.set_meta("data", user_mods)
+	continue_button.set_meta("last_save_metadata", last_save_metadata)
 	Debug.log_debug("Found recent save: %s" % last_save)
+
+	# connect signal to continue button
+	continue_button.pressed_tweened.connect(
+		System.manage.session.restore_session.bind(
+			continue_button.get_meta("path"),
+			continue_button.get_meta("last_save_metadata")))
+
+	# reveal continue button
+	arrow_icon_continue.visible = true
+	continue_button.visible = true
 
 
 func _ui_ready() -> void:
