@@ -8,6 +8,8 @@ var city_id: StringName
 var scene: BuildingScene
 var view: View
 
+var _is_leaving: bool
+
 @export_category("Exterior")
 @export var placement_bias: PlacementBias
 @export var exterior_scene: PackedScene # tscn, the building in the city
@@ -23,22 +25,29 @@ func _init() -> void:
 
 
 func interact_with(p_body: CharacterBody) -> void:
-	var character: Character = App.context.character.get_character(p_body.profile_id)
-	print("hi %s" % character.get_profile_name())
-	enter_building()
+	#var character: Character = App.context.character.get_character(p_body.profile_id)
+	enter_building(self, p_body)
 
 
-func enter_building() -> void:
-	# load building scene
-	scene = System.manage.scene.create_scene(FileLocation.IN_BUILDING_SCENE)
-	scene.name = building_id
-	view.add_scene(scene, View.ContainerType.SCENE)
-	EventBus.building_entered.emit(self)
+func enter_building(p_building: Building, p_body: CharacterBody) -> void:
+	Debug.log_verbose("%s is entering building %s" % [p_body.profile_id, p_building.building_id])
+	p_building.scene = System.manage.scene.create_scene(p_building.interior_scene)
+	p_building.scene.name = p_building.building_id
+	p_building.scene.city_id = city_id
+	p_building.scene.building_id = building_id
+	p_building.view.add_scene(p_building.scene, View.ContainerType.SCENE)
 
-	# switch view
+	# switch view and kick camera
 	System.manage.scene.activate_view(View.ViewType.INTERIOR)
-	scene._on_viewport_resized(DisplayServer.window_get_size())
+	p_building.scene._on_viewport_resized(DisplayServer.window_get_size())
+
+	# add character
+	p_body.reparent(p_building.scene.sprite_group)
+	p_body.position = p_building.scene.spawn_point.position
+
+	# broadcast
+	EventBus.building_entered.emit(p_building)
 
 
-func exit_building() -> void:
-	pass
+func exit_building(p_body: CharacterBody) -> void:
+	EventBus.building_exited.emit(self, p_body)

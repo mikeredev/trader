@@ -190,10 +190,10 @@ func _create_building(p_city: City, p_building_id: StringName) -> void:
 	var building: Building
 	match p_building_id:
 		"B_DOCK":
-			var dock: Dock = load("uid://yk14qod6i0yw") as Dock
+			var dock: Dock = load("uid://yk14qod6i0yw").duplicate(true) as Dock
 			building = dock
 		"B_MARKET":
-			var market: Market = load("uid://3rr25xenmydt") as Market
+			var market: Market = load("uid://3rr25xenmydt").duplicate(true) as Market
 			building = market
 
 	building.building_id = p_building_id

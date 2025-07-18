@@ -6,6 +6,7 @@ var datastore: Dictionary[StringName, City] = {}
 func get_city(p_city_id: StringName) -> City:
 	return datastore.get(p_city_id, null)
 
+
 func get_cities() -> Array[City]:
 	return datastore.values()
 

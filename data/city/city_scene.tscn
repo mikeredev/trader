@@ -47,7 +47,7 @@ unique_name_in_owner = true
 [node name="AccessPoints" type="Node2D" parent="Groups"]
 unique_name_in_owner = true
 
-[node name="Sprites" type="Node2D" parent="Groups"]
+[node name="Sprites" type="Node2D" parent="."]
 unique_name_in_owner = true
 
 [node name="Debug" type="Control" parent="."]

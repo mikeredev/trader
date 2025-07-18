@@ -17,12 +17,18 @@ func setup() -> void:
 	EventBus.camera_zoomed.connect(_on_camera_zoomed)
 	EventBus.city_entered.connect(_on_city_entered)
 	EventBus.building_entered.connect(_on_building_entered)
+	EventBus.building_exited.connect(_on_building_exited)
 	ui_cam_devmode.toggled.connect(_on_cam_devmode_toggled)
 
 
 func _on_building_entered(p_building: Building) -> void:
 	ui_sublocation.visible = true
 	ui_sublocation.text = p_building.building_id
+
+
+func _on_building_exited(_p_building: Building, _p_body: CharacterBody) -> void:
+	ui_sublocation.text = ""
+	ui_sublocation.visible = false
 
 
 func _on_cam_devmode_toggled(p_toggled_on: bool) -> void:

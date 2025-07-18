@@ -44,7 +44,7 @@ func _process_zoom() -> void:
 func follow(p_body: CharacterBody) -> void:
 	var remote_transform: RemoteTransform2D = p_body.remote_transform
 	remote_transform.remote_path = get_path()
-	Debug.log_debug("-> %s camera following: %s" % [name.to_upper(), p_body.name])
+	Debug.log_debug("%s camera following: %s" % [get_path(), p_body.name])
 
 
 func enable_devmode(p_toggled_on: bool) -> void:
@@ -65,7 +65,7 @@ func set_min_zoom(p_viewport: Vector2i, p_reference: Vector2i) -> void:
 	minimum = snappedf(minimum, Camera.ZOOM_SNAP)
 	min_zoom = Vector2(minimum, minimum)
 	zoom = min_zoom
-	if enabled: EventBus.camera_zoomed.emit(zoom) # logged but not broadcast
+	if enabled: EventBus.camera_zoomed.emit(zoom)
 	Debug.log_debug("%s minimum zoom: %s" % [get_path(), min_zoom])
 
 

@@ -6,6 +6,7 @@ var view: View
 var base_size: Vector2i
 
 
+
 func _init(p_city_id: StringName) -> void:
 	state_id = "InCity"
 	city = App.context.city.get_city(p_city_id)
@@ -15,17 +16,31 @@ func _init(p_city_id: StringName) -> void:
 
 func _connect_signals() -> void:
 	EventBus.viewport_resized.connect(_on_viewport_resized)
+	EventBus.building_exited.connect(_on_building_exited)
 
 
 func _main() -> void:
+	# generate city scene
 	build_scene()
-	add_player()
+
+	# drop player outside dock
+	var player: Character = App.context.character.get_player()
+	var dock: Dock = city.buildings.get("B_DOCK")
+	add_character_at(dock, player.body)
+
+	# configure camer and activate view
 	configure_view()
-	EventBus.city_entered.emit(city) # broadcast update
+
+	# broadcast update
+	EventBus.city_entered.emit(city)
 
 
 func _exit() -> void:
 	view.clear_view()
+
+	# clear any sublocation interior scenes
+	var interior: View = System.manage.scene.get_view(View.ViewType.INTERIOR)
+	interior.clear_view()
 
 
 func build_scene() -> void:
@@ -39,27 +54,38 @@ func build_scene() -> void:
 	builder.build()
 
 
-func add_player() -> void:
-	Debug.log_info("Adding player body...")
-	var player: Character = App.context.character.get_player()
-	player.body.reparent(scene.sprite_group)
+func add_character_at(p_building: Building, p_body: CharacterBody) -> void:
+	# body should exist in cache or other scene at this point
+	Debug.log_info("Adding %s at %s %s..." % [p_body.profile_id, city.city_id, p_building.building_id])
+	p_body.reparent(scene.sprite_group)
 
 	# start outside dock
-	var dock: Dock = city.buildings.get("B_DOCK")
-	var access_point: Vector2i = scene.access_points.get(dock)
+	var access_point: Vector2i = scene.access_points.get(p_building)
 	var modifider: int = ProjectSettings.get_setting("services/config/default_tile_size")
-	player.body.position.x = (access_point.x + 0.5) * modifider # centered on door tile
-	player.body.position.y = (access_point.y + 1) * modifider # slightly below
+	p_body.position.x = (access_point.x + 0.5) * modifider # centered on door tile
+	p_body.position.y = (access_point.y + 1) * modifider # slightly below
 
 	# camera follow
-	view.camera.follow(player.body)
+	if p_body is PlayerBody:
+		view.camera.follow(p_body)
 
 
 func configure_view() -> void:
 	Debug.log_info("Configuring view...")
-	view = System.manage.scene.activate_view(View.ViewType.CITY)
 	view.camera.update_limits(scene.tile_grid.area)
+	view = System.manage.scene.activate_view(View.ViewType.CITY)
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:
 	view.camera.set_min_zoom(p_viewport_size, base_size)
+
+
+func _on_building_exited(p_building: Building, p_body: CharacterBody) -> void:
+	add_character_at(p_building, p_body)
+
+	# re-enable body physics after reparent
+	p_body.process_mode = Node.PROCESS_MODE_INHERIT
+
+	# switch view and kick camera
+	System.manage.scene.activate_view(View.ViewType.CITY)
+	#city scene viewport resized? emit signal caught by incity state?

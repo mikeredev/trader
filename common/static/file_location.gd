@@ -6,7 +6,6 @@ const DEFAULT_MOD_ICON: String = "uid://q40ea1cxooft" # godot robot svg
 const DIALOG_CONFIRM: String = "uid://d0nnf6m4pq68q"
 
 const IN_CITY_SCENE: String = "uid://b3hjf84mgaj58"
-const IN_BUILDING_SCENE: PackedScene = preload("uid://bjfpaf5ayb4l4") # generic interior
 
 const NOTIFICATION_BOX: PackedScene = preload("uid://d0jesupddkx4x")
 
