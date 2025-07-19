@@ -13,6 +13,10 @@ func _ready() -> void:
 	ui_sublocation.visible = false
 
 
+func _process(_delta: float) -> void:
+	pass#ui_fps.text = "%d FPS" % Engine.get_frames_per_second()
+
+
 func setup() -> void:
 	EventBus.camera_zoomed.connect(_on_camera_zoomed)
 	EventBus.city_entered.connect(_on_city_entered)

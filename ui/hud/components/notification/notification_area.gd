@@ -14,7 +14,7 @@ var tween: Tween
 
 func setup() -> void:
 	EventBus.create_notification.connect(create_notification)
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mouse_filter = Control.MOUSE_FILTER_IGNORE # TBD dynamically set this to ignore when alerts > 0
 
 
 func create_notification(p_text: String) -> void:
@@ -43,6 +43,14 @@ func create_notification(p_text: String) -> void:
 	# and reveal it
 	tween = get_tree().create_tween()
 	tween.tween_property(box, "modulate:a", 1.0, duration)
+
+	# add a self-destruct timer (TBD needs severity)
+	var timer: Timer = Timer.new()
+	timer.wait_time = 2.0
+	timer.one_shot = true
+	box.add_child(timer)
+	timer.timeout.connect(func() -> void: remove_notification(box) )
+	timer.start()
 
 
 func remove_notification(p_box: NotificationBox) -> void:

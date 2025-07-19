@@ -29,23 +29,6 @@ func _main() -> void:
 	# finalise blueprint
 	System.manage.content.generate_blueprint()
 
-	# merge save, if present
-	if save_data:
-		Debug.log_info("Merging save data with blueprint...")
-		print(save_data)
-		print("========")
-
-		# merge player
-		print(save_data["data"]["player"])
-		var profile_name: StringName = save_data["data"]["player"]["profile"]["profile_name"]
-		var profile_id: StringName = save_data["data"]["player"]["profile"]["profile_id"]
-		var country_id: StringName = save_data["data"]["player"]["profile"]["country_id"]
-		var rank: int = save_data["data"]["player"]["profile"]["rank"]
-
-		var player: Character = App.context.character.create_character(Character.Role.PLAYER, profile_name, country_id, rank, profile_id)
-		var new_game: bool = false
-		System.manage.session.start_session(player, new_game)
-
 	# tidy-up
 	#System.manage.content.clear_staging()
 

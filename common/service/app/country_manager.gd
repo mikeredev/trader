@@ -13,7 +13,7 @@ func get_country(p_country_id: StringName) -> Country:
 	return datastore.get(p_country_id, null)
 
 
-func get_leader(p_country_id: StringName) -> Character:
+func get_leader(p_country_id: StringName) -> Leader:
 	var country: Country = get_country(p_country_id)
 	var profile_id: StringName = country.leader.profile.profile_id
 	return App.context.character.get_character(profile_id)

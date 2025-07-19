@@ -3,6 +3,39 @@ class_name CityManager extends Service
 var datastore: Dictionary[StringName, City] = {}
 
 
+func enter_building(p_city: City, p_building: Building, p_body: CharacterBody) -> void:
+	Debug.log_verbose("%s is entering building %s" % [p_body.profile_id, p_building.building_id])
+	if not p_building.interior_scene:
+		Debug.log_warning("No interior scene: %s" % p_building.building_id)
+		return
+	p_building.scene = System.manage.scene.create_scene(p_building.interior_scene)
+	p_building.scene.name = p_building.building_id
+	p_building.scene.city_id = p_city.city_id
+	p_building.scene.building_id = p_building.building_id
+	p_building.view.add_scene(p_building.scene, View.ContainerType.SCENE)
+
+	# add NPC master
+	p_building.master = NPC.new()
+	p_building.master.body = NPCBody.new()
+	p_building.master.actions = p_building.actions
+	p_building.scene.sprite_group.add_child(p_building.master.body)
+	p_building.master.body.position = p_building.scene.master_point.position
+
+	# add character
+	p_body.reparent(p_building.scene.sprite_group)
+	p_body.position = p_building.scene.entry_point.position
+
+	# switch view and kick camera
+	System.manage.scene.activate_view(View.ViewType.INTERIOR)
+
+	# broadcast
+	EventBus.building_entered.emit(p_building)
+
+
+func exit_building(p_building: Building, p_body: CharacterBody) -> void:
+	EventBus.building_exited.emit(p_building, p_body)
+
+
 func get_city(p_city_id: StringName) -> City:
 	return datastore.get(p_city_id, null)
 

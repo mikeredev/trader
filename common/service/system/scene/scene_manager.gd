@@ -23,6 +23,7 @@ func activate_view(p_type: View.ViewType) -> View:
 		view._set_active(active)
 	_active_view = target
 	Debug.log_debug("Activated view: %s" % target.get_path())
+	EventBus.viewport_resized.emit(DisplayServer.window_get_size())
 	return target
 
 

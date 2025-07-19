@@ -67,7 +67,7 @@ text = "NO_SUBLOCATION"
 [node name="LabelFPS" type="Label" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "00 fps"
+text = "00 FPS"
 
 [node name="Camera" type="HBoxContainer" parent="MarginOuter/NavMain/InfoBar/MarginInner/ComponentStack"]
 layout_mode = 2

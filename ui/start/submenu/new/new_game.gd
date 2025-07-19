@@ -33,7 +33,7 @@ func populate_countries() -> void: # pull directly from blueprint as nothing is 
 
 func start_session(p_profile_name: StringName, p_country_id: StringName) -> void:
 	Debug.log_info("Starting new session...")
-	var player: Character = App.context.character.create_character(Character.Role.PLAYER, p_profile_name, p_country_id, Rank.Level.COMMONER)
+	var player: Character = App.context.character.create_player(p_profile_name, p_country_id, Rank.Level.COMMONER)
 	var new_game: bool = true
 	System.manage.session.start_session(player, new_game)
 

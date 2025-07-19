@@ -1,7 +1,7 @@
 class_name CharacterManager extends Service
 
 var datastore: Dictionary[StringName, Character] = {}
-var player: Character # quick lookup for player access
+var player: Player # quick lookup for player access
 
 
 func cache_body(p_body: CharacterBody) -> void:
@@ -18,13 +18,12 @@ func cache_body(p_body: CharacterBody) -> void:
 func create_body(p_character: Character) -> CharacterBody:
 	var body: CharacterBody
 
-	match p_character.role:
-		Character.Role.PLAYER:
-			var player_body: PlayerBody = PlayerBody.new()
-			body = player_body
-		_:
-			var npc_body: NPCBody = NPCBody.new()
-			body = npc_body
+	if p_character is Player:
+		var player_body: PlayerBody = PlayerBody.new()
+		body = player_body
+	else:
+		var npc_body: NPCBody = NPCBody.new()
+		body = npc_body
 
 	var name: String = p_character.profile.profile_name
 	body.name = name
@@ -40,22 +39,20 @@ func create_body(p_character: Character) -> CharacterBody:
 	return body
 
 
-func create_character(p_role: Character.Role, p_name: String, p_country_id: StringName,
-	p_rank: Rank.Level, p_title: String = "") -> Character:
+func create_player(p_name: String, p_country_id: StringName, p_rank: Rank.Level) -> Player:
+	Debug.log_info("Creating player...")
+	player = Player.new()
+	player.profile = _create_profile(p_name, p_country_id, p_rank)
+	_register_character(player)
+	return player
 
-	# assign role / profile / inventory / fleet as needed
-	var character: Character = Character.new()
-	character.role = p_role
-	character.profile = _create_profile(p_name, p_country_id, p_rank, p_title)
 
-	# register for lookup
-	datastore[character.profile.profile_id] = character
-
-	if character.role == Character.Role.PLAYER:
-		player = character # register player for quick lookup
-
-	Debug.log_verbose("  Registered character: %s" % character.profile.profile_id)
-	return character
+func create_leader(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "") -> Leader:
+	Debug.log_info("Creating leader...")
+	var leader: Leader = Leader.new()
+	leader.profile = _create_profile(p_name, p_country_id, p_rank, p_title)
+	_register_character(leader)
+	return leader
 
 
 func get_character(p_profile_id: StringName) -> Character:
@@ -64,14 +61,6 @@ func get_character(p_profile_id: StringName) -> Character:
 
 func get_player() -> Character:
 	return player
-
-
-func to_dict() -> Dictionary[String, Variant]:
-	var dict: Dictionary[String, Variant] = {}
-	for profile_id: StringName in datastore.keys():
-		var data: Dictionary[String, Variant] = get_savedata(profile_id)
-		dict[profile_id] = data
-	return dict
 
 
 func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
@@ -87,6 +76,14 @@ func get_savedata(p_profile_id: String) -> Dictionary[String, Variant]:
 			#"balance": p_character.inventory.balance,
 		#},
 	}
+
+
+func to_dict() -> Dictionary[String, Variant]:
+	var dict: Dictionary[String, Variant] = {}
+	for profile_id: StringName in datastore.keys():
+		var data: Dictionary[String, Variant] = get_savedata(profile_id)
+		dict[profile_id] = data
+	return dict
 
 
 func _create_profile(p_name: String, p_country_id: StringName, p_rank: Rank.Level, p_title: String = "") -> Profile:
@@ -113,3 +110,8 @@ func _get_uid(p_name: String) -> StringName:
 	var cleaned: String = regex.sub(p_name, "", true)
 	var result: String = cleaned.substr(0, 32)
 	return "%s_%d" % [result.to_snake_case().to_lower(), Time.get_unix_time_from_system()]
+
+
+func _register_character(p_character: Character) -> void:
+	datastore[p_character.profile.profile_id] = p_character
+	Debug.log_verbose("  Registered character: %s" % p_character.profile.profile_id)

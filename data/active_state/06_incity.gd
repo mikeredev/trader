@@ -4,7 +4,7 @@ var city: City
 var scene: CityScene
 var view: View
 var base_size: Vector2i
-
+var tile_size: int
 
 
 func _init(p_city_id: StringName) -> void:
@@ -12,7 +12,7 @@ func _init(p_city_id: StringName) -> void:
 	city = App.context.city.get_city(p_city_id)
 	view = System.manage.scene.get_view(View.ViewType.CITY)
 	base_size = ProjectSettings.get_setting("services/config/scene_base_size")
-
+	tile_size = ProjectSettings.get_setting("services/config/default_tile_size")
 
 func _connect_signals() -> void:
 	EventBus.viewport_resized.connect(_on_viewport_resized)
@@ -59,11 +59,10 @@ func add_character_at(p_building: Building, p_body: CharacterBody) -> void:
 	Debug.log_info("Adding %s at %s %s..." % [p_body.profile_id, city.city_id, p_building.building_id])
 	p_body.reparent(scene.sprite_group)
 
-	# start outside dock
+	# start outside p_building
 	var access_point: Vector2i = scene.access_points.get(p_building)
-	var modifider: int = ProjectSettings.get_setting("services/config/default_tile_size")
-	p_body.position.x = (access_point.x + 0.5) * modifider # centered on door tile
-	p_body.position.y = (access_point.y + 1) * modifider # slightly below
+	p_body.position.x = (access_point.x + 0.5) * tile_size # centered on door tile
+	p_body.position.y = (access_point.y + 1) * tile_size # slightly below
 
 	# camera follow
 	if p_body is PlayerBody:
@@ -73,7 +72,7 @@ func add_character_at(p_building: Building, p_body: CharacterBody) -> void:
 func configure_view() -> void:
 	Debug.log_info("Configuring view...")
 	view.camera.update_limits(scene.tile_grid.area)
-	view = System.manage.scene.activate_view(View.ViewType.CITY)
+	System.manage.scene.activate_view(View.ViewType.CITY)
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:
@@ -88,4 +87,3 @@ func _on_building_exited(p_building: Building, p_body: CharacterBody) -> void:
 
 	# switch view and kick camera
 	System.manage.scene.activate_view(View.ViewType.CITY)
-	#city scene viewport resized? emit signal caught by incity state?

@@ -5,7 +5,6 @@ const ZOOM_STEP: float = 0.1
 const ZOOM_SNAP: float = 0.001
 
 var speed: int = 200
-#var target: CharacterBody
 var min_zoom: Vector2 = Vector2(1, 1)
 var max_zoom: Vector2 = Vector2(60, 60)
 var limits: Dictionary[String, int]
@@ -44,7 +43,7 @@ func _process_zoom() -> void:
 func follow(p_body: CharacterBody) -> void:
 	var remote_transform: RemoteTransform2D = p_body.remote_transform
 	remote_transform.remote_path = get_path()
-	Debug.log_debug("%s camera following: %s" % [get_path(), p_body.name])
+	Debug.log_debug("%s following: %s" % [name, p_body.name])
 
 
 func enable_devmode(p_toggled_on: bool) -> void:

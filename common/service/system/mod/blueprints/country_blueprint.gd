@@ -79,13 +79,12 @@ func build() -> void:
 
 func _create_country(p_country_id: StringName, p_metadata: Dictionary) -> void:
 	var country: Country = Country.new()
-	var capital_id: StringName = p_metadata.get("capital")
+	var capital_id: StringName = p_metadata["capital"]
 	var color: Color = p_metadata.get("color", Color.CYAN) # default to
 
 	# create leader
 	var profile: Dictionary = p_metadata["leader"]
-	var leader: Character = App.context.character.create_character(Character.Role.LEADER,
-	str(profile.name), p_country_id, Rank.Level.KING, str(profile.title))
+	var leader: Leader = App.context.character.create_leader(str(profile.name), p_country_id, Rank.Level.KING, str(profile.title))
 
 	# assign basic properties
 	country.country_id = p_country_id

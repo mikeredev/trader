@@ -2,15 +2,16 @@ class_name InitState extends ActiveState
 
 var ui: UI
 var views: Array[View]
-var saved_mods: PackedStringArray
+var color_scheme: ColorScheme
 var user_directories: Array[String] = [
 	FileLocation.USER_ROOT_MOD_DIR,
 	FileLocation.USER_ROOT_SAVE_DIR,
 	FileLocation.USER_ROOT_SETTINGS_DIR ]
 
 
-func _init(p_node_tree: Array[Node]) -> void:
+func _init(p_color_scheme: ColorScheme, p_node_tree: Array[Node]) -> void:
 	state_id = "Init"
+	color_scheme = p_color_scheme
 	for node: Node in p_node_tree:
 		if node is UI: ui = node
 		if node is View: views.append(node)
@@ -22,6 +23,9 @@ func _start_services() -> void:
 
 
 func _main() -> void:
+	# apply runtime overrides
+	color_scheme.apply()
+
 	# establish environment
 	if not validate_directories(user_directories): return
 	if not build_viewports(views): return
@@ -30,14 +34,12 @@ func _main() -> void:
 	System.manage.config.apply_project_settings(Common.PROJECT_SETTINGS)
 	System.manage.config.load_config()
 	System.manage.config.apply_config()
-	#System.manage.mod.apply_config()
-	#System.data.trade.get_character()
 
 	# allow for notifications
 	ui.setup()
 
 	# process mods
-	saved_mods = System.manage.config.mod_settings.get_saved_mods()
+	var saved_mods: PackedStringArray = System.manage.config.mod_settings.get_saved_mods()
 	System.state.change(SetupState.new(saved_mods))
 
 

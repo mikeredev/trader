@@ -14,15 +14,12 @@ func _ready() -> void:
 	# connect project-wide signals
 	item_rect_changed.connect(_on_item_rect_changed)
 
-	# apply runtime overrides / pass this to init state TBD
-	color_scheme.apply()
-
 	# connect statics
 	Debug.connect_signals()
 
 	# move to first core loop state: initialize environment
 	var node_tree: Array[Node] = self.get_children()
-	System.state.change(InitState.new(node_tree))
+	System.state.change(InitState.new(color_scheme, node_tree))
 
 
 func _on_item_rect_changed() -> void:
