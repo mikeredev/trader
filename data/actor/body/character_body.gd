@@ -1,14 +1,20 @@
 class_name CharacterBody extends CharacterBody2D
 
-var profile_id: StringName
-var sprite: Sprite2D
-var collide: CollisionShape2D = CollisionShape2D.new()
-var interact: Area2D = Area2D.new()
-var remote_transform: RemoteTransform2D = RemoteTransform2D.new()
-
 var speed: int = 300
 var moving: bool = false
 var friction: int = 1
+
+var profile_id: StringName
+var sprite: Sprite2D
+var interact: InterationArea2D
+var collide: CollisionShape2D
+var remote_transform: RemoteTransform2D
+
+
+func _init(p_interact_with: Object) -> void:
+	interact = InterationArea2D.new(p_interact_with)
+	collide = CollisionShape2D.new()
+	remote_transform = RemoteTransform2D.new()
 
 
 func _ready() -> void:

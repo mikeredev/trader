@@ -3,8 +3,8 @@ class_name CityManager extends Service
 var datastore: Dictionary[StringName, City] = {}
 
 
-func enter_building(p_city: City, p_building: Building, p_body: CharacterBody) -> void:
-	Debug.log_verbose("%s is entering building %s" % [p_body.profile_id, p_building.building_id])
+func enter_building(p_city: City, p_building: Building, p_character: Character) -> void:
+	Debug.log_verbose("%s is entering building %s" % [p_character.profile.profile_id, p_building.building_id])
 	if not p_building.interior_scene:
 		Debug.log_warning("No interior scene: %s" % p_building.building_id)
 		return
@@ -16,14 +16,14 @@ func enter_building(p_city: City, p_building: Building, p_body: CharacterBody) -
 
 	# add NPC master
 	p_building.master = NPC.new()
-	p_building.master.body = NPCBody.new()
+	p_building.master.body = NPCBody.new(p_building.master)
 	p_building.master.actions = p_building.actions
 	p_building.scene.sprite_group.add_child(p_building.master.body)
 	p_building.master.body.position = p_building.scene.master_point.position
 
 	# add character
-	p_body.reparent(p_building.scene.sprite_group)
-	p_body.position = p_building.scene.entry_point.position
+	p_character.body.reparent(p_building.scene.sprite_group)
+	p_character.body.position = p_building.scene.entry_point.position
 
 	# switch view and kick camera
 	System.manage.scene.activate_view(View.ViewType.INTERIOR)
@@ -32,8 +32,8 @@ func enter_building(p_city: City, p_building: Building, p_body: CharacterBody) -
 	EventBus.building_entered.emit(p_building)
 
 
-func exit_building(p_building: Building, p_body: CharacterBody) -> void:
-	EventBus.building_exited.emit(p_building, p_body)
+func exit_building(p_building: Building, body: CharacterBody) -> void:
+	EventBus.building_exited.emit(p_building, body)
 
 
 func get_city(p_city_id: StringName) -> City:

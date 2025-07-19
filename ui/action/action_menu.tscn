@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5ux31nk71ynq"]
+
+[ext_resource type="Script" uid="uid://ch6e84rc8ekql" path="res://ui/action/action_menu.gd" id="1_f472c"]
+[ext_resource type="Script" uid="uid://du2p8vo4se3aj" path="res://ui/class/label/typewriter_label.gd" id="2_jnfxd"]
+
+[node name="ActionMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_f472c")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -98.0
+offset_bottom = 98.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+text = "this is a text box, and that was a comma. did it pause?"
+fit_content = true
+script = ExtResource("2_jnfxd")
+autoplay = true
+metadata/_custom_type_script = "uid://du2p8vo4se3aj"
+
+[node name="Actions" type="GridContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/Actions"]
+layout_mode = 2
+text = "FLY_AWAY"

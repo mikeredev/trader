@@ -20,6 +20,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	# connect signals
+	EventBus.building_exited.connect(_on_building_exited)
 	EventBus.viewport_resized.connect(_on_viewport_resized)
 
 	# set camera
@@ -28,6 +29,11 @@ func _ready() -> void:
 	# set collisions
 	exit_point.collision_layer = 0
 	exit_point.collision_mask = Common.Collision.PHYSICS
+
+
+func _on_building_exited(_p_building: Building, _p_body: CharacterBody) -> void:
+	Debug.log_verbose("Freeing scene: %s" % get_path())
+	queue_free()
 
 
 func _on_viewport_resized(p_viewport_size: Vector2) -> void:

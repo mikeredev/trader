@@ -1,4 +1,4 @@
-class_name FadeRect extends ColorRect
+class_name FadeRect extends ColorRect # ensure this is anchored to full screen, behind all other nodes
 
 const BG_FADE_DURATION: float = 1.0
 
@@ -14,7 +14,7 @@ func _ready() -> void:
 	Debug.log_verbose("%s/%s color: #%s" % [get_parent().name, name, primary_bg.to_html()])
 
 
-func fade(p_toggled_on: bool) -> void: # avoid changing color or handle tween interruptions better
+func fade(p_toggled_on: bool) -> void:
 	if tween: tween.kill()
 	if p_toggled_on:
 		tween = System.manage.scene.create_tween(self, "modulate:a", 0.5, BG_FADE_DURATION)

@@ -1,5 +1,7 @@
 class_name FileLocation extends RefCounted
 
+const ACTION_MENU: PackedScene = preload("uid://c5ux31nk71ynq")
+
 const CORE_MOD_DIR: String = "res://core"
 
 const DEFAULT_MOD_ICON: String = "uid://q40ea1cxooft" # godot robot svg

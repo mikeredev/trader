@@ -6,4 +6,4 @@ func _init() -> void:
 
 
 func execute(p_character: Character) -> void:
-	print("execute here")
+	print("execute here %s" % p_character)

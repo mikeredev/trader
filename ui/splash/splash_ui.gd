@@ -1,4 +1,4 @@
-class_name SplashUI extends Control
+class_name SplashUINotUsed extends Control
 
 var _fade: ColorRect
 var tween: Tween

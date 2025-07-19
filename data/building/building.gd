@@ -1,4 +1,4 @@
-class_name Building extends Interactable
+class_name Building extends Resource
 
 enum PlacementBias { NONE, SHORE }
 
@@ -25,6 +25,6 @@ func _init() -> void:
 	view = System.manage.scene.get_view(View.ViewType.INTERIOR)
 
 
-func interact_with(p_body: CharacterBody) -> void:
+func interact_with(p_character: Character) -> void:
 	var city: City = App.context.city.get_city(city_id)
-	App.context.city.enter_building(city, self, p_body)
+	App.context.city.enter_building(city, self, p_character)

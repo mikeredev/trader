@@ -108,16 +108,9 @@ func _create_building(p_building: Building, p_rect: Rect2i) -> void:
 	scene.ground_layer.set_cell(access_point, 1, tile) # put it back on the ground
 
 	# add door interaction area
-	var interaction_area: Area2D = Area2D.new()
+	var interaction_area: InterationArea2D = InterationArea2D.new(p_building)
 	interaction_area.name = p_building.building_id
-	#interaction_area.set_meta("building", p_building)
-	interaction_area.set_meta("interact", p_building)
 	interaction_area.position = scene.building_layer.map_to_local(access_point)
-
-	interaction_area.collision_layer = Common.Collision.INTERACT
-	interaction_area.collision_mask = 0
-	interaction_area.monitoring = false
-	interaction_area.monitorable = true
 
 	var collision_shape: CollisionShape2D = CollisionShape2D.new()
 	collision_shape.name = "CollisionShape"

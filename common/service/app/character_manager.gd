@@ -19,10 +19,10 @@ func create_body(p_character: Character) -> CharacterBody:
 	var body: CharacterBody
 
 	if p_character is Player:
-		var player_body: PlayerBody = PlayerBody.new()
+		var player_body: PlayerBody = PlayerBody.new(player)
 		body = player_body
 	else:
-		var npc_body: NPCBody = NPCBody.new()
+		var npc_body: NPCBody = NPCBody.new(p_character)
 		body = npc_body
 
 	var name: String = p_character.profile.profile_name

@@ -12,3 +12,8 @@ func get_profile_name() -> String:
 
 func get_profile_id() -> StringName:
 	return profile.profile_id
+
+
+
+func interact_with(p_character: CharacterBody)-> void:
+	print("hi")

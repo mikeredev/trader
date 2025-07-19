@@ -6,11 +6,11 @@ func _input(_event: InputEvent) -> void:
 		var interactions: Array[Area2D] = interact.get_overlapping_areas()
 		if interactions.is_empty(): return
 		var area: Area2D = interactions[0]
-		if area.has_meta("interact"):
-			var object: Interactable = area.get_meta("interact")
-			object.interact_with(self)
+		if area is InterationArea2D:
+			var object: InterationArea2D = area
+			object.interact_with_body(self)
 		else:
-			Debug.log_warning("Interaction undefined: %s" % area.name)
+			Debug.log_warning("No interaction defined: %s" % area.name)
 
 
 func _physics_process(_delta: float) -> void:
